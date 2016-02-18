@@ -1,0 +1,205 @@
+
+html[hc = 'bw'] {
+  -webkit-filter: grayscale(100%);
+}
+
+html[hc = 'bw'] {
+  background: white;
+}
+
+div[hc = 'bw'], span[hc = 'bw'], p[hc = 'bw'], ul[hc = 'bw'], li[hc = 'bw'],
+h1[hc = 'bw'], h2[hc = 'bw'], h3[hc = 'bw'], h4[hc = 'bw'], h5[hc = 'bw'],
+table[hc = 'bw'], th[hc = 'bw'], tr[hc = 'bw'], td[hc = 'bw'], pre[hc = 'bw'], code[hc = 'bw'], header[hc='bw'],
+dt[hc='bw'], dl[hc='bw'] {
+  background: white !important;
+  color: black !important;
+  text-shadow: none !important;
+}
+
+input[hc='bw'][type='submit']{background: white !important; color: black !important; text-shadow: none !important; border: 2px solid white !important;  border-radius:10px !important;}
+input[hc='bw'][type='submit']:focus, input[hc='bw'][type='submit']:hover {border: 4px solid black !important;}
+
+a[hc = 'bw'] {
+  background-color: white !important;
+  color: black;
+  text-decoration: underline !important;
+  text-shadow: none !important;
+}
+
+a[hc='bw']:visited, a[hc = 'bw']:hover {
+  color: black !important;
+}
+
+input[hc='bw'], input[type='number'][hc='bw'] {
+  color: black;
+  background: white;
+  border: 1px solid white;
+}
+
+button[hc='bw'] {
+  color: #C2CFFF;
+  background: black;
+  border: 1px solid #C2CFFF;
+}
+
+html[hc = 'bw'] > body {
+  background: white !important;
+  color: black;
+}
+
+html[hc = 'wb'] {
+  -webkit-filter: grayscale(100%);
+}
+
+html[hc = 'wb'] {
+  background: black;
+}
+
+div[hc = 'wb'], span[hc = 'wb'], p[hc = 'wb'], ul[hc = 'wb'], li[hc = 'wb'],
+h1[hc = 'wb'], h2[hc = 'wb'], h3[hc = 'wb'], h4[hc = 'wb'], h5[hc = 'wb'],
+table[hc = 'wb'], th[hc = 'wb'], tr[hc = 'wb'], td[hc = 'wb'], pre[hc = 'wb'], code[hc = 'wb'], header[hc='wb'],
+dt[hc='wb'], dl[hc='wb'] {
+  background: black !important;
+  color: white !important;
+  text-shadow: none !important;
+}
+
+input[hc='wb'][type='submit'], input[hc='wb'][type='button'], button[hc='wb']{background: black !important; color: white !important; text-shadow: none !important; border: 2px solid white !important; border-radius:10px !important;}
+input[hc='wb'][ts='large'][type='submit']:focus, input[hc='wb'][ts='large'][type='submit']:hover, input[hc='wb'][ts='large'][type='button']:hover, input[hc='wb'][ts='large'][type='button']:focus, button[hc='wb'][ts='large']:hover, button[hc='wb'][ts='large']:focus,
+input[hc='wb'][ts='x-large'][type='submit']:focus, input[hc='wb'][ts='x-large'][type='submit']:hover, input[hc='wb'][ts='x-large'][type='button']:hover, input[hc='wb'][ts='x-large'][type='button']:focus, button[hc='wb'][ts='x-large']:hover, button[hc='wb'][ts='x-large']:focus {border: 4px solid white !important;}
+input[hc='wb'][ts='medium'][type='submit']:focus, input[hc='wb'][ts='medium'][type='submit']:hover, input[hc='wb'][ts='medium'][type='button']:hover, input[hc='wb'][ts='medium'][type='button']:focus, button[hc='wb'][ts='medium']:hover, button[hc='wb'][ts='medium']:focus {border: 3px solid white !important;}
+select[hc='wb']{background: #D2D2D2 !important; color: #000 !important; text-shadow: none !important; border: 2px solid white !important;}
+input[hc='wb'][type='text'], input[hc='wb'][type='password']{background: black !important; color: white !important; text-shadow: none !important; border: 2px solid white !important;}
+input[hc='wb'][ts='large'][type='text']:focus, input[hc='wb'][ts='large'][type='text']:hover, input[hc='wb'][ts='large'][type='password']:focus, input[hc='wb'][ts='large'][type='password']:hover, select[hc='wb'][ts='large']:hover, select[hc='wb'][ts='large']:focus,
+input[hc='wb'][ts='x-large'][type='text']:focus, input[hc='wb'][ts='x-large'][type='text']:hover, input[hc='wb'][ts='x-large'][type='password']:focus, input[hc='wb'][ts='x-large'][type='password']:hover, select[hc='wb'][ts='x-large']:hover, select[hc='wb'][ts='x-large']:focus {border: 4px solid white !important;}
+input[hc='wb'][ts='medium'][type='text']:focus, input[hc='wb'][ts='medium'][type='text']:hover, input[hc='wb'][ts='medium'][type='password']:focus, input[hc='wb'][ts='medium'][type='password']:hover, select[hc='wb'][ts='medium']:hover, select[hc='wb'][ts='medium']:focus{border: 3px solid white !important;}
+
+a[hc = 'wb'] {
+  background-color: black !important;
+  color: #C2CFFF !important;
+  text-decoration: underline !important;
+  text-shadow: none !important;
+}
+
+a[hc='wb']:visited, a[hc = 'wb']:hover {
+  color: white !important;
+}
+
+input[hc='wb'], input[type='number'][hc='wb'] {
+  color: white;
+  background: black;
+  border: 1px solid white;
+}
+
+button[hc='wb'] {
+  color: #C2CFFF;
+  background: black;
+  border: 1px solid #C2CFFF;
+}
+
+html[hc = 'wb'] > body {
+  background: black !important;
+  color: white;
+}
+
+html[hc = 'yb'] {
+  background: black;
+  color: yellow;
+}
+html[hc = 'yb'] > body {
+  background: black !important;
+  color: yellow;
+}
+
+div[hc = 'yb'], span[hc = 'yb'], p[hc = 'yb'], ul[hc = 'yb'], li[hc = 'yb'],
+h1[hc = 'yb'], h2[hc = 'yb'], h3[hc = 'yb'], h4[hc = 'yb'], h5[hc = 'yb'],
+table[hc = 'yb'], th[hc = 'yb'], tr[hc = 'yb'], td[hc = 'yb'], pre[hc = 'yb'], code[hc = 'yb'],
+article[hc='yb'], nav[hc='yb'], section[hc='yb'], header[hc='by'],
+dl[hc='yb'], dt[hc='yb'] {
+  background: black !important;
+  color: yellow !important;
+  text-shadow: none !important;
+}
+
+input[hc='yb'][type='submit'], input[hc='yb'][type='button'], button[hc='yb']{background: black !important; color: yellow !important; text-shadow: none !important; border: 2px solid yellow !important; border-radius:10px !important;}
+input[hc='yb'][ts='large'][type='submit']:focus, input[hc='yb'][ts='large'][type='submit']:hover, input[hc='yb'][ts='large'][type='button']:hover, input[hc='yb'][ts='large'][type='button']:focus, button[hc='yb'][ts='large']:hover, button[hc='yb'][ts='large']:focus,
+input[hc='yb'][ts='x-large'][type='submit']:focus, input[hc='yb'][ts='x-large'][type='submit']:hover, input[hc='yb'][ts='x-large'][type='button']:hover, input[hc='yb'][ts='x-large'][type='button']:focus, button[hc='yb'][ts='x-large']:hover, button[hc='yb'][ts='x-large']:focus {border: 4px solid yellow !important;}
+input[hc='yb'][ts='medium'][type='submit']:focus, input[hc='yb'][ts='medium'][type='submit']:hover, input[hc='yb'][ts='medium'][type='button']:hover, input[hc='yb'][ts='medium'][type='button']:focus, button[hc='yb'][ts='medium']:hover, button[hc='yb'][ts='medium']:focus {border: 3px solid yellow !important;}
+input[hc='yb'][type='text'], input[hc='yb'][type='password']{background: black !important; color: yellow !important; text-shadow: none !important; border: 2px solid yellow !important;}
+input[hc='yb'][ts='large'][type='text']:focus, input[hc='yb'][ts='large'][type='text']:hover, input[hc='yb'][ts='large'][type='password']:focus, input[hc='yb'][ts='large'][type='password']:hover,
+input[hc='yb'][ts='x-large'][type='text']:focus, input[hc='yb'][ts='x-large'][type='text']:hover, input[hc='yb'][ts='x-large'][type='password']:focus, input[hc='yb'][ts='x-large'][type='password']:hover {border: 4px solid yellow !important;}
+input[hc='yb'][ts='medium'][type='text']:focus, input[hc='yb'][ts='medium'][type='text']:hover, input[hc='yb'][ts='medium'][type='password']:focus, input[hc='yb'][ts='medium'][type='password']:hover {border: 3px solid yellow !important;}
+
+a[hc = 'yb'] {
+  background: black !important;
+  background-color: black !important;
+  color: yellow !important;
+  text-decoration: underline !important;
+  text-shadow: none !important;
+}
+
+a[hc='yb']:visited, a[hc = 'yb']:hover {
+  color: yellow !important;
+}
+
+input[hc='yb'] {
+  color: yellow;
+  background: black;
+  border: 1px solid yellow;
+}
+
+button[hc='yb'] {
+  color: yellow;
+  background: black;
+  border: 1px solid yellow;
+}
+
+html[hc = 'by'] {
+  background: yellow;
+}
+html[hc = 'by'] > body{
+  background: yellow !important;
+  color: black;
+}
+div[hc = 'by'], span[hc = 'by'], p[hc = 'by'], ul[hc = 'by'], li[hc = 'by'],
+h1[hc = 'by'], h2[hc = 'by'], h3[hc = 'by'], h4[hc = 'by'], h5[hc = 'by'],
+table[hc = 'by'], th[hc = 'by'], tr[hc = 'by'], td[hc = 'by'], pre[hc = 'by'], code[hc = 'by'],
+article[hc='by'], nav[hc='by'], section[hc='by'], header[hc='by'],
+dl[hc='by'], dt[hc='by'] {
+  background: yellow !important;
+  color: black !important;
+  text-shadow: none !important;
+}
+
+input[hc='by'][type='submit'], input[hc='by'][type='button'], button[hc='by']{background: yellow !important; color: black !important; text-shadow: none !important; border: 2px solid black !important; border-radius:10px !important;}
+input[hc='by'][ts='large'][type='submit']:focus, input[hc='by'][ts='large'][type='submit']:hover, input[hc='by'][ts='large'][type='button']:hover, input[hc='by'][ts='large'][type='button']:focus, button[hc='by'][ts='large']:hover, button[hc='by'][ts='large']:focus,
+input[hc='by'][ts='x-large'][type='submit']:focus, input[hc='by'][ts='x-large'][type='submit']:hover, input[hc='by'][ts='x-large'][type='button']:hover, input[hc='by'][ts='x-large'][type='button']:focus, button[hc='by'][ts='x-large']:hover, button[hc='by'][ts='x-large']:focus {border: 4px solid black !important;}
+input[hc='by'][ts='medium'][type='submit']:focus, input[hc='by'][ts='medium'][type='submit']:hover, input[hc='by'][ts='medium'][type='button']:hover, input[hc='by'][ts='medium'][type='button']:focus, button[hc='by'][ts='medium']:hover, button[hc='by'][ts='medium']:focus {border: 3px solid black !important;}
+input[hc='by'][type='text'], input[hc='by'][type='password']{background: yellow !important; color: black !important; text-shadow: none !important; border: 2px solid black !important;}
+input[hc='by'][ts='large'][type='text']:focus, input[hc='by'][ts='large'][type='text']:hover, input[hc='by'][ts='large'][type='password']:focus, input[hc='by'][ts='large'][type='password']:hover,
+input[hc='by'][ts='x-large'][type='text']:focus, input[hc='by'][ts='x-large'][type='text']:hover, input[hc='by'][ts='x-large'][type='password']:focus, input[hc='by'][ts='x-large'][type='password']:hover {border: 4px solid black !important;}
+input[hc='by'][ts='medium'][type='text']:focus, input[hc='by'][ts='medium'][type='text']:hover, input[hc='by'][ts='medium'][type='password']:focus, input[hc='by'][ts='medium'][type='password']:hover {border: 3px solid black !important;}
+
+a[hc = 'by'] {
+  background: yellow !important;
+  background-color: yellow !important;
+  color: black !important;
+  text-decoration: underline !important;
+  text-shadow: none !important;
+}
+
+a[hc='by']:visited, a[hc = 'by']:hover {
+  color: #333 !important;
+}
+
+input[hc='by'] {
+  color: black;
+  background: yellow;
+  border: 1px solid black;
+}
+
+button[hc='by'] {
+  color: black;
+  background: yellow;
+  border: 1px solid yellow;
+}

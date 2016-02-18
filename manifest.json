@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "name": "GPII chrome extension",
+    "version": "0.1.0",
+    "permissions": [
+        "management",
+        "tabs",
+        "http://*/",
+        "https://*/"
+    ],
+    "content_scripts": [{
+        "matches": [
+            "http://*/",
+            "https://*/",
+            "<all_urls>"
+        ],
+        "css": ["css/highContrast.css"]
+    }],
+    "background": {
+        "scripts": [
+            "libs/infusion/infusion-all.js",
+            "src/extensionHolder.js",
+            "src/highContrast.js",
+            "src/chromeSettings.js",
+            "src/background.js"
+        ]
+    }
+}
