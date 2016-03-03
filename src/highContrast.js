@@ -1,6 +1,3 @@
-var gpii = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.chrome");
-
 // This component makes use of css/highContrast.css to perform the adaptations
 // of the web content, and this is done through chrome.tabs.executeScript.
 //

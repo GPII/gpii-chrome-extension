@@ -1,6 +1,3 @@
-var gpii = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.chrome");
-
 fluid.defaults("gpii.chrome.settings", {
     gradeNames: "fluid.modelComponent",
     components: {
@@ -9,7 +6,7 @@ fluid.defaults("gpii.chrome.settings", {
             options: {
                 extensionId: "kgejglhpjiefppelpmljglcjbhoiplfn",
                 model: {
-                    extensionEnabled: "{gpii.chrome.settings}.model.screenReaderTTSEnabled"
+                    extensionEnabled: "{settings}.model.screenReaderTTSEnabled"
                 }
             }
         },
@@ -25,11 +22,11 @@ fluid.defaults("gpii.chrome.settings", {
         highContrast: {
             type: "gpii.chrome.highContrast",
             options: {
-                model: {
-                    highContrastEnabled: "{gpii.chrome.settings}.model.highContrastEnabled",
-                    highContrastTheme: "{gpii.chrome.settings}.model.highContrastTheme"
-                }
-            }
+               model: {
+                   highContrastEnabled: "{settings}.model.highContrastEnabled",
+                   highContrastTheme: "{settings}.model.highContrastTheme"
+               }
+           }
         }
     },
     model: {

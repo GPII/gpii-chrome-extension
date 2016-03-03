@@ -1,5 +1,4 @@
 var gpii = fluid.registerNamespace("gpii");
-fluid.registerNamespace("gpii.chrome");
 
 fluid.defaults("gpii.chrome.extensionHolder", {
     gradeNames: "fluid.modelComponent",
