@@ -3,10 +3,38 @@
 //
 fluid.defaults("gpii.chrome.highContrast", {
     gradeNames: ["fluid.modelComponent"],
-    "black-white":  "bw",
-    "white-black":  "wb",
-    "black-yellow": "by",
-    "yellow-black": "yb",
+    scriptTemplate: "document.documentElement.setAttribute('hc','__THEME__');\
+                    [].forEach.call(document.querySelectorAll('body *'), function(node) {\
+                        node.setAttribute('hc', '__THEME__');\
+                    });\
+                    document.documentElement.setAttribute('hc', '__THEME__');",
+    disableScript: "document.documentElement.removeAttribute('hc');\
+                    [].forEach.call(document.querySelectorAll('body *'), function(node) {\
+                        node.removeAttribute('hc');\
+                    });",
+    commonToPlatform: {
+        highContrastTheme: {
+            transform: {
+                type: "fluid.transforms.valueMapper",
+                inputPath: "highContrastTheme",
+                defaultInputValue: "black-white",
+                options: {
+                    "black-white": {
+                        outputValue: "bw"
+                    },
+                    "white-black": {
+                        outputValue: "wb"
+                    },
+                    "black-yellow": {
+                        outputValue: "by"
+                    },
+                    "yellow-black": {
+                        outputValue: "yb"
+                    }
+                }
+            }
+        }
+    },
     model: {
         highContrastEnabled: undefined,
         highContrastTheme: undefined
@@ -14,7 +42,7 @@ fluid.defaults("gpii.chrome.highContrast", {
     modelListeners: {
         "*": {
             funcName: "gpii.chrome.highContrast.modelChanged",
-            args: ["{that}"],
+            args: "{that}",
             excludeSource: "init"
         }
     }
@@ -22,15 +50,8 @@ fluid.defaults("gpii.chrome.highContrast", {
 
 gpii.chrome.highContrast.modelChanged = function (that) {
     if (that.model.highContrastEnabled) {
-        // Fix this crap. Better use a transformation to get the right value.
-        //
-        var theme = that.options[fluid.get(that.model, "highContrastTheme")];
-        var scriptTemplate = "document.documentElement.setAttribute('hc','__THEME__');\
-                             [].forEach.call(document.querySelectorAll('body *'), function(node) {\
-                                 node.setAttribute('hc', '__THEME__');\
-                             });\
-                             document.documentElement.setAttribute('hc', '__THEME__');"
-        var script = scriptTemplate.replace(/__THEME__/g, theme);
+        var theme = fluid.model.transformWithRules(that.model, that.options.commonToPlatform);
+        var script = that.options.scriptTemplate.replace(/__THEME__/g, theme.highContrastTheme);
 
         chrome.tabs.query({}, function (tabs) {
             fluid.each(tabs, function (tab) {
@@ -44,13 +65,9 @@ gpii.chrome.highContrast.modelChanged = function (that) {
             });
         });
     } else {
-        var script = "document.documentElement.removeAttribute('hc');\
-                     [].forEach.call(document.querySelectorAll('body *'), function(node) {\
-                          node.removeAttribute('hc');\
-                      });"
         chrome.tabs.query({}, function (tabs) {
             fluid.each(tabs, function (tab) {
-                chrome.tabs.executeScript(tab.id, {code: script}, function() {
+                chrome.tabs.executeScript(tab.id, {code: that.options.disableScript}, function() {
                     if (chrome.runtime.lastError) {
                         console.log("Could not remove highContrast from tab '"
                         + tab.url + "', error was: "
