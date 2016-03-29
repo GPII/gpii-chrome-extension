@@ -3,14 +3,14 @@
 //
 fluid.defaults("gpii.chrome.highContrast", {
     gradeNames: ["fluid.modelComponent"],
-    scriptTemplate: "document.documentElement.setAttribute('hc','__THEME__');\
+    scriptTemplate: "document.documentElement.setAttribute('data-gpii-hc','__THEME__');\
                     [].forEach.call(document.querySelectorAll('body *'), function(node) {\
-                        node.setAttribute('hc', '__THEME__');\
+                        node.setAttribute('data-gpii-hc', '__THEME__');\
                     });\
-                    document.documentElement.setAttribute('hc', '__THEME__');",
-    disableScript: "document.documentElement.removeAttribute('hc');\
+                    document.documentElement.setAttribute('data-gpii-hc', '__THEME__');",
+    disableScript: "document.documentElement.removeAttribute('data-gpii-hc');\
                     [].forEach.call(document.querySelectorAll('body *'), function(node) {\
-                        node.removeAttribute('hc');\
+                        node.removeAttribute('data-gpii-hc');\
                     });",
     commonToPlatform: {
         highContrastTheme: {
