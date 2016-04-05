@@ -8,6 +8,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-crx");
+    grunt.loadNpmTasks("grunt-jsonlint");
 
     var files = {
         jQueryStandalone: [
@@ -32,6 +33,9 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         manifest: grunt.file.readJSON("extension/manifest.json"),
+        jsonlint: {
+            all: ["extension/manifest.json"]
+        },
         jshint: {
             all: [
                 "Gruntfile.js",
@@ -112,7 +116,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask("lint", "Lint the source code", ["jshint"]);
+    grunt.registerTask("lint", "Lint the source code", ["jsonlint", "jshint"]);
     grunt.registerTask("bundle", "Bundle dependencies and source code into a single .min.js file", ["concat", "uglify"]);
     grunt.registerTask("build", "Build the extension so you can start using it unpacked", ["bundle", "copy"]);
     grunt.registerTask("buildPkg", "Create a .crx package ready to be distributed", ["lint", "build", "crx"]);
