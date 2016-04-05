@@ -35,4 +35,4 @@ If you want to create a *crx* package to be distributed, run:
 
     grunt buildPkg
 
-**Note that you need to use a .pem file to sign the crx package with. This file needs to be called build.pem and needs to be placed into the top level folder of this repository.**
+**Note that you need to use a .pem file to sign the crx package with. This file needs to be called *key.pem* and needs to be placed into the top level folder of this repository.**
