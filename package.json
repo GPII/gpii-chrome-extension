@@ -1,0 +1,33 @@
+{
+  "name": "google-chrome",
+  "version": "0.1.0",
+  "description": "GPII extension for Google Chrome",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/GPII/google-chrome.git"
+  },
+  "keywords": [
+    "accessibility",
+    "google-chrome",
+    "personalization",
+    "gpii"
+  ],
+  "author": "Javier Hernández",
+  "bugs": {
+    "url": "https://github.com/GPII/google-chrome/issues"
+  },
+  "homepage": "https://github.com/GPII/google-chrome#README.md",
+  "dependencies": {
+    "infusion": "2.0.0-dev.20160309T145652Z.9f515ec"
+  },
+  "devDependencies": {
+    "grunt": "0.4.5",
+    "grunt-contrib-jshint": "1.0.0",
+    "grunt-contrib-uglify": "0.3.2",
+    "grunt-contrib-clean": "0.4.1",
+    "grunt-contrib-concat": "0.3.0",
+    "grunt-contrib-copy": "0.4.1",
+    "grunt-crx": "1.0.3",
+    "grunt-shell": "1.2.1"
+  }
+}
