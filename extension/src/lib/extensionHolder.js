@@ -1,3 +1,7 @@
+/*globals chrome, fluid */
+
+"use strict";
+
 var gpii = fluid.registerNamespace("gpii");
 
 fluid.defaults("gpii.chrome.extensionHolder", {

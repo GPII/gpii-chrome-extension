@@ -18,10 +18,7 @@
     }],
     "background": {
         "scripts": [
-            "libs/infusion/infusion-all.js",
-            "src/extensionHolder.js",
-            "src/highContrast.js",
-            "src/chromeSettings.js",
+            "dist/gpii-google-chrome-all.min.js",
             "src/background.js"
         ]
     }
