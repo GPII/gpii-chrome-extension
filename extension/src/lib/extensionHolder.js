@@ -1,8 +1,9 @@
-/*globals chrome, fluid */
+/*globals fluid */
 
 "use strict";
 
 var gpii = fluid.registerNamespace("gpii");
+var chrome = chrome || require("sinon-chrome");
 
 fluid.defaults("gpii.chrome.extensionHolder", {
     gradeNames: "fluid.modelComponent",
@@ -50,6 +51,7 @@ gpii.chrome.extensionHolder.getEnabled = function (extension) {
 };
 
 gpii.chrome.extensionHolder.setEnabled = function (that) {
+    that.extensionInstance.enabled = that.model.extensionEnabled;
     chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, function () {
         // TODO: What can go wrong here?
     });

@@ -1,4 +1,5 @@
 /*globals fluid */
+
 fluid.defaults("gpii.chrome.settings", {
     gradeNames: "fluid.modelComponent",
     components: {

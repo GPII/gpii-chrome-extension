@@ -20,8 +20,7 @@ module.exports = function(grunt) {
             "node_modules/infusion/src/framework/core/js/FluidIoC.js",
             "node_modules/infusion/src/framework/core/js/DataBinding.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
-            "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
-            "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js"
+            "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js"
         ],
         extension: [
             "extension/src/lib/extensionHolder.js",
@@ -40,7 +39,8 @@ module.exports = function(grunt) {
             all: [
                 "Gruntfile.js",
                 "extension/src/*.js",
-                "extension/src/lib/*.js"
+                "extension/src/lib/*.js",
+                "tests/*.js"
             ],
             options: {
                 jshintrc: true
