@@ -25,7 +25,8 @@ module.exports = function(grunt) {
         extension: [
             "extension/src/lib/extensionHolder.js",
             "extension/src/lib/highContrast.js",
-            "extension/src/lib/chromeSettings.js"
+            "extension/src/lib/chromeSettings.js",
+            "extension/src/lib/wsConnector.js"
         ]
     };
 

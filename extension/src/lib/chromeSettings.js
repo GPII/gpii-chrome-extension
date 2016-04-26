@@ -1,4 +1,6 @@
-/*globals fluid */
+/*globals fluid, gpii */
+
+"use strict";
 
 fluid.defaults("gpii.chrome.settings", {
     gradeNames: "fluid.modelComponent",
@@ -8,7 +10,7 @@ fluid.defaults("gpii.chrome.settings", {
             options: {
                 extensionId: "kgejglhpjiefppelpmljglcjbhoiplfn",
                 model: {
-                    extensionEnabled: "{settings}.model.screenReaderTTSEnabled"
+                    extensionEnabled: "{settings}.model.currentSettings.screenReaderTTSEnabled"
                 }
             }
         },
@@ -25,8 +27,8 @@ fluid.defaults("gpii.chrome.settings", {
             type: "gpii.chrome.highContrast",
             options: {
                 model: {
-                    highContrastEnabled: "{settings}.model.highContrastEnabled",
-                    highContrastTheme: "{settings}.model.highContrastTheme"
+                    highContrastEnabled: "{settings}.model.currentSettings.highContrastEnabled",
+                    highContrastTheme: "{settings}.model.currentSettings.highContrastTheme"
                 }
             }
         //},
@@ -38,16 +40,45 @@ fluid.defaults("gpii.chrome.settings", {
         //            magnification: "{settings}.model.magnification"
         //       }
         //    }
+        },
+        wsConnector: {
+            type: "gpii.wsConnector"
         }
     },
     model: {
-        screenReaderTTSEnabled: undefined,
-        onScreenKeyboardEnabled: undefined,
-        highContrastEnabled: false,
-        highContrastTheme: "",
-        invertColors: undefined,
-        greyscale: undefined,
-        magnifierEnabled: undefined,
-        magnification: undefined
+        currentSettings: {
+            screenReaderTTSEnabled: undefined,
+            onScreenKeyboardEnabled: undefined,
+            highContrastEnabled: false,
+            highContrastTheme: "",
+            invertColors: undefined,
+            greyscale: undefined,
+            magnifierEnabled: undefined,
+            magnification: undefined
+        },
+        oldSettings: null
+    },
+    invokers: {
+        onSettingsChange: {
+            funcName: "gpii.chrome.settings.onSettingsChange",
+            args: ["{that}",  "{arguments}.0"]
+        }
+    },
+    listeners: {
+        "{wsConnector}.events.onSettingsChange": "{settings}.onSettingsChange"
     }
 });
+
+gpii.chrome.settings.onSettingsChange = function (that, settings) {
+    if (settings === undefined) {
+        that.applier.change("currentSettings", that.model.oldSettings);
+        that.applier.change("oldSettings", null);
+    } else {
+        if (that.model.oldSettings === null) {
+            that.applier.change("oldSettings", that.model.currentSettings);
+        }
+        fluid.each(settings, function (value, key) {
+            that.applier.change(["currentSettings", key], value);
+        });
+    }
+};

@@ -31,6 +31,7 @@
     "grunt-jsonlint": "1.0.4",
     "grunt-shell": "1.2.1",
     "node-jqunit": "1.1.4",
-    "sinon-chrome": "1.1.2"
+    "sinon-chrome": "1.1.2",
+    "ws": "1.1.0"
   }
 }
