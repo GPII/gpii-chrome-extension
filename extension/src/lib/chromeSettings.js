@@ -31,30 +31,30 @@ fluid.defaults("gpii.chrome.settings", {
                     highContrastTheme: "{settings}.model.currentSettings.highContrastTheme"
                 }
             }
-        //},
-        //zoom: {
-        //    type: "gpii.chrome.zoom",
-        //    options: {
-        //        model: {
-        //            magnifierEnabled: "{settings}.model.magnifierEnabled",
-        //            magnification: "{settings}.model.magnification"
-        //       }
-        //    }
+        },
+        zoom: {
+           type: "gpii.chrome.zoom",
+           options: {
+               model: {
+                   magnifierEnabled: "{settings}.model.magnifierEnabled",
+                   magnification: "{settings}.model.magnification"
+              }
+           }
         },
         wsConnector: {
             type: "gpii.wsConnector"
         }
     },
     model: {
-        currentSettings: {
+        currentSettings: { // default values
             screenReaderTTSEnabled: undefined,
             onScreenKeyboardEnabled: undefined,
             highContrastEnabled: false,
             highContrastTheme: "",
             invertColors: undefined,
             greyscale: undefined,
-            magnifierEnabled: undefined,
-            magnification: undefined
+            magnifierEnabled: false,
+            magnification: 1
         },
         oldSettings: null
     },
