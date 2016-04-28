@@ -14,15 +14,6 @@ fluid.defaults("gpii.chrome.settings", {
                 }
             }
         },
-        // virtualKeyboard: {
-        //     type: "gpii.chrome.extensionHolder",
-        //     options: {
-        //         extensionId: "lfaiipcbbikbnfcgcmaldlacamgekmnb",
-        //         model: {
-        //             extensionEnabled: "{gpii.chrome.settings}.model.onScreenKeyboardEnabled"
-        //         }
-        //     }
-        // },
         highContrast: {
             type: "gpii.chrome.highContrast",
             options: {
@@ -36,8 +27,8 @@ fluid.defaults("gpii.chrome.settings", {
            type: "gpii.chrome.zoom",
            options: {
                model: {
-                   magnifierEnabled: "{settings}.model.magnifierEnabled",
-                   magnification: "{settings}.model.magnification"
+                   magnifierEnabled: "{settings}.model.currentSettings.magnifierEnabled",
+                   magnification: "{settings}.model.currentSettings.magnification"
               }
            }
         },
