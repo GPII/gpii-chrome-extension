@@ -3,7 +3,6 @@ module.exports = function(grunt) {
     "use strict";
 
     grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
@@ -48,19 +47,6 @@ module.exports = function(grunt) {
                 jshintrc: true
             }
         },
-        concat: {
-            options: {
-                separator: ";"
-            },
-            all: {
-                src: [].concat(
-                    files.jQueryStandalone,
-                    files.infusion,
-                    files.extension
-                ),
-                dest: "dist/gpii-<%= pkg.name %>-all.js"
-            }
-        },
         uglify: {
             options: {
                 beautify: {
@@ -68,15 +54,13 @@ module.exports = function(grunt) {
                 }
             },
             all: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: "dist/",
-                        src: ["*.js"],
-                        dest: "dist/",
-                        ext: ".min.js"
-                    }
-                ]
+                files: {
+                    "dist/gpii-<%= pkg.name %>-all.min.js" : [].concat(
+                        files.jQueryStandalone,
+                        files.infusion,
+                        files.extension
+                    )
+                }
             }
         },
         copy: {
@@ -119,7 +103,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask("lint", "Lint the source code", ["jsonlint", "jshint"]);
-    grunt.registerTask("bundle", "Bundle dependencies and source code into a single .min.js file", ["concat", "uglify"]);
+    grunt.registerTask("bundle", "Bundle dependencies and source code into a single .min.js file", ["uglify"]);
     grunt.registerTask("build", "Build the extension so you can start using it unpacked", ["bundle", "copy"]);
     grunt.registerTask("buildPkg", "Create a .crx package ready to be distributed", ["lint", "build", "crx"]);
 };
