@@ -77,7 +77,7 @@ gpii.wsConnector.onmessage = function (that, ev) {
         if (msg.payload) {
             that.events.onSettingsChange.fire(msg.payload);
         }
-    } else if (msg.type === "onBrowserSettingsChanged") {
+    } else if (msg.type === "onSettingsChanged") {
         that.events.onSettingsChange.fire(msg.payload? msg.payload: undefined);
     } else {
         console.log("Unrecognized event/message");
