@@ -5,6 +5,7 @@ The GPII for Google Chrome is an extension that allows Google Chrome to be confi
 Although the extension is on development right now, it includes support for:
 * High Contrast themes
 * Enable/Disable TTS output - you need to install *ChromeVox* on your browser
+* Zoom
 
 ## Building the extension
 
