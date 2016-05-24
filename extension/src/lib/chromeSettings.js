@@ -33,7 +33,12 @@ fluid.defaults("gpii.chrome.settings", {
            }
         },
         wsConnector: {
-            type: "gpii.wsConnector"
+            type: "gpii.wsConnector",
+            options: {
+                solutionId: "com.ilunion.cloud4chrome",  // This will change in the near future
+                flowManager: "ws://localhost:8081/browserChannel",
+                retryTime: 10
+            }
         }
     },
     model: {

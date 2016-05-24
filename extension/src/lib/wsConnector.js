@@ -6,13 +6,18 @@ var WebSocket = WebSocket || require("ws");
 var gpii = fluid.registerNamespace("gpii");
 
 fluid.defaults("gpii.wsConnector", {
-    gradeNames: "fluid.modelComponent",
-    solutionId: "com.ilunion.cloud4chrome",
-    flowManager: "ws://localhost:8081/browserChannel",
-    model: {
+    gradeNames: "fluid.component",
+    solutionId: null,
+    flowManager: null,
+    retryTime: 5,  // Try reconnecting after x seconds.
+    members: {
         socket: null
     },
     invokers: {
+        connect: {
+            funcName: "gpii.wsConnector.connect",
+            args: "{that}"
+        },
         onopen: {
             funcName: "gpii.wsConnector.onopen",
             args: "{that}"
@@ -39,14 +44,14 @@ fluid.defaults("gpii.wsConnector", {
         onSettingsChange: null
     },
     listeners: {
-        onCreate: "gpii.wsConnector.connect",
+        onCreate: "{wsConnector}.connect",
         onConnect: {
             funcName: "gpii.wsConnector.setup",
             args: "{that}"
         },
         onErrors: {
             funcName: "gpii.wsConnector.error",
-            args: "{arguments}.0"
+            args: ["{that}", "{arguments}.0", "{arguments}.1"]
         },
         onSettingsChange: { // This listener is only for testing
             funcName: "gpii.wsConnector.onSettingsChange",
@@ -60,11 +65,11 @@ gpii.wsConnector.onopen = function (that) {
 };
 
 gpii.wsConnector.onerror = function (that, ev) {
-    that.events.onErrors.fire(ev);
+    that.events.onErrors.fire(ev, "onerror");
 };
 
 gpii.wsConnector.onclose = function (that, ev) {
-    that.events.onErrors.fire(ev);
+    that.events.onErrors.fire(ev, "onclose");
 };
 
 gpii.wsConnector.onmessage = function (that, ev) {
@@ -85,25 +90,31 @@ gpii.wsConnector.onmessage = function (that, ev) {
 };
 
 gpii.wsConnector.connect = function (that) {
-    var socket = new WebSocket(that.options.flowManager);
-    that.applier.change("socket", socket);
-    socket.onopen = that.onopen;
-    socket.onerror = that.onerror;
-    socket.onclose = that.onclose;
+    that.socket = new WebSocket(that.options.flowManager);
+    that.socket.onopen = that.onopen;
+    that.socket.onerror = that.onerror;
+    that.socket.onclose = that.onclose;
 };
 
-gpii.wsConnector.error = function (err) {
+gpii.wsConnector.error = function (that, err, type) {
     //TODO: Add some error handling, ie:
     //  * make difference between different kind of errors
-    //  * try reconnecting in x seconds
     //
-    console.log("### error: " + JSON.stringify(err, null, 2));
+    if (type === "onclose") {
+        setTimeout(that.connect, that.options.retryTime * 1000);
+    }
 };
 
 gpii.wsConnector.setup = function (that) {
-    var payload = { solutionId: that.options.solutionId };
-    that.model.socket.send(JSON.stringify({payload: payload}));
-    that.model.socket.onmessage = that.onmessage;
+    var authPayload = {
+        type: "connect",
+        payload: {
+            solutionId: that.options.solutionId
+        }
+    };
+
+    that.socket.send(JSON.stringify(authPayload));
+    that.socket.onmessage = that.onmessage;
 };
 
 // Useful for testing
