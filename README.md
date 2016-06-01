@@ -2,7 +2,7 @@
 
 The GPII for Google Chrome is an extension that allows Google Chrome to be configured by the GPII and improve the accessibility of the browser in different ways.
 
-Although the extension is on development right now, it includes support for:
+Although the extension is in development right now, it includes support for:
 * High Contrast themes
 * Enable/Disable TTS output - you need to install *ChromeVox* on your browser
 * Zoom
@@ -23,7 +23,7 @@ Perform a build so you can run an unpacked version of the extension on your brow
 
 Follow these steps if you want to use the unpacked version of the extension:
 
-1. Visit *chrome://extensions* in your browser (or open up the Chrome menu by clicking the icon to the far right of the Omnibox:  The menu's icon is three horizontal bars. and select *Extensions* under the *Tools* menu to get to the same place).
+1. Visit *chrome://extensions* in your browser. Alternatively, open the Chrome menu by clicking the icon to the far right of the Omnibox; The menu's icon is three horizontal bars. Select *Extensions* under the *Tools* menu to open Chrome's extension settings.
 
 2. Ensure that the *Developer mode* checkbox in the top right-hand corner is checked.
 
