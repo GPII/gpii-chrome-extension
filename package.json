@@ -2,6 +2,7 @@
   "name": "gpii-chrome-extension",
   "version": "0.1.0",
   "description": "GPII extension for Google Chrome",
+  "license" : "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "git://github.com/GPII/gpii-chrome-extension.git"
