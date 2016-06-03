@@ -55,7 +55,7 @@ module.exports = function(grunt) {
             },
             all: {
                 files: {
-                    "dist/gpii-<%= pkg.name %>-all.min.js" : [].concat(
+                    "dist/<%= pkg.name %>-all.min.js" : [].concat(
                         files.jQueryStandalone,
                         files.infusion,
                         files.extension
@@ -81,7 +81,7 @@ module.exports = function(grunt) {
                         dest: "build/css/"
                     },
                     {
-                        src: ["dist/gpii-<%= pkg.name %>-all.min.js"],
+                        src: ["dist/<%= pkg.name %>-all.min.js"],
                         dest: "build/"
                     }
                 ]
