@@ -52,10 +52,6 @@ fluid.defaults("gpii.wsConnector", {
         onErrors: {
             funcName: "gpii.wsConnector.error",
             args: ["{that}", "{arguments}.0", "{arguments}.1"]
-        },
-        onSettingsChange: { // This listener is only for testing
-            funcName: "gpii.wsConnector.onSettingsChange",
-            args: "{arguments}.0"
         }
     }
 });
@@ -115,9 +111,4 @@ gpii.wsConnector.setup = function (that) {
 
     that.socket.send(JSON.stringify(authPayload));
     that.socket.onmessage = that.onmessage;
-};
-
-// Useful for testing
-gpii.wsConnector.onSettingsChange = function (settings) {
-    console.log("## Got the folowing settings: " + JSON.stringify(settings, null, 2));
 };
