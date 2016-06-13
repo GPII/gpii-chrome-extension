@@ -14,12 +14,11 @@ jqUnit.test("Running unit tests for highContrast", function () {
 
     jqUnit.assertFalse("highContrastEnabled must be false at the beginning",
                         highContrast.model.highContrastEnabled);
-    jqUnit.assertEquals("highContrastTheme must be undefined at the beginning",
-                        undefined,
-                        highContrast.model.highContrastTheme);
+    jqUnit.assertUndefined("highContrastTheme must be undefined at the beginning",
+                            highContrast.model.highContrastTheme);
 
     highContrast.applier.change("highContrastEnabled", true);
-    jqUnit.assertTrue("highContrastEnabled == true", highContrast.model.highContrastEnabled);
+    jqUnit.assertTrue("highContrastEnabled === true", highContrast.model.highContrastEnabled);
 
     highContrast.applier.change("highContrastTheme", "black-white");
     jqUnit.assertEquals("highContrastTheme is set to black-white",
