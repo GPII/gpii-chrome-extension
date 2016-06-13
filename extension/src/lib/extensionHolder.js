@@ -15,13 +15,9 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         extensionEnabled: undefined
     },
     invokers: {
-        setEnabled: {
-            funcName: "gpii.chrome.extensionHolder.setEnabled",
+        switch: {
+            funcName: "gpii.chrome.extensionHolder.switch",
             args: ["{that}", "{arguments}.1"]
-        },
-        getEnabled: {
-            funcName: "gpii.chrome.extensionHolder.getEnabled",
-            args: "{that}.extensionInstance"
         }
     },
     listeners: {
@@ -32,7 +28,7 @@ fluid.defaults("gpii.chrome.extensionHolder", {
     },
     modelListeners: {
         extensionEnabled: {
-            func: "{that}.setEnabled",
+            func: "{that}.switch",
             args: "{that}",
             excludeSource: "init"
         }
@@ -42,15 +38,11 @@ fluid.defaults("gpii.chrome.extensionHolder", {
 gpii.chrome.extensionHolder.populate = function (that) {
     chrome.management.get(that.options.extensionId, function (extInfo) {
         that.extensionInstance = extInfo;
-        that.applier.change("extensionEnabled", that.getEnabled());
+        that.applier.change("extensionEnabled", that.extensionInstance.enabled);
     });
 };
 
-gpii.chrome.extensionHolder.getEnabled = function (extension) {
-    return extension.enabled;
-};
-
-gpii.chrome.extensionHolder.setEnabled = function (that) {
+gpii.chrome.extensionHolder.switch = function (that) {
     that.extensionInstance.enabled = that.model.extensionEnabled;
     chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, function () {
         // TODO: What can go wrong here?
