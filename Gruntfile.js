@@ -22,6 +22,7 @@ module.exports = function(grunt) {
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js"
         ],
         extension: [
+            "extension/src/lib/chromeEvented.js",
             "extension/src/lib/extensionHolder.js",
             "extension/src/lib/highContrast.js",
             "extension/src/lib/chromeSettings.js",
