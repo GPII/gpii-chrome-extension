@@ -1,4 +1,5 @@
-/*globals fluid */
+/* eslint-env node */
+/* global fluid, require */
 
 "use strict";
 
@@ -55,7 +56,7 @@ gpii.chrome.zoom.applyZoomInTab = function (that, tab, value) {
 };
 
 gpii.chrome.zoom.modelChanged = function (that) {
-    var value = that.model.magnifierEnabled? that.model.magnification: 1;
+    var value = that.model.magnifierEnabled ? that.model.magnification : 1;
     // Iterate over all tabs and set the zoom factor
     chrome.tabs.query({}, function (tabs) {
         fluid.each(tabs, function (tab) {
@@ -65,6 +66,6 @@ gpii.chrome.zoom.modelChanged = function (that) {
 };
 
 gpii.chrome.zoom.updateTab = function (that, tab) {
-    var value = that.model.magnifierEnabled? that.model.magnification: 1;
+    var value = that.model.magnifierEnabled ? that.model.magnification : 1;
     that.applyZoomInTab(tab, value);
 };

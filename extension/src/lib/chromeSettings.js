@@ -1,4 +1,5 @@
-/*globals fluid, gpii */
+/* eslint-env node */
+/* global fluid, gpii */
 
 "use strict";
 
@@ -34,13 +35,13 @@ fluid.defaults("gpii.chrome.settings", {
             }
         },
         zoom: {
-           type: "gpii.chrome.zoom",
-           options: {
-               model: {
-                   magnifierEnabled: "{settings}.model.magnifierEnabled",
-                   magnification: "{settings}.model.magnification"
-              }
-           }
+            type: "gpii.chrome.zoom",
+            options: {
+                model: {
+                    magnifierEnabled: "{settings}.model.magnifierEnabled",
+                    magnification: "{settings}.model.magnification"
+                }
+            }
         },
         wsConnector: {
             type: "gpii.wsConnector",

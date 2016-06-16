@@ -1,4 +1,5 @@
-/*globals fluid */
+/* eslint-env node */
+/* global fluid */
 
 "use strict";
 
@@ -72,25 +73,25 @@ fluid.defaults("gpii.chrome.highContrast", {
 });
 
 gpii.chrome.highContrast.formatScript = function (that) {
-  var script;
-  if (that.model.highContrastEnabled) {
-      var theme = fluid.model.transformWithRules(that.model, that.options.commonToPlatform);
-      script = that.options.scriptTemplate.replace(/__THEME__/g, theme.highContrastTheme);
-  } else {
-      script = that.options.disableScript;
-  }
-  return script;
+    var script;
+    if (that.model.highContrastEnabled) {
+        var theme = fluid.model.transformWithRules(that.model, that.options.commonToPlatform);
+        script = that.options.scriptTemplate.replace(/__THEME__/g, theme.highContrastTheme);
+    } else {
+        script = that.options.disableScript;
+    }
+    return script;
 };
 
 gpii.chrome.highContrast.executeScriptInTab = function (tab, script) {
-    chrome.tabs.executeScript(tab.id, {code: script}, function() {
+    chrome.tabs.executeScript(tab.id, {code: script}, function () {
         if (chrome.runtime.lastError) {
             console.log("Could not apply highContrast in tab '" +
             tab.url + "', error was: " +
             chrome.runtime.lastError.message);
         }
     });
-}
+};
 
 gpii.chrome.highContrast.executeScriptInAllTabs = function (script) {
     chrome.tabs.query({}, function (tabs) {
@@ -108,4 +109,4 @@ gpii.chrome.highContrast.modelChanged = function (that) {
 gpii.chrome.highContrast.updateTab = function (that, tab) {
     var script = that.formatScript();
     gpii.chrome.highContrast.executeScriptInTab(tab, script);
-}
+};

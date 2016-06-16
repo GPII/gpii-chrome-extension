@@ -1,4 +1,5 @@
-/*globals fluid */
+/* eslint-env node */
+/* global fluid */
 
 "use strict";
 
@@ -15,8 +16,8 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         extensionEnabled: undefined
     },
     invokers: {
-        switch: {
-            funcName: "gpii.chrome.extensionHolder.switch",
+        switchStatus: {
+            funcName: "gpii.chrome.extensionHolder.switchStatus",
             args: ["{that}", "{arguments}.1"]
         }
     },
@@ -28,7 +29,7 @@ fluid.defaults("gpii.chrome.extensionHolder", {
     },
     modelListeners: {
         extensionEnabled: {
-            func: "{that}.switch",
+            func: "{that}.switchStatus",
             args: "{that}",
             excludeSource: "init"
         }
@@ -42,7 +43,7 @@ gpii.chrome.extensionHolder.populate = function (that) {
     });
 };
 
-gpii.chrome.extensionHolder.switch = function (that) {
+gpii.chrome.extensionHolder.switchStatus = function (that) {
     that.extensionInstance.enabled = that.model.extensionEnabled;
     chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, function () {
         // TODO: What can go wrong here?

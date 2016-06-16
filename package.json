@@ -2,7 +2,7 @@
   "name": "gpii-chrome-extension",
   "version": "0.1.0",
   "description": "GPII extension for Google Chrome",
-  "license" : "BSD-3-Clause",
+  "license" : "(BSD-3-Clause OR ECL-2.0)",
   "repository": {
     "type": "git",
     "url": "git://github.com/GPII/gpii-chrome-extension.git"
@@ -22,14 +22,14 @@
     "infusion": "2.0.0-dev.20160309T145652Z.9f515ec"
   },
   "devDependencies": {
-    "grunt": "0.4.5",
-    "grunt-contrib-clean": "0.4.1",
-    "grunt-contrib-copy": "0.4.1",
-    "grunt-contrib-jshint": "1.0.0",
-    "grunt-contrib-uglify": "0.3.2",
+    "fluid-grunt-eslint": "18.1.1",
+    "grunt": "1.0.1",
+    "grunt-contrib-clean": "1.0.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-uglify": "1.0.1",
     "grunt-crx": "1.0.3",
     "grunt-jsonlint": "1.0.4",
-    "grunt-shell": "1.2.1",
+    "grunt-shell": "1.3.0",
     "node-jqunit": "1.1.4",
     "sinon-chrome": "1.1.2",
     "ws": "1.1.0"

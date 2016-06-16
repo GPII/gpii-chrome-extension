@@ -1,4 +1,5 @@
-/*globals fluid */
+/* eslint-env node */
+/* global fluid, require */
 
 "use strict";
 

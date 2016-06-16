@@ -1,10 +1,12 @@
-module.exports = function(grunt) {
+/* global module */
+
+module.exports = function (grunt) {
 
     "use strict";
 
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-contrib-jshint");
+    grunt.loadNpmTasks("fluid-grunt-eslint");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-crx");
     grunt.loadNpmTasks("grunt-jsonlint");
@@ -37,16 +39,13 @@ module.exports = function(grunt) {
         jsonlint: {
             all: ["extension/manifest.json"]
         },
-        jshint: {
+        eslint: {
             all: [
                 "Gruntfile.js",
                 "extension/src/*.js",
                 "extension/src/lib/*.js",
                 "tests/*.js"
-            ],
-            options: {
-                jshintrc: true
-            }
+            ]
         },
         uglify: {
             options: {
@@ -103,7 +102,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask("lint", "Lint the source code", ["jsonlint", "jshint"]);
+    grunt.registerTask("lint", "Lint the source code", ["jsonlint", "eslint"]);
     grunt.registerTask("bundle", "Bundle dependencies and source code into a single .min.js file", ["uglify"]);
     grunt.registerTask("build", "Build the extension so you can start using it unpacked", ["bundle", "copy"]);
     grunt.registerTask("buildPkg", "Create a .crx package ready to be distributed", ["lint", "build", "crx"]);

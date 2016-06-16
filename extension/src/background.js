@@ -1,4 +1,4 @@
-/*globals fluid */
+/* global fluid */
 
 var gpii = fluid.registerNamespace("gpii");
 var chromeSettings = gpii.chrome.settings();

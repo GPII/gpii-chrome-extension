@@ -1,4 +1,5 @@
-/*globals fluid, JSON */
+/* eslint-env node */
+/* global fluid, JSON */
 
 "use strict";
 
@@ -79,7 +80,7 @@ gpii.wsConnector.onmessage = function (that, ev) {
             that.events.onSettingsChange.fire(msg.payload);
         }
     } else if (msg.type === "onSettingsChanged") {
-        that.events.onSettingsChange.fire(msg.payload? msg.payload: undefined);
+        that.events.onSettingsChange.fire(msg.payload ? msg.payload : undefined);
     } else {
         console.log("Unrecognized event/message");
     }

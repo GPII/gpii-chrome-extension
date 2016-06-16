@@ -1,3 +1,6 @@
+/* eslint-env node */
+/* global require */
+
 "use strict";
 
 var fluid = require("infusion");
