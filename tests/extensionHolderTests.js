@@ -46,12 +46,10 @@ jqUnit.test("Running unit tests for extensionHolder", function () {
     ext.applier.change("extensionEnabled", true);
     jqUnit.assertTrue("Checking that ext.model.extensionEnabled is true", ext.model.extensionEnabled);
     jqUnit.assertTrue("Checking that ext.extensionInstance.enabled is true", ext.extensionInstance.enabled);
-    jqUnit.assertTrue("Checking that ext.getEnabled returns true", ext.getEnabled());
 
     ext.applier.change("extensionEnabled", false);
     jqUnit.assertFalse("Checking that ext.model.extensionEnabled is false", ext.model.extensionEnabled);
     jqUnit.assertFalse("Checking that ext.extensionInstance.enabled is false", ext.extensionInstance.enabled);
-    jqUnit.assertFalse("Checking that ext.getEnabled returns false", ext.getEnabled());
 
     chrome.flush();
 });
