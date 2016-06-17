@@ -1,6 +1,7 @@
 /* global fluid */
 
+fluid.setLogging(true);
 var gpii = fluid.registerNamespace("gpii");
 var chromeSettings = gpii.chrome.settings();
 
-console.log("Instantiated chromeSettings: " + chromeSettings);
+fluid.log("Instantiated chromeSettings:", chromeSettings);

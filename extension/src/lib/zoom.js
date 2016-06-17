@@ -48,9 +48,9 @@ fluid.defaults("gpii.chrome.zoom", {
 gpii.chrome.zoom.applyZoomInTab = function (that, tab, value) {
     chrome.tabs.setZoom(tab.id, value, function () {
         if (chrome.runtime.lastError) {
-            console.log("Could not apply zoom in tab '" +
-                        tab.url + "', error was: " +
-                        chrome.runtime.lastError.message);
+            fluid.log("Could not apply zoom in tab'",
+                      tab.url, "', error was: ",
+                      chrome.runtime.lastError.message);
         }
     });
 };

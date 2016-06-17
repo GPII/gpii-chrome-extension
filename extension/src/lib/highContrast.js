@@ -86,8 +86,8 @@ gpii.chrome.highContrast.formatScript = function (that) {
 gpii.chrome.highContrast.executeScriptInTab = function (tab, script) {
     chrome.tabs.executeScript(tab.id, {code: script}, function () {
         if (chrome.runtime.lastError) {
-            console.log("Could not apply highContrast in tab '" +
-            tab.url + "', error was: " +
+            fluid.log("Could not apply highContrast in tab '",
+            tab.url, "', error was: ",
             chrome.runtime.lastError.message);
         }
     });

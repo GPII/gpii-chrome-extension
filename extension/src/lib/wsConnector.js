@@ -82,7 +82,7 @@ gpii.wsConnector.onmessage = function (that, ev) {
     } else if (msg.type === "onSettingsChanged") {
         that.events.onSettingsChange.fire(msg.payload ? msg.payload : undefined);
     } else {
-        console.log("Unrecognized event/message");
+        fluid.log("Unrecognized event/message");
     }
 };
 
