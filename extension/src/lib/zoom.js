@@ -27,7 +27,8 @@ fluid.defaults("gpii.chrome.zoom", {
         }
     },
     modelListeners: {
-        "*": {
+        "zoom.modelChanged": {
+            path: ["magnifierEnabled", "magnification"],
             funcName: "{that}.modelChanged",
             args: "{that}",
             excludeSource: "init"

@@ -54,7 +54,8 @@ fluid.defaults("gpii.chrome.highContrast", {
         }
     },
     modelListeners: {
-        "*": {
+        "highContrast.modelChanged": {
+            path: ["highContrastEnabled", "highContrastTheme"],
             funcName: "gpii.chrome.highContrast.modelChanged",
             args: "{that}",
             excludeSource: "init"
