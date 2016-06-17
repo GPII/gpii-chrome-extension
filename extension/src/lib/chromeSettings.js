@@ -65,9 +65,5 @@ fluid.defaults("gpii.chrome.settings", {
 });
 
 gpii.chrome.settings.updateSettings = function (that, settings) {
-    if (settings === undefined) {
-        that.applier.change("", that.options.defaultSettings);
-    } else {
-        that.applier.change("", settings);
-    }
+    that.applier.change("", settings || that.options.defaultSettings);
 };
