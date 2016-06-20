@@ -2,7 +2,7 @@
   "name": "gpii-chrome-extension",
   "version": "0.1.0",
   "description": "GPII extension for Google Chrome",
-  "license" : "(BSD-3-Clause OR ECL-2.0)",
+  "license": "(BSD-3-Clause OR ECL-2.0)",
   "repository": {
     "type": "git",
     "url": "git://github.com/GPII/gpii-chrome-extension.git"
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
   "dependencies": {
-    "infusion": "2.0.0-dev.20160309T145652Z.9f515ec"
+    "infusion": "2.0.0-dev.20160519T222603Z.754d2c6"
   },
   "devDependencies": {
     "fluid-grunt-eslint": "18.1.1",
