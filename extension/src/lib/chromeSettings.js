@@ -9,7 +9,7 @@ fluid.defaults("gpii.chrome.settings", {
         screenReaderTTSEnabled: false,
         onScreenKeyboardEnabled: undefined,
         highContrastEnabled: false,
-        highContrastTheme: "",
+        highContrastTheme: "black-white",
         invertColors: undefined,
         greyscale: undefined,
         magnifierEnabled: false,
@@ -29,8 +29,31 @@ fluid.defaults("gpii.chrome.settings", {
             type: "gpii.chrome.highContrast",
             options: {
                 model: {
-                    highContrastEnabled: "{settings}.model.highContrastEnabled",
-                    highContrastTheme: "{settings}.model.highContrastTheme"
+                    highContrastEnabled: "{settings}.model.highContrastEnabled"
+                },
+                modelRelay: {
+                    highContrastTheme: {
+                        source: "{settings}.model.highContrastTheme",
+                        target: "highContrastTheme",
+                        singleTransform: {
+                            type: "fluid.transforms.valueMapper",
+                            defaultInputValue: "black-white",
+                            options: {
+                                "black-white": {
+                                    outputValue: "bw"
+                                },
+                                "white-black": {
+                                    outputValue: "wb"
+                                },
+                                "black-yellow": {
+                                    outputValue: "by"
+                                },
+                                "yellow-black": {
+                                    outputValue: "yb"
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },

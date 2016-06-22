@@ -25,7 +25,7 @@ gpii.chrome.eventedComponent.init = function (that) {
     chrome.tabs.onCreated.addListener(function (tab) {
         that.events.onTabOpened.fire(tab);
     });
-    chrome.tabs.onUpdated.addListener(function (tab) {
-        that.events.onTabUpdated.fire(tab);
+    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, oldTabStatus) {
+        that.events.onTabUpdated.fire(oldTabStatus);
     });
 };

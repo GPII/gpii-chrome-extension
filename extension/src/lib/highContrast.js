@@ -11,37 +11,13 @@ var chrome = chrome || require("sinon-chrome");
 //
 fluid.defaults("gpii.chrome.highContrast", {
     gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent"],
-    scriptTemplate: "document.documentElement.setAttribute('data-gpii-hc','__THEME__');" +
-                    "[].forEach.call(document.querySelectorAll('body *'), function(node) {" +
-                        "node.setAttribute('data-gpii-hc', '__THEME__');" +
-                    "});" +
-                    "document.documentElement.setAttribute('data-gpii-hc', '__THEME__');",
-    disableScript: "document.documentElement.removeAttribute('data-gpii-hc');" +
-                    "[].forEach.call(document.querySelectorAll('body *'), function(node) {" +
-                        "node.removeAttribute('data-gpii-hc');" +
-                    "});",
-    commonToPlatform: {
-        highContrastTheme: {
-            transform: {
-                type: "fluid.transforms.valueMapper",
-                inputPath: "highContrastTheme",
-                defaultInputValue: "black-white",
-                options: {
-                    "black-white": {
-                        outputValue: "bw"
-                    },
-                    "white-black": {
-                        outputValue: "wb"
-                    },
-                    "black-yellow": {
-                        outputValue: "by"
-                    },
-                    "yellow-black": {
-                        outputValue: "yb"
-                    }
-                }
-            }
-        }
+    enableScript: "content_scripts/highContrastEnable.js",
+    disableScript: "content_scripts/highContrastDisable.js",
+    updatedTabScriptOptions: {
+        runAt: "document_end"
+    },
+    events: {
+        onMessage: null
     },
     model: {
         highContrastEnabled: undefined,
@@ -51,41 +27,68 @@ fluid.defaults("gpii.chrome.highContrast", {
         formatScript: {
             funcName: "gpii.chrome.highContrast.formatScript",
             args: "{that}"
+        },
+        executeScriptInTab: {
+            funcName: "gpii.chrome.highContrast.executeScriptInTab",
+            args: ["{that}", "{arguments}.0", "{arguments}.1"]
+        },
+        executeScriptInAllTabs: {
+            funcName: "gpii.chrome.highContrast.executeScriptInAllTabs",
+            args: ["{that}"]
         }
     },
     modelListeners: {
         "highContrast.modelChanged": {
             path: ["highContrastEnabled", "highContrastTheme"],
-            funcName: "gpii.chrome.highContrast.modelChanged",
+            funcName: "gpii.chrome.highContrast.executeScriptInAllTabs",
             args: "{that}",
             excludeSource: "init"
         }
     },
     listeners: {
+        onCreate: {
+            funcName: "gpii.chrome.highContrast.populate",
+            args: "{that}"
+        },
         onTabOpened: {
-            funcName: "gpii.chrome.highContrast.updateTab",
-            args: ["{that}", "{arguments}.0"]
+            func: "{that}.executeScriptInTab",
+            args: ["{arguments}.0", "{that}.options.updatedTabScriptOptions"]
         },
         onTabUpdated: {
-            funcName: "gpii.chrome.highContrast.updateTab",
-            args: ["{that}", "{arguments}.0"]
+            func: "{that}.executeScriptInTab",
+            args: ["{arguments}.0", "{that}.options.updatedTabScriptOptions"]
+        },
+        onMessage: {
+            funcName: "gpii.chrome.highContrast.respondToMessage",
+            args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         }
     }
 });
 
-gpii.chrome.highContrast.formatScript = function (that) {
-    var script;
-    if (that.model.highContrastEnabled) {
-        var theme = fluid.model.transformWithRules(that.model, that.options.commonToPlatform);
-        script = that.options.scriptTemplate.replace(/__THEME__/g, theme.highContrastTheme);
-    } else {
-        script = that.options.disableScript;
+gpii.chrome.highContrast.respondToMessage = function (that, request, sender, sendResponse) {
+    if (request.type === "requestTheme") {
+        sendResponse({theme: that.model.highContrastTheme});
     }
+};
+
+gpii.chrome.highContrast.populate = function (that) {
+    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+        that.events.onMessage.fire(request, sender, sendResponse);
+    });
+};
+
+gpii.chrome.highContrast.formatScript = function (that, options) {
+    var script = {
+        file: that.model.highContrastEnabled ? that.options.enableScript : that.options.disableScript,
+        allFrames: true
+    };
+    fluid.extend(script, options);
     return script;
 };
 
-gpii.chrome.highContrast.executeScriptInTab = function (tab, script) {
-    chrome.tabs.executeScript(tab.id, {code: script}, function () {
+gpii.chrome.highContrast.executeScriptInTab = function (that, tab, options) {
+    var script = that.formatScript(options);
+    chrome.tabs.executeScript(tab.id, script, function () {
         if (chrome.runtime.lastError) {
             fluid.log("Could not apply highContrast in tab '",
             tab.url, "', error was: ",
@@ -94,20 +97,10 @@ gpii.chrome.highContrast.executeScriptInTab = function (tab, script) {
     });
 };
 
-gpii.chrome.highContrast.executeScriptInAllTabs = function (script) {
+gpii.chrome.highContrast.executeScriptInAllTabs = function (that) {
     chrome.tabs.query({}, function (tabs) {
         fluid.each(tabs, function (tab) {
-            gpii.chrome.highContrast.executeScriptInTab(tab, script);
+            that.executeScriptInTab(tab);
         });
     });
-};
-
-gpii.chrome.highContrast.modelChanged = function (that) {
-    var script = that.formatScript();
-    gpii.chrome.highContrast.executeScriptInAllTabs(script);
-};
-
-gpii.chrome.highContrast.updateTab = function (that, tab) {
-    var script = that.formatScript();
-    gpii.chrome.highContrast.executeScriptInTab(tab, script);
 };

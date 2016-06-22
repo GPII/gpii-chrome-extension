@@ -44,6 +44,7 @@ module.exports = function (grunt) {
                 "Gruntfile.js",
                 "extension/src/*.js",
                 "extension/src/lib/*.js",
+                "extension/src/content_scripts/*.js",
                 "tests/*.js"
             ]
         },
@@ -79,6 +80,12 @@ module.exports = function (grunt) {
                         cwd: "extension/css/",
                         src: "*",
                         dest: "build/css/"
+                    },
+                    {
+                        expand: true,
+                        cwd: "extension/src/content_scripts/",
+                        src: "*",
+                        dest: "build/content_scripts/"
                     },
                     {
                         src: ["dist/<%= pkg.name %>-all.min.js"],
