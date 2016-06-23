@@ -1,3 +1,15 @@
+/*
+ * GPII Chrome Extension for Google Chrome
+ *
+ * Copyright 2016 RtF-US
+ *
+ * Licensed under the New BSD license. You may not use this file except in
+ * compliance with this license.
+ *
+ * You may obtain a copy of the license at
+ * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
+ */
+
 /* eslint-env node */
 /* global fluid */
 
@@ -44,7 +56,7 @@ fluid.defaults("gpii.chrome.extensionHolder", {
 
 gpii.chrome.extensionHolder.setup = function (that, extInfo) {
     if (chrome.runtime.lastError) {
-        fluid.log("Could not get extensionInfo error was:",
+        fluid.log("Could not get extensionInfo, error was:",
         chrome.runtime.lastError.message);
         that.events.onError.fire(chrome.runtime.lastError);
     } else {
@@ -62,7 +74,7 @@ gpii.chrome.extensionHolder.switchStatus = function (that) {
     chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, function () {
         // TODO: What can go wrong here?
         if (chrome.runtime.lastError) {
-            fluid.log("Could not get extensionInfo error was:",
+            fluid.log("Could not get extensionInfo, error was:",
             chrome.runtime.lastError.message);
             that.events.onError.fire(chrome.runtime.lastError);
         };
