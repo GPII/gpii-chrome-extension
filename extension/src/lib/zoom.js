@@ -12,10 +12,13 @@ fluid.defaults("gpii.chrome.zoom", {
         magnifierEnabled: false,
         magnification: 1
     },
+    events: {
+        onError: null
+    },
     invokers: {
-        modelChanged: {
-            funcName: "gpii.chrome.zoom.modelChanged",
-            args: ["{that}", "{arguments}.0"]
+        applyZoomSettings: {
+            funcName: "gpii.chrome.zoom.applyZoomSettings",
+            args: ["{that}"]
         },
         applyZoomInTab: {
             funcName: "gpii.chrome.zoom.applyZoomInTab",
@@ -29,7 +32,7 @@ fluid.defaults("gpii.chrome.zoom", {
     modelListeners: {
         "zoom.modelChanged": {
             path: ["magnifierEnabled", "magnification"],
-            funcName: "{that}.modelChanged",
+            funcName: "{that}.applyZoomSettings",
             args: "{that}",
             excludeSource: "init"
         }
@@ -41,7 +44,7 @@ fluid.defaults("gpii.chrome.zoom", {
         },
         onTabUpdated: {
             funcName: "{that}.updateTab",
-            args: "{arguments}.0"
+            args: "{arguments}.2"
         }
     }
 });
@@ -52,11 +55,12 @@ gpii.chrome.zoom.applyZoomInTab = function (that, tab, value) {
             fluid.log("Could not apply zoom in tab'",
                       tab.url, "', error was: ",
                       chrome.runtime.lastError.message);
+            that.events.onError.fire(chrome.runtime.lastError);
         }
     });
 };
 
-gpii.chrome.zoom.modelChanged = function (that) {
+gpii.chrome.zoom.applyZoomSettings = function (that) {
     var value = that.model.magnifierEnabled ? that.model.magnification : 1;
     // Iterate over all tabs and set the zoom factor
     chrome.tabs.query({}, function (tabs) {

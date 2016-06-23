@@ -17,7 +17,8 @@ fluid.defaults("gpii.chrome.highContrast", {
         runAt: "document_end"
     },
     events: {
-        onMessage: null
+        onMessage: null,
+        onError: null
     },
     model: {
         highContrastEnabled: undefined,
@@ -34,7 +35,7 @@ fluid.defaults("gpii.chrome.highContrast", {
         },
         executeScriptInAllTabs: {
             funcName: "gpii.chrome.highContrast.executeScriptInAllTabs",
-            args: ["{that}"]
+            args: "{that}"
         }
     },
     modelListeners: {
@@ -56,7 +57,7 @@ fluid.defaults("gpii.chrome.highContrast", {
         },
         onTabUpdated: {
             func: "{that}.executeScriptInTab",
-            args: ["{arguments}.0", "{that}.options.updatedTabScriptOptions"]
+            args: ["{arguments}.2", "{that}.options.updatedTabScriptOptions"]
         },
         onMessage: {
             funcName: "gpii.chrome.highContrast.respondToMessage",
@@ -93,6 +94,7 @@ gpii.chrome.highContrast.executeScriptInTab = function (that, tab, options) {
             fluid.log("Could not apply highContrast in tab '",
             tab.url, "', error was: ",
             chrome.runtime.lastError.message);
+            that.events.onError.fire(chrome.runtime.lastError);
         }
     });
 };
