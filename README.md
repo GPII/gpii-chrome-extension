@@ -21,6 +21,27 @@ Perform a build so you can run an unpacked version of the extension on your brow
 
     grunt build
 
+
+If you want to create a [crx](https://developer.chrome.com/extensions/crx) package to be distributed, run:
+
+    grunt buildPkg
+
+**Note that you need to use a [PEM](http://how2ssl.com/articles/working_with_pem_files/) file to sign the crx package with. This file needs to be called *key.pem* and needs to be placed into the top level folder of this repository.**
+
+## Testing
+
+Run:
+
+    node tests/all-tests.js
+
+More tests are coming soon. :)
+
+## Trying out the extension
+
+Requirements:
+* Google Chrome browser. You can download it [here](https://www.google.com/chrome/browser/desktop/).
+* The GPII running locally on your system. More information about how to install and run the GPII on your machine can be found [here](https://github.com/GPII/universal#installation).
+
 Follow these steps if you want to use the unpacked version of the extension:
 
 1. Visit *chrome://extensions* in your browser. Alternatively, open the Chrome menu by clicking the icon to the far right of the Omnibox; The menu's icon is three horizontal bars. Select *Extensions* under the *Tools* menu to open Chrome's extension settings.
@@ -31,9 +52,12 @@ Follow these steps if you want to use the unpacked version of the extension:
 
 4. Navigate to the directory in which your local copy of the extension lives, and select the *build* folder.
 
+Alternatively, you can install the *crx* package that you created yourself by opening it from Google Chrome. Soon, you will be able to install the extension just by clicking on a link, but this won't happen until we release the first time.
 
-If you want to create a [crx](https://developer.chrome.com/extensions/crx) package to be distributed, run:
+### Testing the auto-personalization
 
-    grunt buildPkg
+We have included two users in the GPII in order to demonstrate this extension:
+* *gpiiChrome1*: Enables chromeVox
+* *gpiiChrome2*: Applies a white-on-black high contrast theme and turns magnification on
 
-**Note that you need to use a [PEM](http://how2ssl.com/articles/working_with_pem_files/) file to sign the crx package with. This file needs to be called *key.pem* and needs to be placed into the top level folder of this repository.**
+Key-in as any of these users to see the extension in action.
