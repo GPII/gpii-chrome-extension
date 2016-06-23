@@ -9,7 +9,6 @@ var chrome = chrome || require("sinon-chrome");
 fluid.defaults("gpii.chrome.eventedComponent", {
     gradeNames: "fluid.component",
     events: {
-        onCreate: null,
         onTabOpened: null,
         onTabUpdated: null
     },
@@ -26,6 +25,6 @@ gpii.chrome.eventedComponent.init = function (that) {
         that.events.onTabOpened.fire(tab);
     });
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, oldTabStatus) {
-        that.events.onTabUpdated.fire(oldTabStatus);
+        that.events.onTabUpdated.fire(tabId, changeInfo, oldTabStatus);
     });
 };
