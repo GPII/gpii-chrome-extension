@@ -30,7 +30,7 @@ fluid.defaults("gpii.chrome.zoom", {
     invokers: {
         applyZoomSettings: {
             funcName: "gpii.chrome.zoom.applyZoomSettings",
-            args: ["{that}"]
+            args: "{that}"
         },
         applyZoomInTab: {
             funcName: "gpii.chrome.zoom.applyZoomInTab",
@@ -45,16 +45,15 @@ fluid.defaults("gpii.chrome.zoom", {
         "zoom.modelChanged": {
             path: ["magnifierEnabled", "magnification"],
             funcName: "{that}.applyZoomSettings",
-            args: "{that}",
             excludeSource: "init"
         }
     },
     listeners: {
-        onTabOpened: {
+        "onTabOpened.setupTab": {
             funcName: "{that}.updateTab",
             args: "{arguments}.0"
         },
-        onTabUpdated: {
+        "onTabUpdated.setupTab": {
             funcName: "{that}.updateTab",
             args: "{arguments}.2"
         }

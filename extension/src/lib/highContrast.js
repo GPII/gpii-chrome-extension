@@ -39,7 +39,7 @@ fluid.defaults("gpii.chrome.highContrast", {
     invokers: {
         formatScript: {
             funcName: "gpii.chrome.highContrast.formatScript",
-            args: "{that}"
+            args: ["{that}", "{arguments}.0"]
         },
         executeScriptInTab: {
             funcName: "gpii.chrome.highContrast.executeScriptInTab",
@@ -59,19 +59,19 @@ fluid.defaults("gpii.chrome.highContrast", {
         }
     },
     listeners: {
-        onCreate: {
+        "onCreate.populate": {
             funcName: "gpii.chrome.highContrast.populate",
             args: "{that}"
         },
-        onTabOpened: {
+        "onTabOpened.setupTab": {
             func: "{that}.executeScriptInTab",
             args: ["{arguments}.0", "{that}.options.updatedTabScriptOptions"]
         },
-        onTabUpdated: {
+        "onTabUpdated.setupTab": {
             func: "{that}.executeScriptInTab",
             args: ["{arguments}.2", "{that}.options.updatedTabScriptOptions"]
         },
-        onMessage: {
+        "onMessage.respond": {
             funcName: "gpii.chrome.highContrast.respondToMessage",
             args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         }

@@ -25,7 +25,8 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         extensionInstance: null
     },
     events: {
-        onError: null
+        onError: null,
+        onSetEnabled: null
     },
     model: {
         extensionEnabled: undefined
@@ -41,8 +42,12 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         }
     },
     listeners: {
-        onCreate: {
+        "onCreate.populate": {
             funcName: "gpii.chrome.extensionHolder.populate",
+            args: "{that}"
+        },
+        "onSetEnabled.complete": {
+            funcName: "gpii.chrome.extensionHolder.setEnabledComplete",
             args: "{that}"
         }
     },
@@ -71,12 +76,13 @@ gpii.chrome.extensionHolder.populate = function (that) {
 
 gpii.chrome.extensionHolder.switchStatus = function (that) {
     that.extensionInstance.enabled = that.model.extensionEnabled;
-    chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, function () {
-        // TODO: What can go wrong here?
-        if (chrome.runtime.lastError) {
-            fluid.log("Could not get extensionInfo, error was:",
-            chrome.runtime.lastError.message);
-            that.events.onError.fire(chrome.runtime.lastError);
-        };
-    });
+    chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, that.events.fire.onSetEnabled);
+};
+
+gpii.chrome.extensionHolder.setEnabledComplete = function (that) {
+    if (chrome.runtime.lastError) {
+        fluid.log("Could not enable extension, error was:",
+        chrome.runtime.lastError.message);
+        that.events.onError.fire(chrome.runtime.lastError);
+    };
 };

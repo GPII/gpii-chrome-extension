@@ -25,7 +25,7 @@ fluid.defaults("gpii.chrome.eventedComponent", {
         onTabUpdated: null
     },
     listeners: {
-        onCreate: {
+        "onCreate.init": {
             funcName: "gpii.chrome.eventedComponent.init",
             args: "{that}"
         }

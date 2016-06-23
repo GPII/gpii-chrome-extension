@@ -52,8 +52,8 @@ fluid.defaults("gpii.wsConnector", {
         onSettingsChange: null
     },
     listeners: {
-        onCreate: "{wsConnector}.connect",
-        onConnect: {
+        "onCreate.connect": "{wsConnector}.connect",
+        "onConnect.setup": {
             funcName: "gpii.wsConnector.setup",
             args: "{that}"
         },
