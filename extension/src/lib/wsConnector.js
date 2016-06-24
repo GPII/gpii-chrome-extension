@@ -20,9 +20,10 @@ var gpii = fluid.registerNamespace("gpii");
 
 fluid.defaults("gpii.wsConnector", {
     gradeNames: "fluid.component",
-    solutionId: null,
-    flowManager: null,
-    retryTime: 5,  // Try reconnecting after x seconds.
+    solutionId: null,   /* The solution id, such as "net.gpii.solution" */
+    flowManager: null,  /* This takes the form "ws://host:port"*/
+    reconnect: true,    /* Whether the component should reconnect automatically */
+    retryTime: 5,       /* Try reconnecting after x seconds */
     members: {
         socket: null
     },
@@ -31,15 +32,15 @@ fluid.defaults("gpii.wsConnector", {
             funcName: "gpii.wsConnector.connect",
             args: "{that}"
         },
-        onOpen: {
+        openHandler: {
             func: "{that}.events.onConnect.fire"
         },
-        onError: {
+        errorHandler: {
             func: "{that}.events.onError.fire",
             args: ["{arguments}.0"]
         },
-        onMessage: {
-            funcName: "gpii.wsConnector.onMessage",
+        messageHandler: {
+            funcName: "gpii.wsConnector.messageHandler",
             args: ["{that}", "{arguments}.0"]
         }
     },
@@ -64,7 +65,7 @@ fluid.defaults("gpii.wsConnector", {
     }
 });
 
-gpii.wsConnector.onMessage = function (that, ev) {
+gpii.wsConnector.messageHandler = function (that, ev) {
     var msg = JSON.parse(ev.data);
 
     if (msg.isError) {
@@ -83,9 +84,9 @@ gpii.wsConnector.onMessage = function (that, ev) {
 
 gpii.wsConnector.connect = function (that) {
     that.socket = new WebSocket(that.options.flowManager);
-    that.socket.onopen = that.onOpen;
-    that.socket.onerror = that.onError;
-    that.socket.onclose = that.onError;
+    that.socket.onopen = that.openHandler;
+    that.socket.onerror = that.errorHandler;
+    that.socket.onclose = that.errorHandler;
 };
 
 gpii.wsConnector.error = function (that, err) {
@@ -93,7 +94,9 @@ gpii.wsConnector.error = function (that, err) {
     //  * make difference between different kind of errors
     //
     if (err.type === "close") {
-        setTimeout(that.connect, that.options.retryTime * 1000);
+        if (that.options.reconnect) {
+            setTimeout(that.connect, that.options.retryTime * 1000);
+        }
     }
 };
 
@@ -106,5 +109,5 @@ gpii.wsConnector.setup = function (that) {
     };
 
     that.socket.send(JSON.stringify(authPayload));
-    that.socket.onmessage = that.onMessage;
+    that.socket.onmessage = that.messageHandler;
 };

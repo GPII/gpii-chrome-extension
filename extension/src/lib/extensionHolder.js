@@ -61,8 +61,9 @@ fluid.defaults("gpii.chrome.extensionHolder", {
 
 gpii.chrome.extensionHolder.setup = function (that, extInfo) {
     if (chrome.runtime.lastError) {
-        fluid.log("Could not get extensionInfo, error was:",
-        chrome.runtime.lastError.message);
+        fluid.log(fluid.logLevel.FAIL,
+                  "Could not get extensionInfo, error was:",
+                  chrome.runtime.lastError.message);
         that.events.onError.fire(chrome.runtime.lastError);
     } else {
         that.extensionInstance = extInfo;
@@ -76,13 +77,14 @@ gpii.chrome.extensionHolder.populate = function (that) {
 
 gpii.chrome.extensionHolder.switchStatus = function (that) {
     that.extensionInstance.enabled = that.model.extensionEnabled;
-    chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, that.events.fire.onSetEnabled);
+    chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, that.events.onSetEnabled.fire);
 };
 
 gpii.chrome.extensionHolder.setEnabledComplete = function (that) {
     if (chrome.runtime.lastError) {
-        fluid.log("Could not enable extension, error was:",
-        chrome.runtime.lastError.message);
+        fluid.log(fluid.logLevel.FAIL,
+                  "Could not enable extension, error was:",
+                  chrome.runtime.lastError.message);
         that.events.onError.fire(chrome.runtime.lastError);
     };
 };
