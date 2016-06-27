@@ -15,3 +15,4 @@
 require("./extensionHolderTests.js");
 require("./highContrastTests.js");
 require("./wsConnectorTests.js");
+require("./zoomTests.js");

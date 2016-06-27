@@ -23,8 +23,6 @@ var gpii = fluid.registerNamespace("gpii");
 
 require("../extension/src/lib/wsConnector.js");
 
-//fluid.logObjectRenderChars = 8000000;
-
 fluid.defaults("gpii.chrome.tests.wsConnector.server", {
     gradeNames: "fluid.modelComponent",
     port: 8081,
@@ -250,12 +248,6 @@ fluid.defaults("gpii.chrome.tests.wsConnector.tester", {
             }, {
                 event: "{clientOne}.events.onError",
                 listener: "gpii.chrome.tests.wsConnector.expectedEvent"
-            // }, {
-            //     func: "{server}.allowClient",
-            //     args: ["{clientOne}.options.solutionId"],
-            // }, {
-            //     event: "{clientOne}.events.onConnectionSucceeded",
-            //     listener: "gpii.chrome.tests.wsConnector.expectedEvent"
             }]
         }, {
             name: "Settings change, client receives settings when connecting",
