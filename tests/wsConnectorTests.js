@@ -313,4 +313,4 @@ gpii.chrome.tests.wsConnector.onConnectionRequestDone = function (client) {
     jqUnit.assertDeepEq("Client's readyState === OPEN", client.OPEN, client.readyState);
 };
 
-gpii.chrome.tests.wsConnector();
+fluid.test.runTests("gpii.chrome.tests.wsConnector");

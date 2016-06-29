@@ -197,4 +197,5 @@ gpii.chrome.tests.zoom.mockChrome = function (that) {
     };
 };
 
-gpii.chrome.tests.zoom.testEnvironment();
+
+fluid.test.runTests("gpii.chrome.tests.zoom.testEnvironment")
