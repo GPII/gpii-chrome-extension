@@ -36,6 +36,10 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js"
         ],
+        infusionTesting: [
+            "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
+            "node_modules/infusion/tests/test-core/utils/js/IoCTestUtils.js"
+        ],
         extension: [
             "extension/src/lib/chromeEvented.js",
             "extension/src/lib/extensionHolder.js",
@@ -43,6 +47,17 @@ module.exports = function (grunt) {
             "extension/src/lib/chromeSettings.js",
             "extension/src/lib/wsConnector.js",
             "extension/src/lib/zoom.js"
+        ],
+        testing: [
+            "node_modules/infusion/tests/lib/qunit/js/qunit.js",
+            "node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.js",
+            "node_modules/infusion/tests/test-core/jqUnit/js/jqUnit.js",
+            "node_modules/infusion/tests/test-core/jqUnit/js/jqUnit-browser.js",
+            "node_modules/sinon-chrome/dist/sinon-chrome.latest.js"
+        ],
+        testingCSS: [
+            "node_modules/infusion/tests/lib/qunit/css/qunit.css",
+            "node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.css"
         ]
     };
 
@@ -73,6 +88,10 @@ module.exports = function (grunt) {
                         files.jQueryStandalone,
                         files.infusion,
                         files.extension
+                    ),
+                    "dist/<%= pkg.name %>-testing.min.js" : [].concat(
+                        files.infusionTesting,
+                        files.testing
                     )
                 }
             }
@@ -101,8 +120,26 @@ module.exports = function (grunt) {
                         dest: "build/content_scripts/"
                     },
                     {
+                        expand: true,
+                        cwd: "tests/",
+                        src: "**",
+                        dest: "build/tests/"
+                    },
+                    {
                         src: ["dist/<%= pkg.name %>-all.min.js"],
                         dest: "build/"
+                    },
+                    {
+                        src: ["dist/<%= pkg.name %>-testing.min.js"],
+                        dest: "build/"
+                    },
+                    {
+                        src: [].concat(
+                            files.testingCSS
+                        ),
+                        dest: "build/css/",
+                        expand: true,
+                        flatten: true
                     }
                 ]
             }

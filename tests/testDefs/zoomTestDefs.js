@@ -15,13 +15,10 @@
 
 "use strict";
 
-var chrome = require("sinon-chrome");
-var fluid = require("infusion");
-var jqUnit = fluid.require("node-jqunit", require, "jqUnit");
+var chrome = chrome || require("sinon-chrome");
+var fluid = fluid || require("infusion");
+var jqUnit = jqUnit || fluid.require("node-jqunit", require, "jqUnit");
 var gpii = fluid.registerNamespace("gpii");
-
-require("../extension/src/lib/chromeEvented.js");
-require("../extension/src/lib/zoom.js");
 
 fluid.defaults("gpii.chrome.tests.zoom.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
@@ -197,5 +194,4 @@ gpii.chrome.tests.zoom.mockChrome = function (that) {
     };
 };
 
-
-fluid.test.runTests("gpii.chrome.tests.zoom.testEnvironment")
+//fluid.test.runTests("gpii.chrome.tests.zoom.testEnvironment");

@@ -1,0 +1,3 @@
+QUnit.testSuites([
+    "highContrastTests.html"
+]);

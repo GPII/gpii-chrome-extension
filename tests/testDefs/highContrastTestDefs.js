@@ -15,12 +15,9 @@
 
 "use strict";
 
-var fluid = require("infusion");
-var jqUnit = fluid.require("node-jqunit", require, "jqUnit");
+var fluid = fluid || require("infusion");
+var jqUnit = jqUnit || fluid.require("node-jqunit", require, "jqUnit");
 var gpii = fluid.registerNamespace("gpii");
-
-require("../extension/src/lib/chromeEvented.js");
-require("../extension/src/lib/highContrast.js");
 
 jqUnit.module("GPII Chrome Extension highContrast unit tests");
 

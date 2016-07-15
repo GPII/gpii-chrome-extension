@@ -13,6 +13,6 @@
 /* global require */
 
 require("./extensionHolderTests.js");
-require("./highContrastTests.js");
+require("./nodeHighContrastTests.js");
 require("./wsConnectorTests.js");
-require("./zoomTests.js");
+require("./nodeZoomTests.js");

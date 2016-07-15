@@ -30,9 +30,13 @@ If you want to create a [crx](https://developer.chrome.com/extensions/crx) packa
 
 ## Testing
 
-Run:
+Run the node tests:
 
-    node tests/all-tests.js
+    node tests/node-tests.js
+
+You can also run the browser tests, open your browser and go to:
+
+    chrome-extension://ifommhafkphfognacgcmpidnpbffedlp/tests/highContrastTests.html
 
 More tests are coming soon. :)
 
