@@ -42,6 +42,7 @@ module.exports = function (grunt) {
         ],
         extension: [
             "extension/src/lib/chromeEvented.js",
+            "extension/src/lib/chromeNotifications.js",
             "extension/src/lib/extensionHolder.js",
             "extension/src/lib/highContrast.js",
             "extension/src/lib/chromeSettings.js",

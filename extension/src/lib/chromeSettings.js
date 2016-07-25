@@ -32,6 +32,8 @@ fluid.defaults("gpii.chrome.settings", {
             type: "gpii.chrome.extensionHolder",
             options: {
                 extensionId: "kgejglhpjiefppelpmljglcjbhoiplfn",
+                name: "ChromeVox",
+                installationUrl: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn",
                 model: {
                     extensionEnabled: "{settings}.model.screenReaderTTSEnabled"
                 }
@@ -85,6 +87,9 @@ fluid.defaults("gpii.chrome.settings", {
                 flowManager: "ws://localhost:8081/browserChannel",
                 retryTime: 10
             }
+        },
+        notifications: {
+            type: "gpii.chrome.notifications"
         }
     },
     model: "{settings}.options.defaultSettings",  // Defaults
@@ -95,10 +100,44 @@ fluid.defaults("gpii.chrome.settings", {
         }
     },
     listeners: {
-        "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings"
+        "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings",
+        "{chromeVox}.events.onError": {
+            funcName: "gpii.chrome.settings.handleExtensionHolderError",
+            args: ["{that}", "{chromeVox}", "{arguments}.0"]
+        }
     }
 });
 
 gpii.chrome.settings.updateSettings = function (that, settings) {
     that.applier.change("", settings || that.options.defaultSettings);
+};
+
+gpii.chrome.settings.handleExtensionHolderError = function (that, extension, error) {
+    if (error.message === "Failed to find extension with id " + extension.options.extensionId + ".") {
+        var options = {
+            type: "basic",
+            title: "GPII notifications",
+            message: extension.options.name + " couldn't be found. Do you want to add it from the chrome store?",
+            iconUrl: "https://raw.githubusercontent.com/javihernandez/android/master/platform/app/res/drawable-hdpi/gpii_logo.png",
+            buttons: [{
+                title: "Yes, please"
+            }, {
+                title: "No, thanks"
+            }]
+        };
+
+        that.notifications.create(options, function (id) {
+            var cb = function (notificationId, buttonId) {
+                if (notificationId === id) {
+                    if (buttonId === 0) {
+                        window.open(extension.options.installationUrl);
+                    }
+
+                    that.notifications.events.onButtonClicked.removeListener(cb);
+                    that.notifications.clear(notificationId);
+                }
+            };
+            that.notifications.events.onButtonClicked.addListener(cb);
+        });
+    }
 };

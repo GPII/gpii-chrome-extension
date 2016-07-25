@@ -21,6 +21,8 @@ var chrome = chrome || require("sinon-chrome");
 fluid.defaults("gpii.chrome.extensionHolder", {
     gradeNames: "fluid.modelComponent",
     extensionId: "",
+    name: "",
+    installationUrl: "",
     members: {
         extensionInstance: null
     },
