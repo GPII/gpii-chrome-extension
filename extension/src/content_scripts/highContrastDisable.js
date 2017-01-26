@@ -10,8 +10,9 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
+"use strict";
+
 (function () {
-    "use strict";
     document.documentElement.removeAttribute("data-gpii-hc");
     [].forEach.call(document.querySelectorAll("body *"), function (node) {
         node.removeAttribute("data-gpii-hc");

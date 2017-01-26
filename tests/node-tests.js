@@ -11,6 +11,7 @@
  */
 
 /* global require */
+"use strict";
 
 require("./extensionHolderTests.js");
 require("./nodeHighContrastTests.js");

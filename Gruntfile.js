@@ -12,11 +12,9 @@
 
  /* global module */
 
+"use strict";
 
 module.exports = function (grunt) {
-
-    "use strict";
-
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("fluid-grunt-eslint");
@@ -155,7 +153,10 @@ module.exports = function (grunt) {
                 "src": [
                     "build/**/*"
                 ],
-                "dest": "./"
+                "dest": "./gpii-chrome-extension.crx",
+                "options": {
+                    "privateKey": "./key.pem"
+                }
             }
         }
     });
