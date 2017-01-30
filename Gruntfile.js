@@ -114,6 +114,12 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
+                        cwd: "extension/images/",
+                        src: "*",
+                        dest: "build/images/"
+                    },
+                    {
+                        expand: true,
                         cwd: "extension/src/content_scripts/",
                         src: "*",
                         dest: "build/content_scripts/"
