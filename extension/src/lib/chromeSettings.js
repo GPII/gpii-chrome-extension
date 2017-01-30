@@ -118,7 +118,7 @@ gpii.chrome.settings.handleExtensionHolderError = function (that, extension, err
             type: "basic",
             title: "GPII notifications",
             message: extension.options.name + " couldn't be found. Do you want to add it from the chrome store?",
-            iconUrl: "https://raw.githubusercontent.com/javihernandez/android/master/platform/app/res/drawable-hdpi/gpii_logo.png",
+            iconUrl: chrome.extension.getURL("./") + "images/gpii.png",
             buttons: [{
                 title: "Yes, please"
             }, {
@@ -132,9 +132,10 @@ gpii.chrome.settings.handleExtensionHolderError = function (that, extension, err
                     if (buttonId === 0) {
                         window.open(extension.options.installationUrl);
                     }
-
                     that.notifications.events.onButtonClicked.removeListener(cb);
-                    that.notifications.clear(notificationId);
+                    that.notifications.clear(notificationId, function (wasCleared) {
+                        fluid.log("Clearing notification:", notificationId, wasCleared);
+                    });
                 }
             };
             that.notifications.events.onButtonClicked.addListener(cb);
