@@ -61,7 +61,7 @@ Alternatively, you can install the *crx* package that you created yourself by op
 ### Testing the auto-personalization
 
 We have included two users in the GPII in order to demonstrate this extension:
-* *gpiiChrome1*: Enables chromeVox
-* *gpiiChrome2*: Applies a white-on-black high contrast theme and turns magnification on
+* *chrome1*: Enables _chromeVox_ (in case you have the _chromeVox_ extension added to your browser)
+* *chrome2*: Applies a white-on-black high contrast theme and turns magnification on
 
 Key-in as any of these users to see the extension in action.
