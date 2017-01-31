@@ -35,7 +35,7 @@ fluid.defaults("gpii.chrome.notifications", {
         },
         update: {
             funcName: "gpii.chrome.notifications.update",
-            args: ["{that}", "{arguments}.0", "{arguments}.1"]
+            args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
         },
         clear: {
             funcName: "gpii.chrome.notifications.clear",
@@ -48,6 +48,10 @@ fluid.defaults("gpii.chrome.notifications", {
         getPermissionLevel: {
             funcName: "gpii.chrome.notifications.getPermissionLevel",
             args: ["{that}", "{arguments}.0"]
+        },
+        handleResult: {
+            funcName: "gpii.chrome.notifications.handleResult",
+            args: ["{that}.events.onError.fire", "{arguments}.0"]
         }
     },
     listeners: {
@@ -67,51 +71,31 @@ gpii.chrome.notifications.addListeners = function (that) {
 gpii.chrome.notifications.create = function (that, options, eventFirer) {
     // notificationId format is 'gpii-<milliseconds since 1st Jan. 1970>'
     var notificationId = "gpii-".concat(new Date().getTime());
-    chrome.notifications.create(notificationId, options, function (id) {
-        if (chrome.runtime.lastError) {
-            that.events.onError.fire(id, chrome.runtime.lastError);
-        } else {
-            eventFirer(id);
-        }
-    });
+    chrome.notifications.create(notificationId, options, that.handleResult(eventFirer));
 };
 
 gpii.chrome.notifications.update = function (that, notificationId, options, eventFirer) {
-    chrome.notifications.clear(notificationId, function (success) {
-        if (chrome.runtime.lastError) {
-            that.events.onError.fire(notificationId, chrome.runtime.lastError);
-        } else {
-            eventFirer(success);
-        }
-    });
+    chrome.notifications.update(notificationId, options, that.handleResult(eventFirer));
 };
 
 gpii.chrome.notifications.clear = function (that, notificationId, eventFirer) {
-    chrome.notifications.clear(notificationId, function (success) {
-        if (chrome.runtime.lastError) {
-            that.events.onError.fire(notificationId, chrome.runtime.lastError);
-        } else {
-            eventFirer(success);
-        }
-    });
+    chrome.notifications.clear(notificationId, that.handleResult(eventFirer));
 };
 
 gpii.chrome.notifications.getAll = function (that, eventFirer) {
-    chrome.notifications.getAll(function (notifications) {
-        if (chrome.runtime.lastError) {
-            that.events.onError.fire(chrome.runtime.lastError);
-        } else {
-            eventFirer(notifications);
-        }
-    });
+    chrome.notifications.getAll(that.handleResult(eventFirer));
 };
 
 gpii.chrome.notifications.getPermissionLevel = function (that, eventFirer) {
-    chrome.notifications.getPermissionLevel(function (level) {
+    chrome.notifications.getPermissionLevel(that.handleResult(eventFirer));
+};
+
+gpii.chrome.notifications.handleResult = function (errorFirer, successFirer) {
+    return function (result) {
         if (chrome.runtime.lastError) {
-            that.events.onError.fire(chrome.runtime.lastError);
+            errorFirer(result, chrome.runtime.lastError);
         } else {
-            eventFirer(level);
+            successFirer(result);
         }
-    });
+    };
 };

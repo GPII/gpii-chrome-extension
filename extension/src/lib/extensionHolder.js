@@ -34,8 +34,8 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         extensionEnabled: undefined
     },
     invokers: {
-        switchStatus: {
-            funcName: "gpii.chrome.extensionHolder.switchStatus",
+        updateEnabledStatus: {
+            funcName: "gpii.chrome.extensionHolder.updateEnabledStatus",
             args: "{that}"
         },
         setup: {
@@ -55,7 +55,7 @@ fluid.defaults("gpii.chrome.extensionHolder", {
     },
     modelListeners: {
         extensionEnabled: {
-            func: "{that}.switchStatus",
+            func: "{that}.updateEnabledStatus",
             excludeSource: "init"
         }
     }
@@ -77,7 +77,7 @@ gpii.chrome.extensionHolder.populate = function (that) {
     chrome.management.get(that.options.extensionId, that.setup);
 };
 
-gpii.chrome.extensionHolder.switchStatus = function (that) {
+gpii.chrome.extensionHolder.updateEnabledStatus = function (that) {
     that.extensionInstance.enabled = that.model.extensionEnabled;
     chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, that.events.onSetEnabled.fire);
 };
