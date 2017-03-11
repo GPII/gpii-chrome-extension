@@ -15,7 +15,11 @@
             "https://*/",
             "<all_urls>"
         ],
-        "css": ["css/highContrast.css"]
+        "css": ["css/highContrast.css", "css/Enactors.css"],
+        "js": [
+            "dist/gpii-chrome-extension-contentScriptsLib.min.js",
+            "content_scripts/domEnactor.js"
+        ]
     }],
     "background": {
         "scripts": [
