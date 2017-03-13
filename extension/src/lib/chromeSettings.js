@@ -18,10 +18,15 @@
 fluid.defaults("gpii.chrome.settings", {
     gradeNames: "fluid.modelComponent",
     defaultSettings: {
+        highContrastEnabled: true,
+        highContrastTheme: "black-white",
+        textSize: 1,
+        lineSpace: 1,
+        inputsLarger: false,
+        tableOfContents: true,
+
         screenReaderTTSEnabled: false,
         onScreenKeyboardEnabled: undefined,
-        highContrastEnabled: false,
-        highContrastTheme: "black-white",
         invertColors: undefined,
         greyscale: undefined,
         magnifierEnabled: false,
@@ -44,7 +49,10 @@ fluid.defaults("gpii.chrome.settings", {
             options: {
                 model: {
                     highContrastEnabled: "{settings}.model.highContrastEnabled",
-                    highContrastTheme: "{settings}.model.highContrastTheme"
+                    highContrastTheme: "{settings}.model.highContrastTheme",
+                    textSize: "{settings}.model.textSize",
+                    lineSpace: "{settings}.model.lineSpace",
+                    inputsLarger: "{settings}.model.inputsLarger"
                 }
             }
         },

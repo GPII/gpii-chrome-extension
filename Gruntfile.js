@@ -36,6 +36,7 @@ module.exports = function (grunt) {
         contentScriptsLib: [
             "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
             "node_modules/infusion/src/framework/core/js/Fluid.js",
+            "node_modules/infusion/src/framework/core/js/FluidDocument.js",
             "node_modules/infusion/src/framework/core/js/FluidIoC.js",
             "node_modules/infusion/src/framework/core/js/DataBinding.js",
             "node_modules/infusion/src/framework/core/js/FluidView.js",
@@ -45,6 +46,9 @@ module.exports = function (grunt) {
         ],
         enactorCSS: [
             "node_modules/infusion/src/framework/preferences/css/Enactors.css"
+        ],
+        templates: [
+            "node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html"
         ],
         infusionTesting: [
             "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
@@ -132,6 +136,14 @@ module.exports = function (grunt) {
                             files.enactorCSS
                         ),
                         dest: "build/css/",
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: [].concat(
+                            files.templates
+                        ),
+                        dest: "build/templates/",
                         expand: true,
                         flatten: true
                     },

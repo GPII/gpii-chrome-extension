@@ -24,16 +24,55 @@
         model: {
             // Accepted model values:
             // highContrastEnabled: boolean,
-            // highContrastTheme: string
+            // highContrastTheme: string,
+            // textSize: number    // the multiplier to the current font size
+            // lineSpace: number,    // the multiplier to the current line space
+            // inputsLarger: boolean,
+            // tableOfContents: boolean
+        },
+        distributeOptions: {
+            record: "{that}.container",
+            target: "{that > fluid.prefs.enactor}.container"
         },
         components: {
             contrast: {
                 type: "gpii.chrome.enactor.contrast",
-                container: "{domeEnactor}.container",
                 options: {
                     model: {
                         highContrastEnabled: "{domeEnactor}.model.highContrastEnabled",
                         highContrastTheme: "{domeEnactor}.model.highContrastTheme"
+                    }
+                }
+            },
+            textSize: {
+                type: "fluid.prefs.enactor.textSize",
+                options: {
+                    model: {
+                        value: "{domeEnactor}.model.textSize"
+                    }
+                }
+            },
+            lineSpace: {
+                type: "gpii.chrome.enactor.lineSpace",
+                options: {
+                    model: {
+                        value: "{domeEnactor}.model.lineSpace"
+                    }
+                }
+            },
+            inputsLarger: {
+                type: "gpii.chrome.enactor.inputsLarger",
+                options: {
+                    model: {
+                        value: "{domeEnactor}.model.inputsLarger"
+                    }
+                }
+            },
+            tableOfContents: {
+                type: "gpii.chrome.enactor.tableOfContents",
+                options: {
+                    model: {
+                        value: "{domeEnactor}.model.tableOfContents"
                     }
                 }
             }
@@ -41,10 +80,9 @@
     });
 
     // High contrast
-    // Container: DOM <body> element
     fluid.defaults("gpii.chrome.enactor.contrast", {
         gradeNames: ["fluid.prefs.enactor.contrast"],
-        "classes": {
+        classes: {
             "default": "",
             "bw": "fl-theme-bw",
             "wb": "fl-theme-wb",
@@ -79,5 +117,31 @@
             return fluid.get(mapping, [model.highContrastTheme]);
         }
     };
+
+    // Line space
+    fluid.defaults("gpii.chrome.enactor.lineSpace", {
+        gradeNames: ["fluid.prefs.enactor.lineSpace"],
+        fontSizeMap: {
+            "xx-small": "9px",
+            "x-small": "11px",
+            "small": "13px",
+            "medium": "15px",
+            "large": "18px",
+            "x-large": "23px",
+            "xx-large": "30px"
+        }
+    });
+
+    // Line space
+    fluid.defaults("gpii.chrome.enactor.inputsLarger", {
+        gradeNames: ["fluid.prefs.enactor.inputsLarger"],
+        cssClass: "fl-text-larger"
+    });
+
+    // Table of contents
+    fluid.defaults("gpii.chrome.enactor.tableOfContents", {
+        gradeNames: ["fluid.prefs.enactor.tableOfContents"],
+        tocTemplate: "../templates/TableOfContents.html"
+    });
 
 })(jQuery, fluid);
