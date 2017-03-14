@@ -72,7 +72,7 @@
                 type: "gpii.chrome.enactor.tableOfContents",
                 options: {
                     model: {
-                        value: "{domeEnactor}.model.tableOfContents"
+                        toc: "{domeEnactor}.model.tableOfContents"
                     }
                 }
             }
@@ -141,7 +141,15 @@
     // Table of contents
     fluid.defaults("gpii.chrome.enactor.tableOfContents", {
         gradeNames: ["fluid.prefs.enactor.tableOfContents"],
-        tocTemplate: "../templates/TableOfContents.html"
+        tocTemplate: "templates/TableOfContents.html",
+        // Handle the initial model value when the component creation cycle completes instead of
+        // relying on model listeners. See https://issues.fluidproject.org/browse/FLUID-5519
+        listeners: {
+            "onCreate.handleInitialModelValue": {
+                listener: "{that}.applyToc",
+                args: ["{that}.model.toc"]
+            }
+        }
     });
 
 })(jQuery, fluid);

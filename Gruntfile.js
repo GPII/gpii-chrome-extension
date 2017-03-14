@@ -42,6 +42,13 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/core/js/FluidView.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
+            "node_modules/infusion/src/framework/core/js/FluidDOMUtilities.js",
+            "node_modules/infusion/src/framework/core/js/FluidRequests.js",
+            "node_modules/infusion/src/lib/fastXmlPull/js/fastXmlPull.js",
+            "node_modules/infusion/src/framework/renderer/js/fluidParser.js",
+            "node_modules/infusion/src/framework/renderer/js/fluidRenderer.js",
+            "node_modules/infusion/src/framework/renderer/js/RendererUtilities.js",
+            "node_modules/infusion/src/components/tableOfContents/js/TableOfContents.js",
             "node_modules/infusion/src/framework/preferences/js/Enactors.js"
         ],
         enactorCSS: [
