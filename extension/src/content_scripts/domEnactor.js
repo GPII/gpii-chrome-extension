@@ -113,11 +113,7 @@
             "yellow-black": "yb"
         };
 
-        if (!model.highContrastEnabled) {
-            return "default";
-        } else {
-            return fluid.get(mapping, [model.highContrastTheme]);
-        }
+        return model.highContrastEnabled ? fluid.get(mapping, [model.highContrastTheme]) : "default";
     };
 
     // Line space
