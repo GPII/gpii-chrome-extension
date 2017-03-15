@@ -83,7 +83,8 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
 gpii.chrome.domSettingsApplier.respondToMessage = function (settings, request, sender, sendResponse) {
     if (request.type === "requestSettings") {
         sendResponse({
-            settings: settings
+            settings: settings,
+            rootURL: chrome.extension.getURL("./")
         });
     }
 };

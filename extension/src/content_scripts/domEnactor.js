@@ -21,6 +21,7 @@
     // It contains various subcomponents for handling various settings.
     fluid.defaults("gpii.chrome.domeEnactor", {
         gradeNames: ["fluid.viewComponent"],
+        rootURL: null,   // must be supplied by integrators. The chrome extension root URL
         model: {
             // Accepted model values:
             // highContrastEnabled: boolean,
@@ -71,6 +72,7 @@
             tableOfContents: {
                 type: "gpii.chrome.enactor.tableOfContents",
                 options: {
+                    rootURL: "{domeEnactor}.options.rootURL",
                     model: {
                         toc: "{domeEnactor}.model.tableOfContents"
                     }
@@ -141,7 +143,17 @@
     // Table of contents
     fluid.defaults("gpii.chrome.enactor.tableOfContents", {
         gradeNames: ["fluid.prefs.enactor.tableOfContents"],
-        tocTemplate: "templates/TableOfContents.html",
+        rootURL: null,   // must be supplied by integrators. The chrome extension root URL
+        tocTemplate: {
+            expander: {
+                funcName: "fluid.stringTemplate",
+                args: ["%rootURL%tocTemplate", {
+                    rootURL: "{that}.options.rootURL",
+                    tocTemplate: "templates/TableOfContents.html"
+                }]
+            }
+        },
+        // tocTemplate: "templates/TableOfContents.html",
         // Handle the initial model value when the component creation cycle completes instead of
         // relying on model listeners. See https://issues.fluidproject.org/browse/FLUID-5519
         listeners: {

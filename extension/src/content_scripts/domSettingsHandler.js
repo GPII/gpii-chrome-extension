@@ -16,11 +16,13 @@
 (function () {
     chrome.runtime.sendMessage({type: "requestSettings"}, function (response) {
         var settings = response.settings;
+        var rootURL = response.rootURL;
 
         var body = document.querySelector("body");
 
         gpii.chrome.domeEnactor(body, {
-            model: settings
+            model: settings,
+            rootURL: rootURL
         });
     });
 })();
