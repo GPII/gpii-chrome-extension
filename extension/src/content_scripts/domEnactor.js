@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2016 RtF-US
+ * Copyright 2017 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -92,6 +92,12 @@
             "yb": "fl-theme-yb",
             "lgdg": "fl-theme-lgdg"
         },
+        mapping: {
+            "black-white": "bw",
+            "white-black": "wb",
+            "black-yellow": "by",
+            "yellow-black": "yb"
+        },
         modelRelay: {
             target: "value",
             singleTransform: {
@@ -99,21 +105,15 @@
                 func: "gpii.chrome.enactor.contrast.convertContrast",
                 args: {
                     highContrastEnabled: "{that}.model.highContrastEnabled",
-                    highContrastTheme: "{that}.model.highContrastTheme"
+                    highContrastTheme: "{that}.model.highContrastTheme",
+                    mapping: "{that}.options.mapping"
                 }
             }
         }
     });
 
     gpii.chrome.enactor.contrast.convertContrast = function (model) {
-        var mapping = {
-            "black-white": "bw",
-            "white-black": "wb",
-            "black-yellow": "by",
-            "yellow-black": "yb"
-        };
-
-        return model.highContrastEnabled ? fluid.get(mapping, [model.highContrastTheme]) : "default";
+        return model.highContrastEnabled ? fluid.get(model.mapping, [model.highContrastTheme]) : "default";
     };
 
     // Line space
@@ -130,7 +130,7 @@
         }
     });
 
-    // Line space
+    // Inputs larger
     fluid.defaults("gpii.chrome.enactor.inputsLarger", {
         gradeNames: ["fluid.prefs.enactor.inputsLarger"],
         cssClass: "fl-text-larger"
@@ -149,7 +149,6 @@
                 }]
             }
         },
-        // tocTemplate: "templates/TableOfContents.html",
         // Handle the initial model value when the component creation cycle completes instead of
         // relying on model listeners. See https://issues.fluidproject.org/browse/FLUID-5519
         listeners: {
