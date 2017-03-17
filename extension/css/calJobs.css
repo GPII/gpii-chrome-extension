@@ -1,0 +1,21 @@
+.fl-theme-yb a, .fl-theme-by a, .fl-theme-bw a, .fl-theme-wb a, .fl-theme-lgdg a,
+.fl-theme-yb div, .fl-theme-by div, .fl-theme-bw div, .fl-theme-wb div, .fl-theme-lgdg div {
+  background-image: none !important;
+}
+
+.fl-theme-yb input, .fl-theme-yb button {
+  border: 1px solid yellow;
+}
+
+.fl-theme-bw input, .fl-theme-bw button,
+.fl-theme-by input, .fl-theme-by button {
+  border: 1px solid black;
+}
+
+.fl-theme-wb input, .fl-theme-wb button {
+  border: 1px solid white;
+}
+
+.fl-text-larger a {
+  font-size: 125% !important;
+}

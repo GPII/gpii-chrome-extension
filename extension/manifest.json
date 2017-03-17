@@ -17,6 +17,7 @@
         ],
         "css": [
             "css/highContrast.css",
+            "css/calJobs.css",
             "css/Enactors.css"
         ],
         "js": [
