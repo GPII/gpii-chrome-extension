@@ -1,5 +1,11 @@
-.fl-theme-yb a, .fl-theme-by a, .fl-theme-bw a, .fl-theme-wb a, .fl-theme-lgdg a,
-.fl-theme-yb div, .fl-theme-by div, .fl-theme-bw div, .fl-theme-wb div, .fl-theme-lgdg div {
+/* Larger links and inputs */
+.fl-text-larger a {
+  font-size: 125% !important;
+}
+
+/* High contrast */
+.fl-theme-yb a, .fl-theme-by a, .fl-theme-bw a, .fl-theme-wb a,
+.fl-theme-yb div, .fl-theme-by div, .fl-theme-bw div, .fl-theme-wb div {
   background-image: none !important;
 }
 
@@ -16,6 +22,7 @@
   border: 1px solid white;
 }
 
-.fl-text-larger a {
-  font-size: 125% !important;
+.fl-theme-yb img, .fl-theme-by img, .fl-theme-bw img, .fl-theme-wb img,
+.fl-theme-yb input[type="image"], .fl-theme-by input[type="image"], .fl-theme-bw input[type="image"], .fl-theme-wb input[type="image"] {
+  filter: grayscale(100%);
 }
