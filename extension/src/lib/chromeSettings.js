@@ -11,7 +11,7 @@
  */
 
 /* eslint-env node */
-/* global fluid, gpii */
+/* global fluid, gpii, chrome */
 
 "use strict";
 
@@ -25,7 +25,20 @@ fluid.defaults("gpii.chrome.settings", {
         invertColors: undefined,
         greyscale: undefined,
         magnifierEnabled: false,
-        magnification: 1
+        magnification: 1,
+
+        // not all fo the following settings are in the common terms yet.
+        // and may need to be updated once they are added there.
+        fontSize: 1,
+        lineSpace: 1,
+        characterSpacing: 1,
+        inputsLargerEnabled: false,
+        selfVoicingEnabled: false,
+        selfVoicingSelectionEnabled: false,
+        tableOfContentsEnabled: false,
+        dictionaryEnabled: false,
+        simplifiedUiEnabled: false,
+        syllabificationEnabled: false
     },
     components: {
         chromeVox: {
