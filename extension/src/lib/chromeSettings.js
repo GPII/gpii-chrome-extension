@@ -33,7 +33,6 @@ fluid.defaults("gpii.chrome.settings", {
         lineSpace: 1,
         characterSpacing: 1,
         inputsLargerEnabled: false,
-        selfVoicingEnabled: false,
         selfVoicingSelectionEnabled: false,
         tableOfContentsEnabled: false,
         dictionaryEnabled: false,
@@ -49,6 +48,28 @@ fluid.defaults("gpii.chrome.settings", {
                 installationUrl: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn",
                 model: {
                     extensionEnabled: "{settings}.model.screenReaderTTSEnabled"
+                }
+            }
+        },
+        click2Speech: {
+            type: "gpii.chrome.extensionHolder",
+            options: {
+                extensionId: "djfpbemmcokhlllnafdmomgecdlicfhj",
+                name: "ChromeVox",
+                installationUrl: "https://chrome.google.com/webstore/detail/click2speech/djfpbemmcokhlllnafdmomgecdlicfhj",
+                model: {
+                    extensionEnabled: "{settings}.model.selfVoicingSelectionEnabled"
+                }
+            }
+        },
+        dictionary: {
+            type: "gpii.chrome.extensionHolder",
+            options: {
+                extensionId: "mgijmajocgfcbeboacabfgobmjgjcoja",
+                name: "ChromeVox",
+                installationUrl: "https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja",
+                model: {
+                    extensionEnabled: "{settings}.model.dictionaryEnabled"
                 }
             }
         },
