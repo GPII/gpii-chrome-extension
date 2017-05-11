@@ -55,7 +55,7 @@ fluid.defaults("gpii.chrome.settings", {
             type: "gpii.chrome.extensionHolder",
             options: {
                 extensionId: "djfpbemmcokhlllnafdmomgecdlicfhj",
-                name: "ChromeVox",
+                name: "click2speech",
                 installationUrl: "https://chrome.google.com/webstore/detail/click2speech/djfpbemmcokhlllnafdmomgecdlicfhj",
                 model: {
                     extensionEnabled: "{settings}.model.selfVoicingSelectionEnabled"
@@ -66,7 +66,7 @@ fluid.defaults("gpii.chrome.settings", {
             type: "gpii.chrome.extensionHolder",
             options: {
                 extensionId: "mgijmajocgfcbeboacabfgobmjgjcoja",
-                name: "ChromeVox",
+                name: "Google Dictionary (by Google)",
                 installationUrl: "https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja",
                 model: {
                     extensionEnabled: "{settings}.model.dictionaryEnabled"
@@ -134,12 +134,17 @@ fluid.defaults("gpii.chrome.settings", {
         }
     },
     listeners: {
-        "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings",
-        "{chromeVox}.events.onError": {
-            funcName: "gpii.chrome.settings.handleExtensionHolderError",
-            args: ["{that}", "{chromeVox}", "{arguments}.0"]
-        }
-    }
+        "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings"
+    },
+    distributeOptions: [{
+        record: {
+            "onError.missingExtension": {
+                funcName: "gpii.chrome.settings.handleExtensionHolderError",
+                args: ["{settings}", "{that}", "{arguments}.0"]
+            }
+        },
+        target: "{settings > gpii.chrome.extensionHolder}.options.listeners"
+    }]
 });
 
 gpii.chrome.settings.updateSettings = function (that, settings) {
