@@ -63,6 +63,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         manifest: grunt.file.readJSON("extension/manifest.json"),
+        developmentBuild: false,
         jsonlint: {
             all: ["extension/manifest.json"]
         },
@@ -79,7 +80,8 @@ module.exports = function (grunt) {
             options: {
                 beautify: {
                     ascii_only: true
-                }
+                },
+                sourceMap: "<%= developmentBuild %>"
             },
             all: {
                 files: {
@@ -169,6 +171,11 @@ module.exports = function (grunt) {
 
     grunt.registerTask("lint", "Lint the source code", ["jsonlint", "eslint"]);
     grunt.registerTask("bundle", "Bundle dependencies and source code into a single .min.js file", ["uglify"]);
-    grunt.registerTask("build", "Build the extension so you can start using it unpacked", ["bundle", "copy"]);
+    grunt.registerTask("build", "Build the extension so you can start using it unpacked", ["clean", "bundle", "copy"]);
     grunt.registerTask("buildPkg", "Create a .crx package ready to be distributed", ["lint", "build", "crx"]);
+
+    grunt.registerTask("buildDev", "Build the extension so you can start using it unpacked and with a sourceMap", function () {
+        grunt.config.set("developmentBuild", true);
+        grunt.task.run("build");
+    });
 };
