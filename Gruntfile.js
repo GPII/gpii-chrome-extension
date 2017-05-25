@@ -23,16 +23,38 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jsonlint");
 
     var files = {
-        jQueryStandalone: [
-            "node_modules/infusion/src/framework/core/js/jquery.standalone.js"
-        ],
-        infusion: [
+        extensionLib: [
+            "node_modules/infusion/src/framework/core/js/jquery.standalone.js",
             "node_modules/infusion/src/framework/core/js/Fluid.js",
             "node_modules/infusion/src/framework/core/js/FluidDebugging.js",
             "node_modules/infusion/src/framework/core/js/FluidIoC.js",
             "node_modules/infusion/src/framework/core/js/DataBinding.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js"
+        ],
+        contentScriptsLib: [
+            "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
+            "node_modules/infusion/src/framework/core/js/Fluid.js",
+            "node_modules/infusion/src/framework/core/js/FluidDocument.js",
+            "node_modules/infusion/src/framework/core/js/FluidIoC.js",
+            "node_modules/infusion/src/framework/core/js/DataBinding.js",
+            "node_modules/infusion/src/framework/core/js/FluidView.js",
+            "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
+            "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
+            "node_modules/infusion/src/framework/core/js/FluidDOMUtilities.js",
+            "node_modules/infusion/src/framework/core/js/FluidRequests.js",
+            "node_modules/infusion/src/lib/fastXmlPull/js/fastXmlPull.js",
+            "node_modules/infusion/src/framework/renderer/js/fluidParser.js",
+            "node_modules/infusion/src/framework/renderer/js/fluidRenderer.js",
+            "node_modules/infusion/src/framework/renderer/js/RendererUtilities.js",
+            "node_modules/infusion/src/components/tableOfContents/js/TableOfContents.js",
+            "node_modules/infusion/src/framework/preferences/js/Enactors.js"
+        ],
+        enactorCSS: [
+            "node_modules/infusion/src/framework/preferences/css/Enactors.css"
+        ],
+        templates: [
+            "node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html"
         ],
         infusionTesting: [
             "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
@@ -41,6 +63,7 @@ module.exports = function (grunt) {
         extension: [
             "extension/src/lib/chromeEvented.js",
             "extension/src/lib/chromeNotifications.js",
+            "extension/src/lib/domSettingsApplier.js",
             "extension/src/lib/extensionHolder.js",
             "extension/src/lib/highContrast.js",
             "extension/src/lib/chromeSettings.js",
@@ -86,13 +109,15 @@ module.exports = function (grunt) {
             all: {
                 files: {
                     "dist/<%= pkg.name %>-all.min.js" : [].concat(
-                        files.jQueryStandalone,
-                        files.infusion,
+                        files.extensionLib,
                         files.extension
                     ),
                     "dist/<%= pkg.name %>-testing.min.js" : [].concat(
                         files.infusionTesting,
                         files.testing
+                    ),
+                    "dist/<%= pkg.name %>-contentScriptsLib.min.js" : [].concat(
+                        files.contentScriptsLib
                     )
                 }
             }
@@ -113,6 +138,22 @@ module.exports = function (grunt) {
                         cwd: "extension/css/",
                         src: "*",
                         dest: "build/css/"
+                    },
+                    {
+                        src: [].concat(
+                            files.enactorCSS
+                        ),
+                        dest: "build/css/",
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: [].concat(
+                            files.templates
+                        ),
+                        dest: "build/templates/",
+                        expand: true,
+                        flatten: true
                     },
                     {
                         expand: true,
@@ -138,6 +179,10 @@ module.exports = function (grunt) {
                     },
                     {
                         src: ["dist/<%= pkg.name %>-testing.min.js"],
+                        dest: "build/"
+                    },
+                    {
+                        src: ["dist/<%= pkg.name %>-contentScriptsLib.min.js"],
                         dest: "build/"
                     },
                     {

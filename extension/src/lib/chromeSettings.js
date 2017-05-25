@@ -2,6 +2,7 @@
  * GPII Chrome Extension for Google Chrome
  *
  * Copyright 2016 RtF-US
+ * Copyright 2017 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -18,21 +19,15 @@
 fluid.defaults("gpii.chrome.settings", {
     gradeNames: "fluid.modelComponent",
     defaultSettings: {
-        screenReaderTTSEnabled: false,
-        onScreenKeyboardEnabled: undefined,
-        highContrastEnabled: false,
-        highContrastTheme: "black-white",
-        invertColors: undefined,
-        greyscale: undefined,
-        magnifierEnabled: false,
-        magnification: 1,
-
-        // not all fo the following settings are in the common terms yet.
+        // not all of the following settings are in the common terms yet.
         // and may need to be updated once they are added there.
         fontSize: 1,
         lineSpace: 1,
-        characterSpacing: 1,
+        highContrastEnabled: false,
+        highContrastTheme: "black-yellow",
+        characterSpace: 1,
         inputsLargerEnabled: false,
+        selfVoicingEnabled: false,
         selfVoicingSelectionEnabled: false,
         tableOfContentsEnabled: false,
         dictionaryEnabled: false,
@@ -47,7 +42,7 @@ fluid.defaults("gpii.chrome.settings", {
                 name: "ChromeVox",
                 installationUrl: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn",
                 model: {
-                    extensionEnabled: "{settings}.model.screenReaderTTSEnabled"
+                    extensionEnabled: "{settings}.model.selfVoicingEnabled"
                 }
             }
         },
@@ -73,38 +68,51 @@ fluid.defaults("gpii.chrome.settings", {
                 }
             }
         },
-        highContrast: {
-            type: "gpii.chrome.highContrast",
+        domSettingsApplier: {
+            type: "gpii.chrome.domSettingsApplier",
             options: {
                 model: {
-                    highContrastEnabled: "{settings}.model.highContrastEnabled"
-                },
-                modelRelay: {
-                    highContrastTheme: {
-                        source: "{settings}.model.highContrastTheme",
-                        target: "highContrastTheme",
-                        singleTransform: {
-                            type: "fluid.transforms.valueMapper",
-                            defaultInputValue: "black-white",
-                            options: {
-                                "black-white": {
-                                    outputValue: "bw"
-                                },
-                                "white-black": {
-                                    outputValue: "wb"
-                                },
-                                "black-yellow": {
-                                    outputValue: "by"
-                                },
-                                "yellow-black": {
-                                    outputValue: "yb"
-                                }
-                            }
-                        }
-                    }
+                    highContrastEnabled: "{settings}.model.highContrastEnabled",
+                    highContrastTheme: "{settings}.model.highContrastTheme",
+                    textSize: "{settings}.model.fontSize",
+                    lineSpace: "{settings}.model.lineSpace",
+                    inputsLarger: "{settings}.model.inputsLargerEnabled",
+                    tableOfContents: "{settings}.model.tableOfContentsEnabled"
                 }
             }
         },
+        // highContrast: {
+        //     type: "gpii.chrome.highContrast",
+        //     options: {
+        //         model: {
+        //             highContrastEnabled: "{settings}.model.highContrastEnabled"
+        //         },
+        //         modelRelay: {
+        //             highContrastTheme: {
+        //                 source: "{settings}.model.highContrastTheme",
+        //                 target: "highContrastTheme",
+        //                 singleTransform: {
+        //                     type: "fluid.transforms.valueMapper",
+        //                     defaultInputValue: "black-white",
+        //                     options: {
+        //                         "black-white": {
+        //                             outputValue: "bw"
+        //                         },
+        //                         "white-black": {
+        //                             outputValue: "wb"
+        //                         },
+        //                         "black-yellow": {
+        //                             outputValue: "by"
+        //                         },
+        //                         "yellow-black": {
+        //                             outputValue: "yb"
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // },
         zoom: {
             type: "gpii.chrome.zoom",
             options: {
