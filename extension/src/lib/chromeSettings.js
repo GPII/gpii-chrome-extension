@@ -117,8 +117,8 @@ fluid.defaults("gpii.chrome.settings", {
             type: "gpii.chrome.zoom",
             options: {
                 model: {
-                    magnifierEnabled: "{settings}.model.magnifierEnabled",
-                    magnification: "{settings}.model.magnification"
+                    magnifierEnabled: true, // set to true because fontSize is always enabled
+                    magnification: "{settings}.model.fontSize"
                 }
             }
         },
