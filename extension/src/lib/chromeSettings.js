@@ -74,7 +74,6 @@ fluid.defaults("gpii.chrome.settings", {
                 model: {
                     highContrastEnabled: "{settings}.model.highContrastEnabled",
                     highContrastTheme: "{settings}.model.highContrastTheme",
-                    textSize: "{settings}.model.fontSize",
                     lineSpace: "{settings}.model.lineSpace",
                     inputsLarger: "{settings}.model.inputsLargerEnabled",
                     tableOfContents: "{settings}.model.tableOfContentsEnabled"

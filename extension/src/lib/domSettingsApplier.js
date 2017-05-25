@@ -34,7 +34,6 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
     model: {
         // highContrastEnabled: boolean,
         // highContrastTheme: string,
-        // textSize: number    // the multiplier to the current font size
         // lineSpace: number,    // the multiplier to the current line space
         // inputsLarger: boolean,
         // tableOfContents: boolean

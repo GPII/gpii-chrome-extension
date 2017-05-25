@@ -26,7 +26,6 @@
             // Accepted model values:
             // highContrastEnabled: boolean,
             // highContrastTheme: string,
-            // textSize: number    // the multiplier to the current font size
             // lineSpace: number,    // the multiplier to the current line space
             // inputsLarger: boolean,
             // tableOfContents: boolean
@@ -42,14 +41,6 @@
                     model: {
                         highContrastEnabled: "{domeEnactor}.model.highContrastEnabled",
                         highContrastTheme: "{domeEnactor}.model.highContrastTheme"
-                    }
-                }
-            },
-            textSize: {
-                type: "fluid.prefs.enactor.textSize",
-                options: {
-                    model: {
-                        value: "{domeEnactor}.model.textSize"
                     }
                 }
             },
