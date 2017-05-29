@@ -53,9 +53,8 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
             createOnEvent: "onConnect",
             options: {
                 model: "{domSettingsApplier}.model",
-                // members: {
-                //     port: "{arguments}.0"
-                // },
+                // TODO: When FLUID-5912 is fixed, move port to the members block.
+                //       https://issues.fluidproject.org/browse/FLUID-5912
                 port: "{arguments}.0",
                 listeners: {
                     "onCreate.bindDisconnect": {
