@@ -51,7 +51,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/Enactors.js"
         ],
         enactorCSS: [
-            "node_modules/infusion/src/framework/preferences/css/Enactors.css"
+            "node_modules/infusion/dist/assets/src/framework/preferences/css/Enactors.css"
         ],
         templates: [
             "node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html"
