@@ -10,19 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global gpii, chrome */
+/* global gpii */
 "use strict";
 
-(function () {
-    chrome.runtime.sendMessage({type: "requestSettings"}, function (response) {
-        var settings = response.settings;
-        var rootURL = response.rootURL;
-
-        var body = document.querySelector("body");
-
-        gpii.chrome.domeEnactor(body, {
-            model: settings,
-            rootURL: rootURL
-        });
-    });
-})();
+gpii.chrome.domEnactor("body");

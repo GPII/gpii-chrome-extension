@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid */
+/* global fluid, chrome */
 "use strict";
 
 (function ($, fluid) {
@@ -19,9 +19,8 @@
 
     // The main component to handle settings that require DOM manipulations.
     // It contains various subcomponents for handling various settings.
-    fluid.defaults("gpii.chrome.domeEnactor", {
+    fluid.defaults("gpii.chrome.domEnactor", {
         gradeNames: ["fluid.viewComponent"],
-        rootURL: null,   // must be supplied by integrators. The chrome extension root URL
         model: {
             // Accepted model values:
             // highContrastEnabled: boolean,
@@ -29,6 +28,16 @@
             // lineSpace: number,    // the multiplier to the current line space
             // inputsLarger: boolean,
             // tableOfContents: boolean
+        },
+        events: {
+            onMessage: null
+        },
+        listeners: {
+            "onCreate.bindPortEvents": "gpii.chrome.domEnactor.bindPortEvents",
+            "onMessage.updateModel": {
+                changePath: "",
+                value: "{arguments}.0"
+            }
         },
         distributeOptions: {
             record: "{that}.container",
@@ -39,8 +48,8 @@
                 type: "gpii.chrome.enactor.contrast",
                 options: {
                     model: {
-                        highContrastEnabled: "{domeEnactor}.model.highContrastEnabled",
-                        highContrastTheme: "{domeEnactor}.model.highContrastTheme"
+                        highContrastEnabled: "{domEnactor}.model.highContrastEnabled",
+                        highContrastTheme: "{domEnactor}.model.highContrastTheme"
                     }
                 }
             },
@@ -48,7 +57,7 @@
                 type: "gpii.chrome.enactor.lineSpace",
                 options: {
                     model: {
-                        value: "{domeEnactor}.model.lineSpace"
+                        value: "{domEnactor}.model.lineSpace"
                     }
                 }
             },
@@ -56,21 +65,25 @@
                 type: "gpii.chrome.enactor.inputsLarger",
                 options: {
                     model: {
-                        value: "{domeEnactor}.model.inputsLarger"
+                        value: "{domEnactor}.model.inputsLarger"
                     }
                 }
             },
             tableOfContents: {
                 type: "gpii.chrome.enactor.tableOfContents",
                 options: {
-                    rootURL: "{domeEnactor}.options.rootURL",
                     model: {
-                        toc: "{domeEnactor}.model.tableOfContents"
+                        toc: "{domEnactor}.model.tableOfContents"
                     }
                 }
             }
         }
     });
+
+    gpii.chrome.domEnactor.bindPortEvents = function (that) {
+        that.port = chrome.runtime.connect({name: "domEnactor-" + that.id});
+        that.port.onMessage.addListener(that.events.onMessage.fire);
+    };
 
     // High contrast
     fluid.defaults("gpii.chrome.enactor.contrast", {
@@ -130,14 +143,11 @@
     // Table of contents
     fluid.defaults("gpii.chrome.enactor.tableOfContents", {
         gradeNames: ["fluid.prefs.enactor.tableOfContents"],
-        rootURL: null,   // must be supplied by integrators. The chrome extension root URL
         tocTemplate: {
+            // Converts the relative path to a fully-qualified URL in the extension.
             expander: {
-                funcName: "fluid.stringTemplate",
-                args: ["%rootURL%tocTemplate", {
-                    rootURL: "{that}.options.rootURL",
-                    tocTemplate: "templates/TableOfContents.html"
-                }]
+                funcName: "chrome.runtime.getURL",
+                args: ["templates/TableOfContents.html"]
             }
         },
         // Handle the initial model value when the component creation cycle completes instead of

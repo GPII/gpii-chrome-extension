@@ -21,7 +21,8 @@
         ],
         "js": [
             "dist/gpii-chrome-extension-contentScriptsLib.min.js",
-            "content_scripts/domEnactor.js"
+            "content_scripts/domEnactor.js",
+            "content_scripts/domSettingsHandler.js"
         ]
     }, {
         "matches": [
