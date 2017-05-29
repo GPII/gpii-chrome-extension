@@ -86,7 +86,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         manifest: grunt.file.readJSON("extension/manifest.json"),
-        developmentBuild: false,
         jsonlint: {
             all: ["extension/manifest.json"]
         },
@@ -103,8 +102,8 @@ module.exports = function (grunt) {
             options: {
                 beautify: {
                     ascii_only: true
-                },
-                sourceMap: "<%= developmentBuild %>"
+                }
+                // sourceMap options set in buildDev task definition
             },
             all: {
                 files: {
@@ -174,15 +173,15 @@ module.exports = function (grunt) {
                         dest: "build/tests/"
                     },
                     {
-                        src: ["dist/<%= pkg.name %>-all.min.js"],
+                        src: ["dist/<%= pkg.name %>-all.min.js*"],
                         dest: "build/"
                     },
                     {
-                        src: ["dist/<%= pkg.name %>-testing.min.js"],
+                        src: ["dist/<%= pkg.name %>-testing.min.js*"],
                         dest: "build/"
                     },
                     {
-                        src: ["dist/<%= pkg.name %>-contentScriptsLib.min.js"],
+                        src: ["dist/<%= pkg.name %>-contentScriptsLib.min.js*"],
                         dest: "build/"
                     },
                     {
@@ -220,7 +219,7 @@ module.exports = function (grunt) {
     grunt.registerTask("buildPkg", "Create a .crx package ready to be distributed", ["lint", "build", "crx"]);
 
     grunt.registerTask("buildDev", "Build the extension so you can start using it unpacked and with a sourceMap", function () {
-        grunt.config.set("developmentBuild", true);
+        grunt.config.set("uglify.options.sourceMap.includeSources", true);
         grunt.task.run("build");
     });
 };
