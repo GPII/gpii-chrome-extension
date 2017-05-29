@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid */
+/* global fluid, chrome */
 "use strict";
 
 (function ($, fluid) {
@@ -29,6 +29,16 @@
             // lineSpace: number,    // the multiplier to the current line space
             // inputsLarger: boolean,
             // tableOfContents: boolean
+        },
+        events: {
+            onMessage: null
+        },
+        listeners: {
+            "onCreate.bindPortEvents": "gpii.chrome.domEnactor.bindPortEvents",
+            "onMessage.updateModel": {
+                changePath: "",
+                value: "{arguments}.0"
+            }
         },
         distributeOptions: {
             record: "{that}.container",
@@ -78,6 +88,11 @@
             }
         }
     });
+
+    gpii.chrome.domEnactor.bindPortEvents = function (that) {
+        that.port = chrome.runtime.connect({name: "domEnactor-" + that.id});
+        that.port.onMessage.addListener(that.events.onMessage.fire);
+    };
 
     // High contrast
     fluid.defaults("gpii.chrome.enactor.contrast", {

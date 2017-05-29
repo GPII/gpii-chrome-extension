@@ -28,6 +28,7 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         runAt: "document_end"
     },
     events: {
+        onConnect: null,
         onMessage: null,
         onError: null
     },
@@ -39,90 +40,38 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         // inputsLarger: boolean,
         // tableOfContents: boolean
     },
-    invokers: {
-        formatScript: {
-            funcName: "gpii.chrome.domSettingsApplier.formatScript",
-            args: ["{that}", "{arguments}.0"]
-        },
-        executeScriptInTab: {
-            funcName: "gpii.chrome.domSettingsApplier.executeScriptInTab",
-            args: ["{that}", "{arguments}.0", "{arguments}.1"]
-        },
-        executeScriptInAllTabs: {
-            funcName: "gpii.chrome.domSettingsApplier.executeScriptInAllTabs",
-            args: "{that}"
-        }
-    },
-    modelListeners: {
-        "": {
-            listener: "gpii.chrome.domSettingsApplier.executeScriptInAllTabs",
-            args: "{that}",
-            excludeSource: "init"
-        }
-    },
     listeners: {
-        "onCreate.populate": {
-            funcName: "gpii.chrome.domSettingsApplier.populate",
-            args: "{that}"
-        },
-        "onTabOpened.setupTab": {
-            func: "{that}.executeScriptInTab",
-            args: ["{arguments}.0", "{that}.options.updatedTabScriptOptions"]
-        },
-        "onTabUpdated.setupTab": {
-            func: "{that}.executeScriptInTab",
-            args: ["{arguments}.2", "{that}.options.updatedTabScriptOptions"]
-        },
-        "onMessage.respond": {
-            funcName: "gpii.chrome.domSettingsApplier.respondToMessage",
-            args: ["{that}.model", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+        "onCreate.bindOnConnect": {
+            "this": "chrome.runtime.onConnect",
+            method: "addListener",
+            args: "{that}.events.onConnect.fire"
+        }
+    },
+    dynamicComponents: {
+        port: {
+            type: "fluid.modelComponent",
+            createOnEvent: "onConnect",
+            options: {
+                model: "{domSettingsApplier}.model",
+                // members: {
+                //     port: "{arguments}.0"
+                // },
+                port: "{arguments}.0",
+                listeners: {
+                    "onCreate.bindDisconnect": {
+                        "this": "{that}.options.port.onDisconnect",
+                        method: "addListener",
+                        args: ["{that}.destroy"]
+                    }
+                },
+                modelListeners: {
+                    "": {
+                        "this": "{that}.options.port",
+                        method: "postMessage",
+                        args: ["{that}.model"]
+                    }
+                }
+            }
         }
     }
 });
-
-gpii.chrome.domSettingsApplier.respondToMessage = function (settings, request, sender, sendResponse) {
-    if (request.type === "requestSettings") {
-        sendResponse({
-            settings: settings
-        });
-    }
-};
-
-gpii.chrome.domSettingsApplier.populate = function (that) {
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        that.events.onMessage.fire(request, sender, sendResponse);
-    });
-};
-
-gpii.chrome.domSettingsApplier.formatScript = function (that, options) {
-    var script = {
-        file: that.options.domSettingsHandler,
-        allFrames: true
-    };
-    fluid.extend(script, options);
-    return script;
-};
-
-gpii.chrome.domSettingsApplier.executeScriptInTab = function (that, tab, options) {
-    if (tab.url === undefined || tab.status !== "complete") {
-        return;
-    }
-
-    var script = that.formatScript(options);
-    chrome.tabs.executeScript(tab.id, script, function () {
-        if (chrome.runtime.lastError) {
-            fluid.log("Could not apply highContrast in tab '",
-            tab.url, "', error was: ",
-            chrome.runtime.lastError.message);
-            that.events.onError.fire(chrome.runtime.lastError);
-        }
-    });
-};
-
-gpii.chrome.domSettingsApplier.executeScriptInAllTabs = function (that) {
-    chrome.tabs.query({}, function (tabs) {
-        fluid.each(tabs, function (tab) {
-            that.executeScriptInTab(tab);
-        });
-    });
-};
