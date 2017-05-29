@@ -20,7 +20,7 @@ var fluid = require("infusion");
 var jqUnit = fluid.require("node-jqunit", require, "jqUnit");
 var gpii = fluid.registerNamespace("gpii");
 
-require("../extension/src/lib/extensionHolder.js");
+require("../../extension/src/lib/extensionHolder.js");
 
 jqUnit.module("GPII Chrome Extension extensionHolder unit tests");
 

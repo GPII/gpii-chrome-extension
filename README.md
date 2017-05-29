@@ -32,11 +32,12 @@ If you want to create a [crx](https://developer.chrome.com/extensions/crx) packa
 
 Run the node tests:
 
-    node tests/node-tests.js
+    node tests/node/all-tests.js
 
 You can also run the browser tests. Inside chrome, browse to chrome://extensions, look for _GPII chrome extension_ and copy the _ID_ of the extension. Then browse to:
 
-    chrome-extension://<paste-the-ID-here>/tests/highContrastTests.html
+    // chrome-extension://<extension ID>/tests/browser/<test file>
+    chrome-extension://hcacmbafjnbpioigkkibbdgocfghiljh/tests/browser/all-tests.html
 
 More tests are coming soon. :)
 

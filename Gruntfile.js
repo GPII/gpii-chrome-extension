@@ -72,10 +72,13 @@ module.exports = function (grunt) {
         ],
         testing: [
             "node_modules/infusion/tests/lib/qunit/js/qunit.js",
-            "node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.js",
             "node_modules/infusion/tests/test-core/jqUnit/js/jqUnit.js",
             "node_modules/infusion/tests/test-core/jqUnit/js/jqUnit-browser.js",
             "node_modules/sinon-chrome/dist/sinon-chrome.latest.js"
+        ],
+        testingComposite: [
+            "node_modules/infusion/tests/lib/qunit/js/qunit.js",
+            "node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.js"
         ],
         testingCSS: [
             "node_modules/infusion/tests/lib/qunit/css/qunit.css",
@@ -115,6 +118,7 @@ module.exports = function (grunt) {
                         files.infusionTesting,
                         files.testing
                     ),
+                    "dist/<%= pkg.name %>-testingComposite.min.js" : files.testingComposite,
                     "dist/<%= pkg.name %>-contentScriptsLib.min.js" : [].concat(
                         files.contentScriptsLib
                     )
@@ -173,15 +177,7 @@ module.exports = function (grunt) {
                         dest: "build/tests/"
                     },
                     {
-                        src: ["dist/<%= pkg.name %>-all.min.js*"],
-                        dest: "build/"
-                    },
-                    {
-                        src: ["dist/<%= pkg.name %>-testing.min.js*"],
-                        dest: "build/"
-                    },
-                    {
-                        src: ["dist/<%= pkg.name %>-contentScriptsLib.min.js*"],
+                        src: ["dist/*.min.js*"],
                         dest: "build/"
                     },
                     {

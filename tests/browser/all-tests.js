@@ -2,6 +2,7 @@
  * GPII Chrome Extension for Google Chrome
  *
  * Copyright 2016 RtF-US
+ * Copyright 2017 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -10,14 +11,12 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* eslint-env node */
-/* global require */
-
+/* global QUnit */
 "use strict";
 
-var fluid = fluid || require("infusion");
-var jqUnit = jqUnit || fluid.require("node-jqunit", require, "jqUnit");
+// command line search:
+// find . -name "*Tests.html" | awk '{print "\""$1"\","}'
 
-require("../extension/src/lib/chromeEvented.js");
-require("../extension/src/lib/highContrast.js");
-require("./testDefs/highContrastTestDefs.js");
+QUnit.testSuites("Adaptation/Enactor Tests", [
+    "highContrastTests.html"
+]);
