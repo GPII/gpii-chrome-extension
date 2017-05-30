@@ -76,7 +76,11 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON("package.json"),
         manifest: grunt.file.readJSON("extension/manifest.json"),
         jsonlint: {
-            all: ["extension/manifest.json"]
+            all: [
+                "*.json",
+                "extension/**/*.json",
+                "tests/**/*.json"
+            ]
         },
         eslint: {
             all: [
