@@ -80,11 +80,9 @@ module.exports = function (grunt) {
         },
         eslint: {
             all: [
-                "Gruntfile.js",
-                "extension/src/*.js",
-                "extension/src/lib/*.js",
-                "extension/src/content_scripts/*.js",
-                "tests/*.js"
+                "*.js",
+                "extension/**/*.js",
+                "tests/**/*.js"
             ]
         },
         uglify: {

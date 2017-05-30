@@ -189,7 +189,7 @@ gpii.chrome.tests.zoom.setSettings = function (that, settings) {
 
 gpii.chrome.tests.zoom.mockChrome = function (that) {
     chrome.tabs.query.yields(that.options.tabs);
-    chrome.tabs.setZoom.func = function (tabId, zoomLevel, callback) {
+    chrome.tabs.setZoom.func = function (tabId, zoomLevel) {
         that.events.onSetZoom.fire(tabId, zoomLevel);
     };
 };

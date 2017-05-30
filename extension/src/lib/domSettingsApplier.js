@@ -15,7 +15,7 @@
 
 "use strict";
 
-var gpii = fluid.registerNamespace("gpii");
+fluid.registerNamespace("gpii");
 var chrome = chrome || require("sinon-chrome");
 
 // This component makes use of css/Enactor.css to perform the adaptations
