@@ -21,6 +21,6 @@ var jqUnit = jqUnit || fluid.require("node-jqunit", require, "jqUnit");
 
 require("../../extension/src/lib/chromeEvented.js");
 require("../../extension/src/lib/zoom.js");
-require("../testDefs/zoomTestDefs.js");
+require("../shared/zoomTestDefs.js");
 
 fluid.test.runTests("gpii.chrome.tests.zoom.testEnvironment");

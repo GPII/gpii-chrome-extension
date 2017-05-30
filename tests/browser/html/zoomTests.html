@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>GPII Chrome extension zoom tests</title>
+
+        <link rel="stylesheet" media="screen" href="../../../node_modules/infusion/tests/lib/qunit/css/qunit.css" />
+        <link rel="stylesheet" href="../../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.css">
+
+        <script src="../../../dist/gpii-chrome-extension-contentScriptsLib.min.js"></script>
+        <script src="../../../extension/src/lib/chromeEvented.js"></script>
+        <script src="../../../extension/src/lib/zoom.js"></script>
+
+        <script src="../../../node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js"></script>
+        <script src="../../../node_modules/infusion/tests/lib/qunit/js/qunit.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/jqUnit/js/jqUnit.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/jqUnit/js/jqUnit-browser.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/utils/js/IoCTestUtils.js"></script>
+        <script src="../../../node_modules/sinon-chrome/dist/sinon-chrome.latest.js"></script>
+
+        <script src="../../shared/zoomTestDefs.js"></script>
+    </head>
+
+    <body id="body">
+        <h1 id="qunit-header">GPII Chrome extension zoom tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+        <script>
+            fluid.test.runTests("gpii.chrome.tests.zoom.testEnvironment");
+        </script>
+    </body>
+</html>

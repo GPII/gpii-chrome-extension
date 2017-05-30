@@ -20,4 +20,4 @@ var jqUnit = jqUnit || fluid.require("node-jqunit", require, "jqUnit");
 
 require("../../extension/src/lib/chromeEvented.js");
 require("../../extension/src/lib/highContrast.js");
-require("../testDefs/highContrastTestDefs.js");
+require("../shared/highContrastTestDefs.js");
