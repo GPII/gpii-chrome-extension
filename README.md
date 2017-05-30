@@ -30,16 +30,17 @@ If you want to create a [crx](https://developer.chrome.com/extensions/crx) packa
 
 ## Testing
 
-Run the node tests:
+Run the node based tests:
 
     node tests/node/all-tests.js
 
-You can also run the browser tests. Inside chrome, browse to chrome://extensions, look for _GPII chrome extension_ and copy the _ID_ of the extension. Then browse to:
+Run the browser based tests:
 
-    // chrome-extension://<extension ID>/tests/browser/<test file>
-    chrome-extension://hcacmbafjnbpioigkkibbdgocfghiljh/tests/browser/all-tests.html
+    http://localhost/tests/browser/all-tests.html
 
-More tests are coming soon. :)
+
+
+_**NOTE:** Browser tests should be served through a web server. The exact URL may vary._
 
 ## Trying out the extension
 
