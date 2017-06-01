@@ -19,6 +19,31 @@
 
         fluid.registerNamespace("gpii.tests");
 
+        /****************
+         * Chrome Mocks *
+         ****************/
+
+        // using the sinon-chrome stub, we return the correct path to the table of contents template
+        chrome.runtime.getURL.returns("../../../node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html");
+
+        // mock message port
+        gpii.tests.mockPort = {
+            onMessage: {
+                addListener: function (fn) {
+                    gpii.tests.mockPort.onMessage.listeners.push(fn);
+                },
+                listeners: []
+            },
+            postMessage: function (msg) {
+                fluid.each(gpii.tests.mockPort.onMessage.listeners, function (fn) {
+                    fn(msg);
+                });
+            }
+        };
+
+        // using the sinon-chrome stub we return the mockPort
+        chrome.runtime.connect.returns(gpii.tests.mockPort);
+
         /***********************
          * High Contrast Tests *
          ***********************/
@@ -285,9 +310,6 @@
          * Table of Contents Tests *
          ***************************/
 
-        // using the sinon-chrome stub, we return the correct path to the table of contents template
-        chrome.runtime.getURL.returns("../../../node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html");
-
         fluid.defaults("gpii.tests.tocTests", {
             gradeNames: ["fluid.test.testEnvironment"],
             components: {
@@ -361,27 +383,6 @@
         /********************
          * domEnactor Tests *
          ********************/
-
-        // using the sinon-chrome stub, we return the correct path to the table of contents template
-        chrome.runtime.getURL.returns("../../../node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html");
-
-        // mock message port
-        gpii.tests.mockPort = {
-            onMessage: {
-                addListener: function (fn) {
-                    gpii.tests.mockPort.onMessage.listeners.push(fn);
-                },
-                listeners: []
-            },
-            postMessage: function (msg) {
-                fluid.each(gpii.tests.mockPort.onMessage.listeners, function (fn) {
-                    fn(msg);
-                });
-            }
-        };
-
-        // using the sinon-chrome stub we return the mockPort
-        chrome.runtime.connect.returns(gpii.tests.mockPort);
 
         fluid.defaults("gpii.tests.domEnactorTests", {
             gradeNames: ["fluid.test.testEnvironment"],
