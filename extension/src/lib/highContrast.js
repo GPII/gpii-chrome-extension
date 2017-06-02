@@ -16,7 +16,7 @@
 "use strict";
 
 var gpii = fluid.registerNamespace("gpii");
-var chrome = chrome || require("sinon-chrome");
+var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 // This component makes use of css/highContrast.css to perform the adaptations
 // of the web content, and this is done through chrome.tabs.executeScript.

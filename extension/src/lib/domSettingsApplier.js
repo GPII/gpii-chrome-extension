@@ -16,7 +16,7 @@
 "use strict";
 
 fluid.registerNamespace("gpii");
-var chrome = chrome || require("sinon-chrome");
+var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 // This component makes use of css/Enactor.css to perform the adaptations
 // of the web content, and this is done through chrome.tabs.executeScript.
@@ -28,9 +28,7 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         runAt: "document_end"
     },
     events: {
-        onConnect: null,
-        onMessage: null,
-        onError: null
+        onConnect: null
     },
     model: {
         // highContrastEnabled: boolean,

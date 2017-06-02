@@ -15,8 +15,8 @@
 
 "use strict";
 
-var chrome = chrome || require("sinon-chrome");
 var fluid = fluid || require("infusion");
+var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 var jqUnit = jqUnit || fluid.require("node-jqunit", require, "jqUnit");
 var gpii = fluid.registerNamespace("gpii");
 

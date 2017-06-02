@@ -17,7 +17,7 @@
 
 var gpii = fluid.registerNamespace("gpii");
 // TODO: Get rid of this repeated code by using the ContextAwareness API
-var chrome = chrome || require("sinon-chrome");
+var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 fluid.defaults("gpii.chrome.eventedComponent", {
     gradeNames: "fluid.component",

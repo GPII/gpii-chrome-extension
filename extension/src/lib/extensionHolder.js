@@ -16,7 +16,7 @@
 "use strict";
 
 var gpii = fluid.registerNamespace("gpii");
-var chrome = chrome || require("sinon-chrome");
+var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 fluid.defaults("gpii.chrome.extensionHolder", {
     gradeNames: "fluid.modelComponent",
