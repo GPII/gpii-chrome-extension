@@ -17,7 +17,8 @@
         ],
         "css": [
             "css/highContrast.css",
-            "css/Enactors.css"
+            "css/Enactors.css",
+            "css/selection.css"
         ],
         "js": [
             "dist/gpii-chrome-extension-contentScriptsLib.min.js",

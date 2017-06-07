@@ -23,6 +23,8 @@ fluid.defaults("gpii.chrome.settings", {
         // and may need to be updated once they are added there.
         fontSize: 1,
         lineSpace: 1,
+        selectionHighlightEnabled: false,
+        selectionHighlightTheme: "yellow",
         highContrastEnabled: false,
         highContrastTheme: "black-yellow",
         characterSpace: 1,
@@ -72,6 +74,8 @@ fluid.defaults("gpii.chrome.settings", {
             type: "gpii.chrome.domSettingsApplier",
             options: {
                 model: {
+                    selectionHighlightEnabled: "{settings}.model.selectionHighlightEnabled",
+                    selectionHighlightTheme: "{settings}.model.selectionHighlightTheme",
                     highContrastEnabled: "{settings}.model.highContrastEnabled",
                     highContrastTheme: "{settings}.model.highContrastTheme",
                     lineSpace: "{settings}.model.lineSpace",

@@ -53,6 +53,15 @@
                     }
                 }
             },
+            selectionHighlight: {
+                type: "gpii.chrome.enactor.selectionHighlight",
+                options: {
+                    model: {
+                        selectionHighlightEnabled: "{domEnactor}.model.selectionHighlightEnabled",
+                        selectionHighlightTheme: "{domEnactor}.model.selectionHighlightTheme"
+                    }
+                }
+            },
             lineSpace: {
                 type: "gpii.chrome.enactor.lineSpace",
                 options: {
@@ -118,6 +127,32 @@
 
     gpii.chrome.enactor.contrast.convertContrast = function (model) {
         return model.highContrastEnabled ? fluid.get(model.mapping, [model.highContrastTheme]) : "default";
+    };
+
+    // Selection highlight
+    fluid.defaults("gpii.chrome.enactor.selectionHighlight", {
+        gradeNames: ["fluid.prefs.enactor.classSwapper"],
+        classes: {
+            "default": "",
+            "yellow": "fl-selection-yellow",
+            "green": "fl-selection-green",
+            "blue": "fl-selection-blue",
+            "pink": "fl-selection-pink",
+            "purple": "fl-selection-purple"
+        },
+        modelRelay: {
+            target: "value",
+            singleTransform: {
+                type: "fluid.transforms.condition",
+                condition: "{that}.model.selectionHighlightEnabled",
+                true: "{that}.model.selectionHighlightTheme",
+                false: "default"
+            }
+        }
+    });
+
+    gpii.chrome.enactor.contrast.convertSelectionHighlight = function (model) {
+        return model.selectionHighlightEnabled ? model.selectionHighlightTheme : "default";
     };
 
     // Line space
