@@ -102,8 +102,7 @@
             "bw": "fl-theme-bw",
             "wb": "fl-theme-wb",
             "by": "fl-theme-by",
-            "yb": "fl-theme-yb",
-            "lgdg": "fl-theme-lgdg"
+            "yb": "fl-theme-yb"
         },
         mapping: {
             "black-white": "bw",
@@ -136,9 +135,7 @@
             "default": "",
             "yellow": "fl-selection-yellow",
             "green": "fl-selection-green",
-            "blue": "fl-selection-blue",
-            "pink": "fl-selection-pink",
-            "purple": "fl-selection-purple"
+            "pink": "fl-selection-pink"
         },
         modelRelay: {
             target: "value",
@@ -150,10 +147,6 @@
             }
         }
     });
-
-    gpii.chrome.enactor.contrast.convertSelectionHighlight = function (model) {
-        return model.selectionHighlightEnabled ? model.selectionHighlightTheme : "default";
-    };
 
     // Line space
     fluid.defaults("gpii.chrome.enactor.lineSpace", {

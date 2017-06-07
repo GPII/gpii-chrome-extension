@@ -44,6 +44,104 @@
         // using the sinon-chrome stub we return the mockPort
         chrome.runtime.connect.returns(gpii.tests.mockPort);
 
+        /*********************
+         * Common Assertions *
+         *********************/
+
+        gpii.tests.assertClasses = function (that, setting) {
+            fluid.each(that.options.classes, function (className, settingName) {
+                if (settingName === setting && className) {
+                    jqUnit.assertTrue("The " + className + " class should be applied.", that.container.hasClass(className));
+                } else if (className) {
+                    jqUnit.assertFalse("The " + className + " class should not be applied.", that.container.hasClass(className));
+                }
+            });
+        };
+
+        /*****************************
+         * Selection Highlight Tests *
+         *****************************/
+
+        jqUnit.module("Selection Highlight Tests");
+
+        fluid.defaults("gpii.tests.selectionHighlightTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                selectionHighlight: {
+                    type: "gpii.chrome.enactor.selectionHighlight",
+                    container: ".gpii-test-selectionHighlight",
+                    options: {
+                        model: {
+                            selectionHighlightEnabled: false,
+                            selectionHighlightTheme: "yellow"
+                        }
+                    }
+                },
+                selectionHighlightTester: {
+                    type: "fluid.tests.selectionHighlightTester"
+                }
+            }
+        });
+
+        fluid.defaults("fluid.tests.selectionHighlightTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            modules: [{
+                name: "Selection Highlight Tests",
+                tests: [{
+                    name: "Model Changes",
+                    expect: 17,
+                    sequence: [{
+                        func: "jqUnit.assertEquals",
+                        args: ["The model.value should be set to \"default\"", "default", "{selectionHighlight}.model.value"]
+                    }, {
+                        func: "{selectionHighlight}.applier.change",
+                        args: ["selectionHighlightEnabled", true]
+                    }, {
+                        changeEvent: "{selectionHighlight}.applier.modelChanged",
+                        path: "value",
+                        listener: "jqUnit.assertEquals",
+                        args: ["The model.value should be set to \"yellow\"", "yellow", "{selectionHighlight}.model.value"]
+                    }, {
+                        func: "gpii.tests.assertClasses",
+                        args: ["{selectionHighlight}", "yellow"]
+                    }, {
+                        func: "{selectionHighlight}.applier.change",
+                        args: ["selectionHighlightTheme", "pink"]
+                    }, {
+                        changeEvent: "{selectionHighlight}.applier.modelChanged",
+                        path: "value",
+                        listener: "jqUnit.assertEquals",
+                        args: ["The model.value should be set to \"pink\"", "pink", "{selectionHighlight}.model.value"]
+                    }, {
+                        func: "gpii.tests.assertClasses",
+                        args: ["{selectionHighlight}", "pink"]
+                    }, {
+                        func: "{selectionHighlight}.applier.change",
+                        args: ["selectionHighlightTheme", "green"]
+                    }, {
+                        changeEvent: "{selectionHighlight}.applier.modelChanged",
+                        path: "value",
+                        listener: "jqUnit.assertEquals",
+                        args: ["The model.value should be set to \"green\"", "green", "{selectionHighlight}.model.value"]
+                    }, {
+                        func: "gpii.tests.assertClasses",
+                        args: ["{selectionHighlight}", "green"]
+                    }, {
+                        func: "{selectionHighlight}.applier.change",
+                        args: ["selectionHighlightEnabled", false]
+                    }, {
+                        changeEvent: "{selectionHighlight}.applier.modelChanged",
+                        path: "value",
+                        listener: "jqUnit.assertEquals",
+                        args: ["The model.value should be set to \"default\"", "default", "{selectionHighlight}.model.value"]
+                    }, {
+                        func: "gpii.tests.assertClasses",
+                        args: ["{selectionHighlight}", "default"]
+                    }]
+                }]
+            }]
+        });
+
         /***********************
          * High Contrast Tests *
          ***********************/
@@ -93,23 +191,13 @@
             }
         });
 
-        gpii.tests.contrastTests.assertContrastClass = function (that, contrast) {
-            fluid.each(that.options.classes, function (className, contrastName) {
-                if (contrastName === contrast && className) {
-                    jqUnit.assertTrue("The " + className + " class should be applied.", that.container.hasClass(className));
-                } else if (className) {
-                    jqUnit.assertFalse("The " + className + " class should not be applied.", that.container.hasClass(className));
-                }
-            });
-        };
-
         fluid.defaults("fluid.tests.contrastTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "Contrast Tests",
                 tests: [{
                     name: "Model Changes",
-                    expect: 31,
+                    expect: 26,
                     sequence: [{
                         func: "jqUnit.assertEquals",
                         args: ["The model.value should be set to \"default\"", "default", "{contrast}.model.value"]
@@ -122,7 +210,7 @@
                         listener: "jqUnit.assertEquals",
                         args: ["The model.value should be set to \"yb\"", "by", "{contrast}.model.value"]
                     }, {
-                        func: "gpii.tests.contrastTests.assertContrastClass",
+                        func: "gpii.tests.assertClasses",
                         args: ["{contrast}", "by"]
                     }, {
                         func: "{contrast}.applier.change",
@@ -133,7 +221,7 @@
                         listener: "jqUnit.assertEquals",
                         args: ["The model.value should be set to \"by\"", "yb", "{contrast}.model.value"]
                     }, {
-                        func: "gpii.tests.contrastTests.assertContrastClass",
+                        func: "gpii.tests.assertClasses",
                         args: ["{contrast}", "yb"]
                     }, {
                         func: "{contrast}.applier.change",
@@ -144,7 +232,7 @@
                         listener: "jqUnit.assertEquals",
                         args: ["The model.value should be set to \"wb\"", "wb", "{contrast}.model.value"]
                     }, {
-                        func: "gpii.tests.contrastTests.assertContrastClass",
+                        func: "gpii.tests.assertClasses",
                         args: ["{contrast}", "wb"]
                     }, {
                         func: "{contrast}.applier.change",
@@ -155,7 +243,7 @@
                         listener: "jqUnit.assertEquals",
                         args: ["The model.value should be set to \"bw\"", "bw", "{contrast}.model.value"]
                     }, {
-                        func: "gpii.tests.contrastTests.assertContrastClass",
+                        func: "gpii.tests.assertClasses",
                         args: ["{contrast}", "bw"]
                     }, {
                         func: "{contrast}.applier.change",
@@ -166,7 +254,7 @@
                         listener: "jqUnit.assertEquals",
                         args: ["The model.value should be set to \"default\"", "default", "{contrast}.model.value"]
                     }, {
-                        func: "gpii.tests.contrastTests.assertContrastClass",
+                        func: "gpii.tests.assertClasses",
                         args: ["{contrast}", "default"]
                     }]
                 }]
@@ -439,6 +527,7 @@
         });
 
         fluid.test.runTests([
+            "gpii.tests.selectionHighlightTests",
             "gpii.tests.contrastTests",
             "gpii.tests.lineSpaceTests",
             "gpii.tests.inputsLargerTests",
