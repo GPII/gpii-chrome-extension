@@ -1,23 +1,23 @@
 /* Larger links and inputs */
-.fl-text-larger a {
+.gpii-ext-input-enhanced a {
     font-size: 125% !important;
 }
 
 /* High contrast */
-.fl-theme-yb a, .fl-theme-by a, .fl-theme-bw a, .fl-theme-wb a,
-.fl-theme-yb div, .fl-theme-by div, .fl-theme-bw div, .fl-theme-wb div {
+.gpii-ext-theme-yb a, .gpii-ext-theme-by a, .gpii-ext-theme-bw a, .gpii-ext-theme-wb a,
+.gpii-ext-theme-yb div, .gpii-ext-theme-by div, .gpii-ext-theme-bw div, .gpii-ext-theme-wb div {
     background-image: none !important;
 }
 
-.fl-theme-yb input, .fl-theme-yb button {
+.gpii-ext-theme-yb input, .gpii-ext-theme-yb button {
     border: 1px solid yellow;
 }
 
-.fl-theme-bw input, .fl-theme-bw button,
-.fl-theme-by input, .fl-theme-by button {
+.gpii-ext-theme-bw input, .gpii-ext-theme-bw button,
+.gpii-ext-theme-by input, .gpii-ext-theme-by button {
     border: 1px solid black;
 }
 
-.fl-theme-wb input, .fl-theme-wb button {
+.gpii-ext-theme-wb input, .gpii-ext-theme-wb button {
     border: 1px solid white;
 }

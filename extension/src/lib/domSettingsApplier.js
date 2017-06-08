@@ -24,9 +24,6 @@ var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 fluid.defaults("gpii.chrome.domSettingsApplier", {
     gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent"],
     domSettingsHandler: "content_scripts/domSettingsHandler.js",
-    updatedTabScriptOptions: {
-        runAt: "document_end"
-    },
     events: {
         onConnect: null
     },

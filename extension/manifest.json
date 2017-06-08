@@ -16,22 +16,23 @@
             "<all_urls>"
         ],
         "css": [
-            "css/highContrast.css",
-            "css/Enactors.css",
+            "css/enactors.css",
             "css/selection.css"
         ],
         "js": [
             "dist/gpii-chrome-extension-contentScriptsLib.min.js",
             "content_scripts/domEnactor.js",
             "content_scripts/domSettingsHandler.js"
-        ]
+        ],
+        "all_frames": true
     }, {
         "matches": [
             "https://www.caljobs.ca.gov/*"
         ],
         "css": [
             "css/calJobs.css"
-        ]
+        ],
+        "all_frames": true
     }],
     "background": {
         "scripts": [

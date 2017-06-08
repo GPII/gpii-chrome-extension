@@ -99,10 +99,10 @@
         gradeNames: ["fluid.prefs.enactor.contrast"],
         classes: {
             "default": "",
-            "bw": "fl-theme-bw",
-            "wb": "fl-theme-wb",
-            "by": "fl-theme-by",
-            "yb": "fl-theme-yb"
+            "bw": "gpii-ext-theme-bw",
+            "wb": "gpii-ext-theme-wb",
+            "by": "gpii-ext-theme-by",
+            "yb": "gpii-ext-theme-yb"
         },
         mapping: {
             "black-white": "bw",
@@ -133,9 +133,9 @@
         gradeNames: ["fluid.prefs.enactor.classSwapper"],
         classes: {
             "default": "",
-            "yellow": "fl-selection-yellow",
-            "green": "fl-selection-green",
-            "pink": "fl-selection-pink"
+            "yellow": "gpii-ext-selection-yellow",
+            "green": "gpii-ext-selection-green",
+            "pink": "gpii-ext-selection-pink"
         },
         modelRelay: {
             target: "value",
@@ -165,7 +165,7 @@
     // Inputs larger
     fluid.defaults("gpii.chrome.enactor.inputsLarger", {
         gradeNames: ["fluid.prefs.enactor.inputsLarger"],
-        cssClass: "fl-text-larger"
+        cssClass: "gpii-ext-input-enhanced"
     });
 
     // Table of contents
