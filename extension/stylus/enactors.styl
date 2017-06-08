@@ -1,27 +1,7 @@
-/*
- * TODO: This file is essentially a copy of Fluid Infusion's enactors.styl file
- *       but with some modifications to remove unused parts and change the theme class names.
- *       When https://issues.fluidproject.org/browse/FLUID-6163 has been addressed this file
- *       should be revised to make use of a more modular set of enactor styling.
- */
+@import "../../node_modules/infusion/src/framework/preferences/css/stylus/utils/Themes"
+@import "utils/selection"
 
-@import "../../node_modules/infusion/src/framework/preferences/css/stylus/utils/Themes.styl"
-
-// UI Enhancer "Enlarge text" input/button options
-.gpii-ext-input-enhanced button,
-.gpii-ext-input-enhanced input,
-.gpii-ext-input-enhanced select,
-.gpii-ext-input-enhanced textarea,
-.gpii-ext-input-enhanced .gpii-ext-input-enhance {
-    font-size: 125% !important;
-}
-
-// UI Enhancer 'enhanced links' styling
-.gpii-ext-input-enhanced a {
-    font-size: 125% !important;
-    text-decoration: underline !important;
-    font-weight: bold !important;
-}
+@import "utils/enhanceInputs"
 
 // Theming
 // Renamed the theme classes from the Fluid Infusion Preferences Framework
@@ -51,3 +31,24 @@ extensionThemes = {
 }
 
 build-themes-Enactors(extensionThemes);
+
+// Selection Highlight
+selectionThemes = {
+    ".gpii-ext-selection-yellow": {
+        foregroundColor: #000000,
+        backgroundColor: #eeee1a,
+        linkColor: #203bd6
+    }
+    ".gpii-ext-selection-green": {
+        foregroundColor: #000000,
+        backgroundColor: #318712,
+        linkColor: #ffffff
+    }
+    ".gpii-ext-selection-pink": {
+        foregroundColor: #000000,
+        backgroundColor: #de00a2,
+        linkColor: #ffffff
+    }
+}
+
+gpii-stylus-selectionThemes(selectionThemes);

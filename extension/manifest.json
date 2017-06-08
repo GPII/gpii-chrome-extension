@@ -16,8 +16,7 @@
             "<all_urls>"
         ],
         "css": [
-            "css/enactors.css",
-            "css/selection.css"
+            "css/enactors.css"
         ],
         "js": [
             "dist/gpii-chrome-extension-contentScriptsLib.min.js",

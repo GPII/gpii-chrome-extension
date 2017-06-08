@@ -1,0 +1,37 @@
+
+gpii-stylus-selection(selector, theme) {
+    {selector} {
+        &::selection,
+        & *::selection {
+            background-color: theme.backgroundColor;
+            color: theme.foregroundColor
+        }
+
+        &a::selection,
+        &a *::selection,
+        & a::selection,
+        & a *::selection {
+            color: theme.linkColor
+        }
+
+        // Firefox specific styles, requires -moz vendor prefix.
+        &::-moz-selection,
+        & *::-moz-selection {
+            background-color: theme.backgroundColor;
+            color: theme.foregroundColor
+        }
+
+        &a::-moz-selection,
+        &a *::-moz-selection,
+        & a::-moz-selection,
+        & a *::-moz-selection {
+            color: theme.linkColor
+        }
+    }
+}
+
+gpii-stylus-selectionThemes(selectionThemes) {
+    for selector in selectionThemes {
+        gpii-stylus-selection(selector, selectionThemes[selector]);
+    }
+}
