@@ -27,6 +27,9 @@
             // highContrastTheme: string,
             // lineSpace: number,    // the multiplier to the current line space
             // inputsLarger: boolean,
+            // selectionHighlightEnabled: boolean,
+            // selectionHighlightTheme: string,
+            // simplifiedUiEnabled: boolean,
             // tableOfContents: boolean
         },
         events: {
@@ -53,15 +56,6 @@
                     }
                 }
             },
-            selectionHighlight: {
-                type: "gpii.chrome.enactor.selectionHighlight",
-                options: {
-                    model: {
-                        selectionHighlightEnabled: "{domEnactor}.model.selectionHighlightEnabled",
-                        selectionHighlightTheme: "{domEnactor}.model.selectionHighlightTheme"
-                    }
-                }
-            },
             lineSpace: {
                 type: "gpii.chrome.enactor.lineSpace",
                 options: {
@@ -75,6 +69,23 @@
                 options: {
                     model: {
                         value: "{domEnactor}.model.inputsLarger"
+                    }
+                }
+            },
+            selectionHighlight: {
+                type: "gpii.chrome.enactor.selectionHighlight",
+                options: {
+                    model: {
+                        selectionHighlightEnabled: "{domEnactor}.model.selectionHighlightEnabled",
+                        selectionHighlightTheme: "{domEnactor}.model.selectionHighlightTheme"
+                    }
+                }
+            },
+            simplify: {
+                type: "gpii.chrome.enactor.simplify",
+                options: {
+                    model: {
+                        simplify: "{domEnactor}.model.simplifiedUiEnabled"
                     }
                 }
             },
@@ -128,6 +139,26 @@
         return model.highContrastEnabled ? fluid.get(model.mapping, [model.highContrastTheme]) : "default";
     };
 
+    // Line space
+    fluid.defaults("gpii.chrome.enactor.lineSpace", {
+        gradeNames: ["fluid.prefs.enactor.lineSpace"],
+        fontSizeMap: {
+            "xx-small": "9px",
+            "x-small": "11px",
+            "small": "13px",
+            "medium": "15px",
+            "large": "18px",
+            "x-large": "23px",
+            "xx-large": "30px"
+        }
+    });
+
+    // Inputs larger
+    fluid.defaults("gpii.chrome.enactor.inputsLarger", {
+        gradeNames: ["fluid.prefs.enactor.inputsLarger"],
+        cssClass: "gpii-ext-input-enhanced"
+    });
+
     // Selection highlight
     fluid.defaults("gpii.chrome.enactor.selectionHighlight", {
         gradeNames: ["fluid.prefs.enactor.classSwapper"],
@@ -148,24 +179,9 @@
         }
     });
 
-    // Line space
-    fluid.defaults("gpii.chrome.enactor.lineSpace", {
-        gradeNames: ["fluid.prefs.enactor.lineSpace"],
-        fontSizeMap: {
-            "xx-small": "9px",
-            "x-small": "11px",
-            "small": "13px",
-            "medium": "15px",
-            "large": "18px",
-            "x-large": "23px",
-            "xx-large": "30px"
-        }
-    });
-
-    // Inputs larger
-    fluid.defaults("gpii.chrome.enactor.inputsLarger", {
-        gradeNames: ["fluid.prefs.enactor.inputsLarger"],
-        cssClass: "gpii-ext-input-enhanced"
+    // Simplification
+    fluid.defaults("gpii.chrome.enactor.simplify", {
+        gradeNames: ["fluid.prefs.enactor", "gpii.simplify"]
     });
 
     // Table of contents

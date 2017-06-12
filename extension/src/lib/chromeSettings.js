@@ -80,6 +80,7 @@ fluid.defaults("gpii.chrome.settings", {
                     highContrastTheme: "{settings}.model.highContrastTheme",
                     lineSpace: "{settings}.model.lineSpace",
                     inputsLarger: "{settings}.model.inputsLargerEnabled",
+                    simplifiedUiEnabled: "{settings}.model.simplifiedUiEnabled",
                     tableOfContents: "{settings}.model.tableOfContentsEnabled"
                 }
             }
