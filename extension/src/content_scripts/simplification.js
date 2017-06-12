@@ -96,9 +96,9 @@
             navToggle.click(function () {
                 var newState = !that.model.showNav;
                 that.applier.change("showNav", newState);
-                navToggle.attr("aria-pressed", newState);
             });
-            content.prepend(navToggle);
+            // prepend to first content element only
+            content.eq(0).prepend(navToggle);
         }
     };
 
@@ -118,10 +118,13 @@
 
     gpii.simplify.toggleNav = function (that, state) {
         var nav = that.findNav();
+        var navToggle = that.locate("navToggle");
         if (state && that.model.simplify) {
             nav.css("visibility", "visible");
+            navToggle.attr("aria-pressed", state);
         } else {
             nav.css("visibility", "");
+            navToggle.attr("aria-pressed", state);
         }
     };
 })(jQuery, fluid);

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>GPII Chrome extension simplification tests</title>
+
+        <link rel="stylesheet" media="screen" href="../../../node_modules/infusion/tests/lib/qunit/css/qunit.css" />
+        <link rel="stylesheet" href="../../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.css">
+
+        <script src="../../../dist/gpii-chrome-extension-contentScriptsLib.min.js"></script>
+        <script src="../../../extension/src/content_scripts/simplification.js"></script>
+
+        <script src="../../../node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js"></script>
+        <script src="../../../node_modules/infusion/tests/lib/qunit/js/qunit.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/jqUnit/js/jqUnit.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/jqUnit/js/jqUnit-browser.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/utils/js/IoCTestUtils.js"></script>
+        <script src="../../../node_modules/sinon-chrome/dist/sinon-chrome.latest.js"></script>
+
+        <script src="../js/simplificationTests.js"></script>
+    </head>
+
+    <body id="body">
+        <h1 id="qunit-header">GPII Chrome extension simplification tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+        <!-- Test Markup -->
+        <div class="gpiic-simplify-init">
+            <article>Article</article>
+        </div>
+        <div class="gpiic-simplify-init-noContent">
+            <div>No discernible content</div>
+        </div>
+
+        <div class="gpiic-simplify-allContent">
+            <div class="gpiic-simplify-article">
+                <article>article element</article>
+                <div role="article">article role</div>
+                <div class="article">article class</div>
+                <div id="article">article id</div>
+            </div>
+            <div class="gpiic-simplify-main">
+                <main>main element</main>
+                <div role="main">main role</div>
+                <div class="main">main class</div>
+                <div id="main">main id</div>
+            </div>
+            <div class="gpiic-simplify-genericContent">
+                <div class="content">content class</div>
+                <div id="content">content id</div>
+                <div class="body">body class</div>
+                <div id="body">body id</div>
+            </div>
+        </div>
+
+        <div class="gpiic-simplify-navigation">
+            <nav>nav element</nav>
+            <div role="navigation">navigation role</div>
+            <div class="navigation">navigation class</div>
+            <div class="nav">nav class</div>
+            <div id="navigation">navigation id</div>
+            <div id="nav">nav id</div>
+            <input role="search" type="text">
+            <input type="search">
+
+            <article></article>
+        </div>
+
+        <div class="gpii-test-simplify">
+            <nav>nav element</nav>
+            <input type="search">
+
+            <main>
+                <h2>some heading</h2>
+                <article>
+                    <h3>article heading</h3>
+                </article>
+                <section class="article">
+                    <h3>second article heading</h3>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>
