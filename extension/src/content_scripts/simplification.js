@@ -19,17 +19,20 @@
     fluid.defaults("gpii.simplify", {
         gradeNames: ["fluid.viewComponent"],
         selectors: {
-            navToggle: ".gpii-simplify-navToggle",
+            navToggle: ".gpiic-simplify-navToggle",
             article: "article, [role~='article'], .article, #article",
             main: "main, [role~='main'], .main, #main",
             genericContent: ".content, #content, .body:not('body'), #body:not('body')",
             nav: "nav, [role~='navigation'], .navigation, .nav, #nav, #navigation, [role~='search'], [type~='search']"
         },
         markup: {
-            navToggle: "<button class='gpii-simplify-navToggle'></button>"
+            navToggle: "<button class='gpiic-simplify-navToggle'></button>"
         },
         strings: {
-            navToggle: "Toggle Navigation"
+            navToggle: "Show/Hide Navigation"
+        },
+        styles: {
+            navToggle: "gpii-simplify-navToggle"
         },
         model: {
             simplify: false,
@@ -93,6 +96,7 @@
             navToggle = $(that.options.markup.navToggle);
             navToggle.attr("aria-pressed", that.model.showNav);
             navToggle.text(that.options.strings.navToggle);
+            navToggle.addClass(that.options.styles.navToggle);
             navToggle.click(function () {
                 var newState = !that.model.showNav;
                 that.applier.change("showNav", newState);
