@@ -32,7 +32,7 @@
         });
 
         jqUnit.test("Initialization - simplify enabled", function () {
-            jqUnit.expect(5);
+            jqUnit.expect(6);
             var that = gpii.simplify(".gpiic-simplify-init", {model: {simplify: true}});
             var navToggle = that.locate("navToggle");
 
@@ -40,6 +40,7 @@
             jqUnit.assertEquals("Visibility styling on the container should have been set", "hidden", that.container.css("visibility"));
             jqUnit.assertEquals("The navigation toggle button should be inserted", 1, navToggle.length);
             jqUnit.assertEquals("The navToggle's text should be set", that.options.strings.navToggle, navToggle.text());
+            jqUnit.assertTrue("The navToggle style should be set", navToggle.hasClass(that.options.styles.navToggle));
             jqUnit.assertEquals("The navToggle's pressed state should be set", "false", navToggle.attr("aria-pressed"));
         });
 
