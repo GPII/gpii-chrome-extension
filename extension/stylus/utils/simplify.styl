@@ -8,11 +8,8 @@
 // UI Enhancer "Enlarge text" input/button options
 button.gpii-simplify-navToggle {
     background: #138bd6;
-    background-image: -webkit-linear-gradient(top, #138bd6, #196b9e);
-    background-image: -moz-linear-gradient(top, #138bd6, #196b9e);
-    background-image: -ms-linear-gradient(top, #138bd6, #196b9e);
-    background-image: -o-linear-gradient(top, #138bd6, #196b9e);
-    background-image: linear-gradient(to bottom, #138bd6, #196b9e);
+    background: embedurl("../../images/gpii-icon.svg", "utf8") no-repeat 5px 0px, linear-gradient(to bottom, #138bd6, #196b9e);
+    background-size: contain;
     -webkit-border-radius: 0.5rem;
     -moz-border-radius: 0.5rem;
     border-radius: 0.5rem;
@@ -23,6 +20,7 @@ button.gpii-simplify-navToggle {
     color: #ffffff;
     font-size: 1.2rem;
     padding: 5px 10px;
+    padding-left: 2.8rem;
     text-decoration: none;
     border-image: none;
     border-width: 0;
@@ -34,7 +32,6 @@ button.gpii-simplify-navToggle {
 
     &:active,
     &[aria-pressed="true"] {
-        background-image: none;
         background-color: #135f8e;
         box-shadow: inset 0 0 10px #000000;
     }

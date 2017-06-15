@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid, jqUnit, chrome, gpii */
+/* global fluid, jqUnit, gpii */
 "use strict";
 
 (function ($) {
