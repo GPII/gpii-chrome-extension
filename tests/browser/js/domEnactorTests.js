@@ -64,6 +64,103 @@
 
         jqUnit.module("Selection Highlight Tests");
 
+        gpii.tests.clearSelection = function () {
+            window.getSelection()
+                  .removeAllRanges();
+        };
+
+        gpii.tests.cloneSelectedNode = function () {
+            return window.getSelection()
+                         .getRangeAt(0)
+                         .cloneContents()
+                         .children[0];
+        };
+
+        jqUnit.test("gpii.chrome.enactor.selectionHighlight.selectParagraph tests", function () {
+            gpii.tests.clearSelection();
+
+            gpii.chrome.enactor.selectionHighlight.selectParagraph($(".gpii-test-selectionHighlight-nestedElm")[0]);
+            var selectedParagraph = gpii.tests.cloneSelectedNode();
+            jqUnit.assertTrue("The paragraph should be selected", $(selectedParagraph).is(".gpii-test-selectionHighlight-paragraph"));
+            gpii.tests.clearSelection();
+
+            gpii.chrome.enactor.selectionHighlight.selectParagraph($(".gpii-test-selectionHighlight-node")[0]);
+            var selectedNode = gpii.tests.cloneSelectedNode();
+            jqUnit.assertTrue("The node should be selected", $(selectedNode).is(".gpii-test-selectionHighlight-node"));
+            gpii.tests.clearSelection();
+        });
+
+        gpii.tests.getContextMenuEvent = function (mousePressed) {
+            var event = jQuery.Event("contextmenu");
+            if (mousePressed) {
+                event.button = 2;
+            }
+            return event;
+        };
+
+        gpii.tests.handleRightClickTestCases = [{
+            model: {
+                selectionHighlightEnabled: true,
+                selectParagraph: true
+            },
+            event: gpii.tests.getContextMenuEvent()
+        }, {
+            model: {
+                selectionHighlightEnabled: true,
+                selectParagraph: false
+            },
+            event: gpii.tests.getContextMenuEvent(true)
+        }, {
+            model: {
+                selectionHighlightEnabled: false,
+                selectParagraph: true
+            },
+            event: gpii.tests.getContextMenuEvent(true)
+        }, {
+            model: {
+                selectionHighlightEnabled: false,
+                selectParagraph: false
+            },
+            event: gpii.tests.getContextMenuEvent(true)
+        }, {
+            model: {
+                selectionHighlightEnabled: false,
+                selectParagraph: false
+            },
+            event: gpii.tests.getContextMenuEvent()
+        }, {
+            model: {
+                selectionHighlightEnabled: true,
+                selectParagraph: false
+            },
+            event: gpii.tests.getContextMenuEvent()
+        }, {
+            model: {
+                selectionHighlightEnabled: false,
+                selectParagraph: true
+            },
+            event: gpii.tests.getContextMenuEvent()
+        }, {
+            model: {
+                selectionHighlightEnabled: true,
+                selectParagraph: true
+            },
+            event: gpii.tests.getContextMenuEvent(true)
+        }];
+
+        jqUnit.test("gpii.chrome.enactor.selectionHighlight.handleRightClick tests", function () {
+            jqUnit.expect(4);
+
+            fluid.each(gpii.tests.handleRightClickTestCases, function (testCase) {
+                gpii.chrome.enactor.selectionHighlight.handleRightClick(testCase.model, testCase.event, function () {
+                    jqUnit.assert("The rick click handler was fired");
+                    jqUnit.assertEquals("The second button should have been pressed", 2, testCase.event.button);
+                    jqUnit.assertTrue("The selectionHighlightEnabled model value should be set to true", testCase.model.selectionHighlightEnabled);
+                    jqUnit.assertTrue("The selectParagraph model value should be set to true", testCase.model.selectParagraph);
+                });
+            });
+        });
+
         fluid.defaults("gpii.tests.selectionHighlightTests", {
             gradeNames: ["fluid.test.testEnvironment"],
             components: {
@@ -82,6 +179,12 @@
                 }
             }
         });
+
+        gpii.tests.selectionHighlightTests.assertSelectedText = function (expectedSelector) {
+            var selectedNode = gpii.tests.cloneSelectedNode();
+            console.log("selectedNode:", selectedNode);
+            jqUnit.assertTrue("The node with selector '" + expectedSelector + "' should be selected", $(selectedNode).is(expectedSelector));
+        };
 
         fluid.defaults("fluid.tests.selectionHighlightTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
@@ -137,6 +240,39 @@
                     }, {
                         func: "gpii.tests.assertClasses",
                         args: ["{selectionHighlight}", "default"]
+                    }]
+                }, {
+                    name: "Paragraph selection",
+                    expect: 4,
+                    sequence: [{
+                        func: "{selectionHighlight}.applier.change",
+                        args: ["", {
+                            selectionHighlightEnabled: true,
+                            selectParagraph: true
+                        }]
+                    }, {
+                        changeEvent: "{selectionHighlight}.applier.modelChanged",
+                        path: "",
+                        listener: "jqUnit.assertTrue",
+                        args: ["The selectParagraph model value is updated", "{selectionHighlight}.model.selectParagraph"]
+                    }, {
+                        jQueryTrigger: gpii.tests.getContextMenuEvent(true),
+                        element: ".gpii-test-selectionHighlight-paragraph"
+                    }, {
+                        func: "gpii.tests.selectionHighlightTests.assertSelectedText",
+                        args: [".gpii-test-selectionHighlight-paragraph"]
+                    }, {
+                        jQueryTrigger: gpii.tests.getContextMenuEvent(true),
+                        element: ".gpii-test-selectionHighlight-nestedElm"
+                    }, {
+                        func: "gpii.tests.selectionHighlightTests.assertSelectedText",
+                        args: [".gpii-test-selectionHighlight-paragraph"]
+                    }, {
+                        jQueryTrigger: gpii.tests.getContextMenuEvent(true),
+                        element: $(".gpii-test-selectionHighlight-node")
+                    }, {
+                        func: "gpii.tests.selectionHighlightTests.assertSelectedText",
+                        args: [".gpii-test-selectionHighlight-node"]
                     }]
                 }]
             }]

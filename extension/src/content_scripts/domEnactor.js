@@ -188,7 +188,7 @@
             selectParagraph: "gpii.chrome.enactor.selectionHighlight.selectParagraph",
             handleRightClick: {
                 funcName: "gpii.chrome.enactor.selectionHighlight.handleRightClick",
-                args: ["{arguments}.0", "{that}.selectParagraph"]
+                args: ["{that}.model", "{arguments}.0", "{that}.selectParagraph"]
             }
         }
     });
@@ -214,10 +214,11 @@
         }
     };
 
-    gpii.chrome.enactor.selectionHighlight.handleRightClick = function (event, handler) {
-        // check if the right mouse button was pressed so that this isn't
-        // triggered by the context menu key ( https://api.jquery.com/contextmenu/ )
-        if (event.button === 2) {
+    gpii.chrome.enactor.selectionHighlight.handleRightClick = function (model, event, handler) {
+        // Check if the right mouse button was pressed so that this isn't
+        // triggered by the context menu key ( https://api.jquery.com/contextmenu/ ).
+        // Only trigger the handler if the appropriate model conditions are met.
+        if (event.button === 2 && model.selectionHighlightEnabled && model.selectParagraph) {
             handler(event.target);
             event.preventDefault();
         }
