@@ -176,8 +176,52 @@
                 true: "{that}.model.selectionHighlightTheme",
                 false: "default"
             }
+        },
+        listeners: {
+            "onCreate.rightClick": {
+                "this": "{that}.container",
+                method: "contextmenu",
+                args: ["{that}.handleRightClick"]
+            }
+        },
+        invokers: {
+            selectParagraph: "gpii.chrome.enactor.selectionHighlight.selectParagraph",
+            handleRightClick: {
+                funcName: "gpii.chrome.enactor.selectionHighlight.handleRightClick",
+                args: ["{arguments}.0", "{that}.selectParagraph"]
+            }
         }
     });
+
+    gpii.chrome.enactor.selectionHighlight.selectParagraph = function (node) {
+        // find closest paragraph node
+        node = $(node);
+        var paragraphNode = node.closest("p")[0] || node[0];
+
+        if (paragraphNode) {
+            // create a range containg the paragraphNode
+            var range = new Range();
+            range.selectNode(paragraphNode);
+
+            // retrieve the current selection
+            var selection = window.getSelection();
+
+            // clear all ranges in the selection
+            selection.removeAllRanges();
+
+            // add the new range based on the RIGHT-ClICKed paragraph
+            selection.addRange(range);
+        }
+    };
+
+    gpii.chrome.enactor.selectionHighlight.handleRightClick = function (event, handler) {
+        // check if the right mouse button was pressed so that this isn't
+        // triggered by the context menu key ( https://api.jquery.com/contextmenu/ )
+        if (event.button === 2) {
+            handler(event.target);
+            event.preventDefault();
+        }
+    };
 
     // Simplification
     fluid.defaults("gpii.chrome.enactor.simplify", {
