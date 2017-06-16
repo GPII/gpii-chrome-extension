@@ -32,8 +32,18 @@
         });
 
         jqUnit.test("Initialization - simplify enabled", function () {
-            jqUnit.expect(6);
+            jqUnit.expect(3);
             var that = gpii.simplify(".gpiic-simplify-init", {model: {simplify: true}});
+            var navToggle = that.locate("navToggle");
+
+            jqUnit.assertValue("The simplify enactor should have initialized", that);
+            jqUnit.assertEquals("Visibility styling on the container should have been set", "hidden", that.container.css("visibility"));
+            jqUnit.assertEquals("The navigation toggle button should not be inserted", 0, navToggle.length);
+        });
+
+        jqUnit.test("Initialization - simplify enabled, wth nav", function () {
+            jqUnit.expect(6);
+            var that = gpii.simplify(".gpiic-simplify-init-withNav", {model: {simplify: true}});
             var navToggle = that.locate("navToggle");
 
             jqUnit.assertValue("The simplify enactor should have initialized", that);

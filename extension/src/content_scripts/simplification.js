@@ -61,8 +61,8 @@
                 args: ["{that}", ["article", "main", "genericContent"]]
             },
             findNav: {
-                funcName: "gpii.simplify.findByStrategy",
-                args: ["{that}", "nav"]
+                funcName: "gpii.simplify.findNav",
+                args: ["{that}"]
             },
             set: {
                 funcName: "gpii.simplify.set",
@@ -89,10 +89,17 @@
         return elms;
     };
 
+    gpii.simplify.findNav = function (that) {
+        var content = that.findContent();
+        var navInContent = content.find(that.options.selectors.nav);
+        return that.locate("nav").not(navInContent);
+    };
+
     gpii.simplify.injectToggle = function (that, content) {
         var navToggle = that.locate("navToggle");
+        var nav = that.findNav();
 
-        if (!navToggle.length) {
+        if (!navToggle.length && nav.length) {
             navToggle = $(that.options.markup.navToggle);
             navToggle.attr("aria-pressed", that.model.showNav);
             navToggle.text(that.options.strings.navToggle);
