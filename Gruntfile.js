@@ -34,6 +34,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js"
         ],
+
         contentScriptsLib: [
             "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
             "node_modules/infusion/src/framework/core/js/Fluid.js",
@@ -52,8 +53,37 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/components/tableOfContents/js/TableOfContents.js",
             "node_modules/infusion/src/framework/preferences/js/Enactors.js"
         ],
+        adjustersLib: [
+            // not concatenating all the individual files because there was an issue when including
+            // "node_modules/infusion/src/framework/preferences/js/PrefsEditor.js" that caused
+            // the distributeOptions to not pass along the configuration to the messageLoader and
+            // templateLoader
+            "node_modules/infusion/dist/infusion-all.js",
+            "extension/src/lib/PrefsEditor.js"
+        ],
         templates: [
-            "node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html"
+            "node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html",
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-textSize.html",
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-lineSpace.html",
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-textFont.html",
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-contrast.html",
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-layout.html",
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-enhanceInputs.html"
+        ],
+        messages: [
+            "node_modules/infusion/src/framework/preferences/messages/*.json"
+        ],
+        fonts: [
+            "node_modules/infusion/src/framework/preferences/fonts/*"
+        ],
+        images: [
+            "node_modules/infusion/src/framework/preferences/messages/**/*"
+        ],
+        css: [
+            "node_modules/infusion/src/lib/normalize/css/normalize.css",
+            "node_modules/infusion/src/framework/core/css/fluid.css",
+            "node_modules/infusion/dist/assets/src/framework/preferences/css/PrefsEditor.css",
+            "node_modules/infusion/dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditorFrame.css"
         ],
         infusionTesting: [
             "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
@@ -103,6 +133,9 @@ module.exports = function (grunt) {
                     ),
                     "dist/<%= pkg.name %>-contentScriptsLib.min.js" : [].concat(
                         files.contentScriptsLib
+                    ),
+                    "dist/<%= pkg.name %>-adjustersLib.min.js" : [].concat(
+                        files.adjustersLib
                     )
                 }
             }
@@ -138,10 +171,54 @@ module.exports = function (grunt) {
                         dest: "build/css/"
                     },
                     {
+                        expand: true,
+                        cwd: "extension/html/",
+                        src: "*",
+                        dest: "build/html/"
+                    },
+                    {
+                        expand: true,
+                        cwd: "extension/templates/",
+                        src: "*",
+                        dest: "build/templates/"
+                    },
+                    {
                         src: [].concat(
                             files.templates
                         ),
                         dest: "build/templates/",
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: [].concat(
+                            files.messages
+                        ),
+                        dest: "build/messages/",
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: [].concat(
+                            files.fonts
+                        ),
+                        dest: "build/fonts/",
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: [].concat(
+                            files.images
+                        ),
+                        dest: "build/images/",
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: [].concat(
+                            files.css
+                        ),
+                        dest: "build/css/",
                         expand: true,
                         flatten: true
                     },

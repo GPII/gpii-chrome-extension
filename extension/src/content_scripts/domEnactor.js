@@ -155,7 +155,7 @@
 
     // Inputs larger
     fluid.defaults("gpii.chrome.enactor.inputsLarger", {
-        gradeNames: ["fluid.prefs.enactor.inputsLarger"],
+        gradeNames: ["fluid.prefs.enactor.enhanceInputs"],
         cssClass: "gpii-ext-input-enhanced"
     });
 

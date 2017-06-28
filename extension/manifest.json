@@ -9,6 +9,10 @@
         "http://*/",
         "https://*/"
     ],
+    "browser_action": {
+        "default_title": "GPII",
+        "default_popup": "html/adjusters.html"
+    },
     "content_scripts": [{
         "matches": [
             "http://*/",
