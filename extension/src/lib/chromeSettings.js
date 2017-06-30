@@ -30,24 +30,26 @@ fluid.defaults("gpii.chrome.settings", {
         characterSpace: 1,
         inputsLargerEnabled: false,
         selfVoicingEnabled: false,
-        selfVoicingSelectionEnabled: false,
         tableOfContentsEnabled: false,
         dictionaryEnabled: false,
         simplifiedUiEnabled: false,
         syllabificationEnabled: false
+        // the following model paths are created by the modelRelay to combine model paths
+        // selectionTheme combines selectionHighlightTheme and selectionHighlightEnabled
+        // contrastTheme combines highContrastTheme highContrastEnabled
     },
     components: {
-        chromeVox: {
-            type: "gpii.chrome.extensionHolder",
-            options: {
-                extensionId: "kgejglhpjiefppelpmljglcjbhoiplfn",
-                name: "ChromeVox",
-                installationUrl: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn",
-                model: {
-                    extensionEnabled: "{settings}.model.selfVoicingEnabled"
-                }
-            }
-        },
+        // chromeVox: {
+        //     type: "gpii.chrome.extensionHolder",
+        //     options: {
+        //         extensionId: "kgejglhpjiefppelpmljglcjbhoiplfn",
+        //         name: "ChromeVox",
+        //         installationUrl: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn",
+        //         model: {
+        //             extensionEnabled: "{settings}.model.selfVoicingEnabled"
+        //         }
+        //     }
+        // },
         click2Speech: {
             type: "gpii.chrome.extensionHolder",
             options: {
@@ -55,7 +57,7 @@ fluid.defaults("gpii.chrome.settings", {
                 name: "click2speech",
                 installationUrl: "https://chrome.google.com/webstore/detail/click2speech/djfpbemmcokhlllnafdmomgecdlicfhj",
                 model: {
-                    extensionEnabled: "{settings}.model.selfVoicingSelectionEnabled"
+                    extensionEnabled: "{settings}.model.selfVoicingEnabled"
                 }
             }
         },
@@ -73,16 +75,7 @@ fluid.defaults("gpii.chrome.settings", {
         domSettingsApplier: {
             type: "gpii.chrome.domSettingsApplier",
             options: {
-                model: {
-                    selectionHighlightEnabled: "{settings}.model.selectionHighlightEnabled",
-                    selectionHighlightTheme: "{settings}.model.selectionHighlightTheme",
-                    highContrastEnabled: "{settings}.model.highContrastEnabled",
-                    highContrastTheme: "{settings}.model.highContrastTheme",
-                    lineSpace: "{settings}.model.lineSpace",
-                    inputsLarger: "{settings}.model.inputsLargerEnabled",
-                    simplifiedUiEnabled: "{settings}.model.simplifiedUiEnabled",
-                    tableOfContents: "{settings}.model.tableOfContentsEnabled"
-                }
+                model: "{settings}.model"
             }
         },
         // highContrast: {
@@ -139,6 +132,31 @@ fluid.defaults("gpii.chrome.settings", {
         }
     },
     model: "{settings}.options.defaultSettings",  // Defaults
+    modelRelay: [{
+        target: "selectionTheme",
+        singleTransform: {
+            type: "fluid.transforms.condition",
+            condition: "{that}.model.selectionHighlightEnabled",
+            true: "{that}.model.selectionHighlightTheme",
+            false: "default"
+        }
+    }, {
+        target: "contrastTheme",
+        singleTransform: {
+            type: "fluid.transforms.free",
+            func: "gpii.chrome.settings.convertContrast",
+            args: {
+                highContrastEnabled: "{that}.model.highContrastEnabled",
+                highContrastTheme: "{that}.model.highContrastTheme",
+                mapping: {
+                    "black-white": "bw",
+                    "white-black": "wb",
+                    "black-yellow": "by",
+                    "yellow-black": "yb"
+                }
+            }
+        }
+    }],
     invokers: {
         updateSettings: {
             funcName: "gpii.chrome.settings.updateSettings",
@@ -158,6 +176,10 @@ fluid.defaults("gpii.chrome.settings", {
         target: "{settings > gpii.chrome.extensionHolder}.options.listeners"
     }]
 });
+
+gpii.chrome.settings.convertContrast = function (model) {
+    return model.highContrastEnabled ? fluid.get(model.mapping, [model.highContrastTheme]) : "default";
+};
 
 gpii.chrome.settings.updateSettings = function (that, settings) {
     that.applier.change("", settings || that.options.defaultSettings);

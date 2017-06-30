@@ -14,12 +14,58 @@
 "use strict";
 
 (function ($, fluid) {
+    fluid.defaults("gpii.chrome.prefs.extensionPanel", {
+        gradeNames: ["fluid.prefs.fullNoPreview"],
+        components: {
+            prefsEditor: {
+                options: {
+                    modelListeners: {
+                        "": {
+                            listener: function (model) {
+                                console.log("PrefsEditor Model:", model);
+                            },
+                            args: ["{that}.model"]
+                        }
+                    },
+                    components: {
+                        portBinding: {
+                            type: "gpii.chrome.portBinding",
+                            options: {
+                                connectionName: "prefsEditor",
+                                model: {
+                                    contrastTheme: "{prefsEditor}.model.preferences.fluid_prefs_contrast",
+                                    inputsLargerEnabled: "{prefsEditor}.model.preferences.fluid_prefs_enhanceInputs",
+                                    lineSpace: "{prefsEditor}.model.preferences.fluid_prefs_lineSpace",
+                                    tableOfContentsEnabled: "{prefsEditor}.model.preferences.fluid_prefs_tableOfContents",
+                                    fontSize: "{prefsEditor}.model.preferences.fluid_prefs_textSize"
+                                    // TODO: Add adjusters for the following
+                                    // characterSpace:
+                                    // dictionaryEnabled:
+                                    // selectionTheme:
+                                    // selfVoicingEnabled:
+                                    // simplifiedUiEnabled:
+                                    // syllabificationEnabled:
+                                },
+                                listeners: {
+                                    "onMessage.refreshView": {
+                                        listener: "{prefsEditor}.events.onPrefsEditorRefresh",
+                                        priority: "after:updateModel"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    });
+
     $("document").ready(function () {
         fluid.prefs.create("#gpiic-ext-adjusters", {
             build: {
                 gradeNames: ["fluid.prefs.auxSchema.starter"],
                 auxiliarySchema: {
-                    "loaderGrades": ["fluid.prefs.fullNoPreview"],
+                    "loaderGrades": ["gpii.chrome.prefs.extensionPanel"],
                     "terms": {
                         "templatePrefix": "../templates/",
                         "messagePrefix": "../messages/"

@@ -59,6 +59,7 @@ module.exports = function (grunt) {
             // the distributeOptions to not pass along the configuration to the messageLoader and
             // templateLoader
             "node_modules/infusion/dist/infusion-all.js",
+            "extension/src/lib/portBinding.js",
             "extension/src/lib/PrefsEditor.js"
         ],
         templates: [

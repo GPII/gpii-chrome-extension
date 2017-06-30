@@ -23,12 +23,10 @@
         gradeNames: ["fluid.viewComponent"],
         model: {
             // Accepted model values:
-            // highContrastEnabled: boolean,
-            // highContrastTheme: string,
+            // contrastTheme: string,
             // lineSpace: number,    // the multiplier to the current line space
             // inputsLarger: boolean,
-            // selectionHighlightEnabled: boolean,
-            // selectionHighlightTheme: string,
+            // selectionTheme: string,
             // simplifiedUiEnabled: boolean,
             // tableOfContents: boolean
         },
@@ -51,8 +49,7 @@
                 type: "gpii.chrome.enactor.contrast",
                 options: {
                     model: {
-                        highContrastEnabled: "{domEnactor}.model.highContrastEnabled",
-                        highContrastTheme: "{domEnactor}.model.highContrastTheme"
+                        value: "{domEnactor}.model.contrastTheme"
                     }
                 }
             },
@@ -68,7 +65,7 @@
                 type: "gpii.chrome.enactor.inputsLarger",
                 options: {
                     model: {
-                        value: "{domEnactor}.model.inputsLarger"
+                        value: "{domEnactor}.model.inputsLargerEnabled"
                     }
                 }
             },
@@ -76,8 +73,7 @@
                 type: "gpii.chrome.enactor.selectionHighlight",
                 options: {
                     model: {
-                        selectionHighlightEnabled: "{domEnactor}.model.selectionHighlightEnabled",
-                        selectionHighlightTheme: "{domEnactor}.model.selectionHighlightTheme"
+                        value: "{domEnactor}.model.selectionTheme"
                     }
                 }
             },
@@ -114,30 +110,8 @@
             "wb": "gpii-ext-theme-wb",
             "by": "gpii-ext-theme-by",
             "yb": "gpii-ext-theme-yb"
-        },
-        mapping: {
-            "black-white": "bw",
-            "white-black": "wb",
-            "black-yellow": "by",
-            "yellow-black": "yb"
-        },
-        modelRelay: {
-            target: "value",
-            singleTransform: {
-                type: "fluid.transforms.free",
-                func: "gpii.chrome.enactor.contrast.convertContrast",
-                args: {
-                    highContrastEnabled: "{that}.model.highContrastEnabled",
-                    highContrastTheme: "{that}.model.highContrastTheme",
-                    mapping: "{that}.options.mapping"
-                }
-            }
         }
     });
-
-    gpii.chrome.enactor.contrast.convertContrast = function (model) {
-        return model.highContrastEnabled ? fluid.get(model.mapping, [model.highContrastTheme]) : "default";
-    };
 
     // Line space
     fluid.defaults("gpii.chrome.enactor.lineSpace", {
@@ -167,15 +141,6 @@
             "yellow": "gpii-ext-selection-yellow",
             "green": "gpii-ext-selection-green",
             "pink": "gpii-ext-selection-pink"
-        },
-        modelRelay: {
-            target: "value",
-            singleTransform: {
-                type: "fluid.transforms.condition",
-                condition: "{that}.model.selectionHighlightEnabled",
-                true: "{that}.model.selectionHighlightTheme",
-                false: "default"
-            }
         },
         listeners: {
             "onCreate.rightClick": {
