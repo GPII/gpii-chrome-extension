@@ -14,45 +14,58 @@
 "use strict";
 
 (function ($, fluid) {
+
+    fluid.defaults("gpii.chrome.prefs.extensionPanel.store", {
+        gradeNames: ["gpii.chrome.portBinding.store"],
+        model: {
+            // TODO: if possible automate the model relay bindings so that we don't
+            //       have to know the model paths ahead of time.
+            preferences: {
+                fluid_prefs_contrast: "{that}.model.remote.contrastTheme",
+                fluid_prefs_enhanceInputs: "{that}.model.remote.inputsLargerEnabled",
+                fluid_prefs_lineSpace: "{that}.model.remote.lineSpace",
+                fluid_prefs_tableOfContents: "{that}.model.remote.tableOfContentsEnabled",
+                fluid_prefs_textSize: "{that}.model.remote.fontSize"
+                // TODO: Add adjusters and model relays for the following:
+                // characterSpace
+                // dictionaryEnabled
+                // selectionTheme
+                // selfVoicingEnabled
+                // simplifiedUiEnabled
+                // syllabificationEnabled
+            }
+        }
+    });
+
+    fluid.contextAware.makeChecks({"gpii.chrome.prefs.portBinding": true});
+
+    fluid.contextAware.makeAdaptation({
+        distributionName: "gpii.chrome.prefs.portBinding.storeDistributor",
+        targetName: "fluid.prefs.store",
+        adaptationName: "strategy",
+        checkName: "portBinding",
+        record: {
+            contextValue: "{gpii.chrome.prefs.portBinding}",
+            gradeNames: "gpii.chrome.prefs.extensionPanel.store",
+            priority: "after:user"
+        }
+    });
+
     fluid.defaults("gpii.chrome.prefs.extensionPanel", {
         gradeNames: ["fluid.prefs.fullNoPreview"],
         components: {
             prefsEditor: {
                 options: {
+                    // Set the initialModel to an empty object so that all of the model preferences are sent to the
+                    // settings store.
+                    members: {
+                        initialModel: {}
+                    },
                     modelListeners: {
                         "": {
-                            listener: function (model) {
-                                console.log("PrefsEditor Model:", model);
-                            },
-                            args: ["{that}.model"]
-                        }
-                    },
-                    components: {
-                        portBinding: {
-                            type: "gpii.chrome.portBinding",
-                            options: {
-                                connectionName: "prefsEditor",
-                                model: {
-                                    contrastTheme: "{prefsEditor}.model.preferences.fluid_prefs_contrast",
-                                    inputsLargerEnabled: "{prefsEditor}.model.preferences.fluid_prefs_enhanceInputs",
-                                    lineSpace: "{prefsEditor}.model.preferences.fluid_prefs_lineSpace",
-                                    tableOfContentsEnabled: "{prefsEditor}.model.preferences.fluid_prefs_tableOfContents",
-                                    fontSize: "{prefsEditor}.model.preferences.fluid_prefs_textSize"
-                                    // TODO: Add adjusters for the following
-                                    // characterSpace:
-                                    // dictionaryEnabled:
-                                    // selectionTheme:
-                                    // selfVoicingEnabled:
-                                    // simplifiedUiEnabled:
-                                    // syllabificationEnabled:
-                                },
-                                listeners: {
-                                    "onMessage.refreshView": {
-                                        listener: "{prefsEditor}.events.onPrefsEditorRefresh",
-                                        priority: "after:updateModel"
-                                    }
-                                }
-                            }
+                            // can't use the autoSave option because we need to exclude init
+                            listener: "{that}.save",
+                            excludeSource: "init"
                         }
                     }
                 }

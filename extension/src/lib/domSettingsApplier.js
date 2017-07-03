@@ -15,7 +15,7 @@
 
 "use strict";
 
-fluid.registerNamespace("gpii");
+var gpii = fluid.registerNamespace("gpii");
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 // This component makes use of css/Enactor.css to perform the adaptations
@@ -28,10 +28,12 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         onConnect: null
     },
     model: {
-        // highContrastEnabled: boolean,
-        // highContrastTheme: string,
+        // Accepted model values:
+        // contrastTheme: string,
         // lineSpace: number,    // the multiplier to the current line space
         // inputsLarger: boolean,
+        // selectionTheme: string,
+        // simplifiedUiEnabled: boolean,
         // tableOfContents: boolean
     },
     listeners: {
@@ -43,28 +45,54 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
     },
     dynamicComponents: {
         port: {
-            type: "fluid.modelComponent",
+            type: "gpii.chrome.portConnection",
             createOnEvent: "onConnect",
             options: {
                 model: "{domSettingsApplier}.model",
-                // TODO: When FLUID-5912 is fixed, move port to the members block.
-                //       https://issues.fluidproject.org/browse/FLUID-5912
-                port: "{arguments}.0",
-                listeners: {
-                    "onCreate.bindDisconnect": {
-                        "this": "{that}.options.port.onDisconnect",
-                        method: "addListener",
-                        args: ["{that}.destroy"]
-                    }
-                },
-                modelListeners: {
-                    "": {
-                        "this": "{that}.options.port",
-                        method: "postMessage",
-                        args: ["{that}.model"]
-                    }
-                }
+                port: "{arguments}.0"
             }
         }
     }
 });
+
+fluid.defaults("gpii.chrome.portConnection", {
+    gradeNames: ["fluid.modelComponent"],
+    // TODO: When FLUID-5912 is fixed, move port to the members block.
+    //       https://issues.fluidproject.org/browse/FLUID-5912
+    port: null, // must be supplied by integrator
+    events: {
+        onDisconnect: null,
+        onMessage: null
+    },
+    listeners: {
+        "onCreate.bindDisconnect": {
+            "this": "{that}.options.port.onDisconnect",
+            method: "addListener",
+            args: ["{that}.destroy"]
+        },
+        "onCreate.bindToPortEvents": {
+            funcName: "gpii.chrome.portConnection.bindToPortEvents",
+            args: ["{that}", "{that}.options.port"]
+        },
+        "onDisconnect.destroy": "{that}.destroy",
+        "onMessage.updateModel": "{that}.updateModel"
+    },
+    modelListeners: {
+        "": {
+            "this": "{that}.options.port",
+            method: "postMessage",
+            args: ["{that}.model"]
+        }
+    },
+    invokers: {
+        updateModel: {
+            changePath: "",
+            value: "{arguments}.0"
+        }
+    }
+});
+
+gpii.chrome.portConnection.bindToPortEvents = function (that, port) {
+    port.onDisconnect.addListener(that.events.onDisconnect.fire);
+    port.onMessage.addListener(that.events.onMessage.fire);
+};

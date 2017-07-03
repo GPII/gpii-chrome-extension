@@ -27,7 +27,7 @@
         listeners: {
             "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents",
             "onMessage.updateModel": {
-                changePath: "",
+                changePath: "remote",
                 value: "{arguments}.0"
             }
         },
@@ -49,5 +49,21 @@
         if (that.port) {
             that.port.postMessage(message);
         }
+    };
+
+    fluid.defaults("gpii.chrome.portBinding.store", {
+        gradeNames: ["fluid.prefs.tempStore", "gpii.chrome.portBinding"],
+        invokers: {
+            set: {
+                funcName: "gpii.chrome.portBinding.store.set",
+                args: ["{that}", "{arguments}.0"]
+            }
+        }
+    });
+
+    gpii.chrome.portBinding.store.set = function (that, settings) {
+        that.applier.fireChangeRequest({path: "preferences", type: "DELETE"});
+        that.applier.change("preferences", settings.preferences);
+        that.postMessage(that.model.remote);
     };
 })(jQuery, fluid);
