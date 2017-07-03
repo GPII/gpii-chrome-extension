@@ -66,6 +66,11 @@
                             // can't use the autoSave option because we need to exclude init
                             listener: "{that}.save",
                             excludeSource: "init"
+                        },
+                        "{fluid.prefs.store}.model.preferences": {
+                            listener: "{that}.fetch",
+                            args: [], // removes the default arguments passed in by the model change event
+                            includeSource: "onMessage"
                         }
                     }
                 }

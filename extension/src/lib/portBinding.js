@@ -28,7 +28,8 @@
             "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents",
             "onMessage.updateModel": {
                 changePath: "remote",
-                value: "{arguments}.0"
+                value: "{arguments}.0",
+                source: "onMessage"
             }
         },
         invokers: {
