@@ -25,12 +25,12 @@
                 fluid_prefs_enhanceInputs: "{that}.model.remote.inputsLargerEnabled",
                 gpii_chrome_prefs_lineSpace: "{that}.model.remote.lineSpace",
                 fluid_prefs_tableOfContents: "{that}.model.remote.tableOfContentsEnabled",
-                gpii_chrome_prefs_textSize: "{that}.model.remote.fontSize"
+                gpii_chrome_prefs_textSize: "{that}.model.remote.fontSize",
+                fluid_prefs_speak: "{that}.model.remote.selfVoicingEnabled"
                 // TODO: Add adjusters and model relays for the following:
                 // characterSpace
                 // dictionaryEnabled
                 // selectionTheme
-                // selfVoicingEnabled
                 // simplifiedUiEnabled
                 // syllabificationEnabled
             }
@@ -178,6 +178,15 @@
                     "classnameMap": {"theme": "@contrast.classes"},
                     "template": "%templatePrefix/PrefsEditorTemplate-contrast.html",
                     "message": "%messagePrefix/contrast.json"
+                }
+            },
+            "selfVoicing": {
+                "type": "fluid.prefs.speak",
+                "panel": {
+                    type: "fluid.prefs.panel.speak",
+                    container: ".flc-prefsEditor-selfVoicing",
+                    template: "%templatePrefix/PrefsEditorTemplate-speak.html",
+                    message: "%messagePrefix/speak.json"
                 }
             },
             "tableOfContents": {

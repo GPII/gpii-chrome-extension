@@ -66,10 +66,10 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-textSize.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-lineSpace.html",
-            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-textFont.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-contrast.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-layout.html",
-            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-enhanceInputs.html"
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-enhanceInputs.html",
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-speak.html"
         ],
         messages: [
             "node_modules/infusion/src/framework/preferences/messages/*.json"
