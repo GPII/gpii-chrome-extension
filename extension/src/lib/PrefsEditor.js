@@ -27,10 +27,10 @@
                 fluid_prefs_tableOfContents: "{that}.model.remote.tableOfContentsEnabled",
                 gpii_chrome_prefs_textSize: "{that}.model.remote.fontSize",
                 fluid_prefs_speak: "{that}.model.remote.selfVoicingEnabled",
-                gpii_chrome_prefs_simplify: "{that}.model.remote.simplifiedUiEnabled"
+                gpii_chrome_prefs_simplify: "{that}.model.remote.simplifiedUiEnabled",
+                gpii_chrome_prefs_dictionary: "{that}.model.remote.dictionaryEnabled"
                 // TODO: Add adjusters and model relays for the following:
                 // characterSpace
-                // dictionaryEnabled
                 // selectionTheme
                 // syllabificationEnabled
             }
@@ -138,6 +138,15 @@
         }
     });
 
+    fluid.defaults("gpii.chrome.prefs.panel.dictionary", {
+        gradeNames: ["fluid.prefs.panel.switchAdjuster"],
+        preferenceMap: {
+            "gpii.chrome.prefs.dictionary": {
+                "model.value": "default"
+            }
+        }
+    });
+
     /***********
      * schemas *
      ***********/
@@ -207,6 +216,15 @@
                     "message": "%messagePrefix/simplify.json"
                 }
             },
+            "dictionary": {
+                "type": "gpii.chrome.prefs.dictionary",
+                "panel": {
+                    "type": "gpii.chrome.prefs.panel.dictionary",
+                    "container": ".flc-prefsEditor-dictionary",
+                    "template": "%templatePrefix/DictionaryPanelTemplate.html",
+                    "message": "%messagePrefix/dictionary.json"
+                }
+            },
             "tableOfContents": {
                 "type": "fluid.prefs.tableOfContents",
                 "panel": {
@@ -269,6 +287,16 @@
         gradeNames: ["fluid.prefs.schemas"],
         schema: {
             "gpii.chrome.prefs.simplify": {
+                "type": "boolean",
+                "default": false
+            }
+        }
+    });
+
+    fluid.defaults("gpii.chrome.prefs.schemas.dictionary", {
+        gradeNames: ["fluid.prefs.schemas"],
+        schema: {
+            "gpii.chrome.prefs.dictionary": {
                 "type": "boolean",
                 "default": false
             }
