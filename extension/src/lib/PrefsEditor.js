@@ -26,12 +26,12 @@
                 gpii_chrome_prefs_lineSpace: "{that}.model.remote.lineSpace",
                 fluid_prefs_tableOfContents: "{that}.model.remote.tableOfContentsEnabled",
                 gpii_chrome_prefs_textSize: "{that}.model.remote.fontSize",
-                fluid_prefs_speak: "{that}.model.remote.selfVoicingEnabled"
+                fluid_prefs_speak: "{that}.model.remote.selfVoicingEnabled",
+                gpii_chrome_prefs_simplify: "{that}.model.remote.simplifiedUiEnabled"
                 // TODO: Add adjusters and model relays for the following:
                 // characterSpace
                 // dictionaryEnabled
                 // selectionTheme
-                // simplifiedUiEnabled
                 // syllabificationEnabled
             }
         }
@@ -129,6 +129,15 @@
         }
     });
 
+    fluid.defaults("gpii.chrome.prefs.panel.simplify", {
+        gradeNames: ["fluid.prefs.panel.switchAdjuster"],
+        preferenceMap: {
+            "gpii.chrome.prefs.simplify": {
+                "model.value": "default"
+            }
+        }
+    });
+
     /***********
      * schemas *
      ***********/
@@ -183,10 +192,19 @@
             "selfVoicing": {
                 "type": "fluid.prefs.speak",
                 "panel": {
-                    type: "fluid.prefs.panel.speak",
-                    container: ".flc-prefsEditor-selfVoicing",
-                    template: "%templatePrefix/PrefsEditorTemplate-speak.html",
-                    message: "%messagePrefix/speak.json"
+                    "type": "fluid.prefs.panel.speak",
+                    "container": ".flc-prefsEditor-selfVoicing",
+                    "template": "%templatePrefix/PrefsEditorTemplate-speak.html",
+                    "message": "%messagePrefix/speak.json"
+                }
+            },
+            "simplify": {
+                "type": "gpii.chrome.prefs.simplify",
+                "panel": {
+                    "type": "gpii.chrome.prefs.panel.simplify",
+                    "container": ".flc-prefsEditor-simplify",
+                    "template": "%templatePrefix/SimplifyPanelTemplate.html",
+                    "message": "%messagePrefix/simplify.json"
                 }
             },
             "tableOfContents": {
@@ -243,6 +261,16 @@
                 "type": "string",
                 "default": "default",
                 "enum": ["default", "bw", "wb", "by", "yb"]
+            }
+        }
+    });
+
+    fluid.defaults("gpii.chrome.prefs.schemas.simplify", {
+        gradeNames: ["fluid.prefs.schemas"],
+        schema: {
+            "gpii.chrome.prefs.simplify": {
+                "type": "boolean",
+                "default": false
             }
         }
     });

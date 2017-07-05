@@ -184,6 +184,12 @@ module.exports = function (grunt) {
                         dest: "build/templates/"
                     },
                     {
+                        expand: true,
+                        cwd: "extension/messages/",
+                        src: "*",
+                        dest: "build/messages/"
+                    },
+                    {
                         src: [].concat(
                             files.templates
                         ),
