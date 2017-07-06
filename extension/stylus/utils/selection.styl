@@ -30,8 +30,24 @@ gpii-stylus-selection(selector, theme) {
     }
 }
 
+gpii-stylus-selectionPreview(selector, theme) {
+    {selector} {
+        &,
+        & * {
+            background-color: theme.backgroundColor;
+            color: theme.foregroundColor
+        }
+    }
+}
+
 gpii-stylus-selectionThemes(selectionThemes) {
     for selector in selectionThemes {
         gpii-stylus-selection(selector, selectionThemes[selector]);
+    }
+}
+
+gpii-stylus-selectionPreviewThemes(selectionThemes) {
+    for selector in selectionThemes {
+        gpii-stylus-selectionPreview(selector, selectionThemes[selector]);
     }
 }

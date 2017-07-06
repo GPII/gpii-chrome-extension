@@ -28,10 +28,10 @@
                 gpii_chrome_prefs_textSize: "{that}.model.remote.fontSize",
                 fluid_prefs_speak: "{that}.model.remote.selfVoicingEnabled",
                 gpii_chrome_prefs_simplify: "{that}.model.remote.simplifiedUiEnabled",
-                gpii_chrome_prefs_dictionary: "{that}.model.remote.dictionaryEnabled"
+                gpii_chrome_prefs_dictionary: "{that}.model.remote.dictionaryEnabled",
+                gpii_chrome_prefs_highlight: "{that}.model.remote.selectionTheme"
                 // TODO: Add adjusters and model relays for the following:
                 // characterSpace
-                // selectionTheme
                 // syllabificationEnabled
             }
         }
@@ -147,6 +147,76 @@
         }
     });
 
+    // TODO: After FLUID-6166 has been addressed, make use of the new base grade to simplify this configuration.
+    fluid.defaults("gpii.chrome.prefs.panel.highlight", {
+        gradeNames: ["fluid.prefs.panel"],
+        preferenceMap: {
+            "gpii.chrome.prefs.highlight": {
+                "model.value": "default",
+                "controlValues.theme": "enum"
+            }
+        },
+        mergePolicy: {
+            "controlValues.theme": "replace",
+            "stringArrayIndex.theme": "replace"
+        },
+        selectors: {
+            themeRow: ".flc-prefsEditor-themeRow",
+            themeLabel: ".flc-prefsEditor-theme-label",
+            themeInput: ".flc-prefsEditor-themeInput",
+            label: ".flc-prefsEditor-selectionHighlight-label",
+            selectionHighlightDescr: ".flc-prefsEditor-selectionHighlight-descr"
+        },
+        listeners: {
+            "afterRender.style": "{that}.style"
+        },
+        stringArrayIndex: {
+            theme: ["selectionHighlight-default", "selectionHighlight-yellow", "selectionHighlight-green", "selectionHighlight-pink"]
+        },
+        styles: {
+            defaultThemeLabel: "fl-prefsEditor-contrast-defaultThemeLabel"
+        },
+        repeatingSelectors: ["themeRow"],
+        protoTree: {
+            label: {messagekey: "selectionHighlightLabel"},
+            selectionHighlightDescr: {messagekey: "selectionHighlightDescr"},
+            expander: {
+                type: "fluid.renderer.selection.inputs",
+                rowID: "themeRow",
+                labelID: "themeLabel",
+                inputID: "themeInput",
+                selectID: "theme-radio",
+                tree: {
+                    optionnames: "${{that}.msgLookup.theme}",
+                    optionlist: "${{that}.options.controlValues.theme}",
+                    selection: "${value}"
+                }
+            }
+        },
+        controlValues: {
+            theme: ["default", "yellow", "green", "pink"]
+        },
+        markup: {
+            // Aria-hidden needed on fl-preview-A and Display 'a' created as pseudo-content in css to prevent AT from reading out display 'a' on IE, Chrome, and Safari
+            // Aria-hidden needed on fl-crossout to prevent AT from trying to read crossout symbol in Safari
+            label: "<span class=\"fl-preview-A\" aria-hidden=\"true\"></span><span class=\"fl-hidden-accessible\">%theme</span><div class=\"fl-crossout\" aria-hidden=\"true\"></div>"
+        },
+        invokers: {
+            style: {
+                funcName: "fluid.prefs.panel.contrast.style",
+                args: [
+                    "{that}.dom.themeLabel",
+                    "{that}.msgLookup.theme",
+                    "{that}.options.markup.label",
+                    "{that}.options.controlValues.theme",
+                    "default",
+                    "{that}.options.classnameMap.theme",
+                    "{that}.options.styles.defaultThemeLabel"
+                ]
+            }
+        }
+    });
+
     /***********
      * schemas *
      ***********/
@@ -225,6 +295,22 @@
                     "message": "%messagePrefix/dictionary.json"
                 }
             },
+            "selectionHighlight": {
+                "type": "gpii.chrome.prefs.highlight",
+                "classes": {
+                    "default": "fl-theme-prefsEditor-default",
+                    "yellow": "gpii-ext-selection-preview-yellow",
+                    "green": "gpii-ext-selection-preview-green",
+                    "pink": "gpii-ext-selection-preview-pink"
+                },
+                "panel": {
+                    "type": "gpii.chrome.prefs.panel.highlight",
+                    "container": ".flc-prefsEditor-selectionHighlight",
+                    "classnameMap": {"theme": "@selectionHighlight.classes"},
+                    "template": "%templatePrefix/SelectionHighlightPanelTemplate.html",
+                    "message": "%messagePrefix/selectionHighlight.json"
+                }
+            },
             "tableOfContents": {
                 "type": "fluid.prefs.tableOfContents",
                 "panel": {
@@ -299,6 +385,17 @@
             "gpii.chrome.prefs.dictionary": {
                 "type": "boolean",
                 "default": false
+            }
+        }
+    });
+
+    fluid.defaults("gpii.chrome.prefs.schemas.highlight", {
+        gradeNames: ["fluid.prefs.schemas"],
+        schema: {
+            "gpii.chrome.prefs.highlight": {
+                "type": "string",
+                "default": "default",
+                "enum": ["default", "yellow", "green", "pink"]
             }
         }
     });
