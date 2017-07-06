@@ -1,5 +1,34 @@
 @import "utils/selection"
 
+// Overriding the fonts to correct the path to the font file
+@font-face {
+  font-family: "OpenSans";
+  src: url("../fonts/OpenSans-Light.ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'OpenSans';
+  src: url("../fonts/OpenSans-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'OpenSans';
+  src: url("../fonts/OpenSans-Semibold.ttf");
+  font-weight: 600;
+  font-style: normal;
+}
+
+// Overriding the background-image to correct the path to the image file
+.fl-prefsEditor-separatedPanel {
+  background-image: url("../images/separatedpanelbg.png");
+}
+
+body {
+    font-size: 1rem;
+}
+
 // Selection Highlight Preview
 selectionThemes = {
     ".gpii-ext-selection-preview-yellow": {

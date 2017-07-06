@@ -75,10 +75,11 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/messages/*.json"
         ],
         fonts: [
-            "node_modules/infusion/src/framework/preferences/fonts/*"
+            "node_modules/infusion/src/framework/preferences/fonts/*",
+            "node_modules/infusion/src/lib/fonts/*.ttf"
         ],
         images: [
-            "node_modules/infusion/src/framework/preferences/messages/**/*"
+            "node_modules/infusion/src/framework/preferences/images/default/*"
         ],
         css: [
             "node_modules/infusion/src/lib/normalize/css/normalize.css",
