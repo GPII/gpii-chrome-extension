@@ -73,7 +73,8 @@
                 type: "gpii.chrome.enactor.selectionHighlight",
                 options: {
                     model: {
-                        value: "{domEnactor}.model.selectionTheme"
+                        value: "{domEnactor}.model.selectionTheme",
+                        selectParagraph: "{domEnactor}.model.clickToSelectEnabled"
                     }
                 }
             },

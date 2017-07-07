@@ -29,7 +29,8 @@
                 fluid_prefs_speak: "{that}.model.remote.selfVoicingEnabled",
                 gpii_chrome_prefs_simplify: "{that}.model.remote.simplifiedUiEnabled",
                 gpii_chrome_prefs_dictionary: "{that}.model.remote.dictionaryEnabled",
-                gpii_chrome_prefs_highlight: "{that}.model.remote.selectionTheme"
+                gpii_chrome_prefs_highlight: "{that}.model.remote.selectionTheme",
+                gpii_chrome_prefs_clickToSelect: "{that}.model.remote.clickToSelectEnabled"
                 // TODO: Add adjusters and model relays for the following:
                 // characterSpace
                 // syllabificationEnabled
@@ -142,6 +143,15 @@
         gradeNames: ["fluid.prefs.panel.switchAdjuster"],
         preferenceMap: {
             "gpii.chrome.prefs.dictionary": {
+                "model.value": "default"
+            }
+        }
+    });
+
+    fluid.defaults("gpii.chrome.prefs.panel.clickToSelect", {
+        gradeNames: ["fluid.prefs.panel.switchAdjuster"],
+        preferenceMap: {
+            "gpii.chrome.prefs.clickToSelect": {
                 "model.value": "default"
             }
         }
@@ -311,6 +321,15 @@
                     "message": "%messagePrefix/selectionHighlight.json"
                 }
             },
+            "clickToSelect": {
+                "type": "gpii.chrome.prefs.clickToSelect",
+                "panel": {
+                    "type": "gpii.chrome.prefs.panel.clickToSelect",
+                    "container": ".flc-prefsEditor-clickToSelect",
+                    "template": "%templatePrefix/ClickToSelectPanelTemplate.html",
+                    "message": "%messagePrefix/clickToSelect.json"
+                }
+            },
             "tableOfContents": {
                 "type": "fluid.prefs.tableOfContents",
                 "panel": {
@@ -383,6 +402,16 @@
         gradeNames: ["fluid.prefs.schemas"],
         schema: {
             "gpii.chrome.prefs.dictionary": {
+                "type": "boolean",
+                "default": false
+            }
+        }
+    });
+
+    fluid.defaults("gpii.chrome.prefs.schemas.clickToSelect", {
+        gradeNames: ["fluid.prefs.schemas"],
+        schema: {
+            "gpii.chrome.prefs.clickToSelect": {
                 "type": "boolean",
                 "default": false
             }
