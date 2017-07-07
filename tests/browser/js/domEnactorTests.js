@@ -100,62 +100,33 @@
 
         gpii.tests.handleRightClickTestCases = [{
             model: {
-                selectionHighlightEnabled: true,
                 selectParagraph: true
             },
             event: gpii.tests.getContextMenuEvent()
         }, {
             model: {
-                selectionHighlightEnabled: true,
                 selectParagraph: false
             },
-            event: gpii.tests.getContextMenuEvent(true)
+            event: gpii.tests.getContextMenuEvent()
         }, {
             model: {
-                selectionHighlightEnabled: false,
                 selectParagraph: true
             },
             event: gpii.tests.getContextMenuEvent(true)
         }, {
             model: {
-                selectionHighlightEnabled: false,
                 selectParagraph: false
-            },
-            event: gpii.tests.getContextMenuEvent(true)
-        }, {
-            model: {
-                selectionHighlightEnabled: false,
-                selectParagraph: false
-            },
-            event: gpii.tests.getContextMenuEvent()
-        }, {
-            model: {
-                selectionHighlightEnabled: true,
-                selectParagraph: false
-            },
-            event: gpii.tests.getContextMenuEvent()
-        }, {
-            model: {
-                selectionHighlightEnabled: false,
-                selectParagraph: true
-            },
-            event: gpii.tests.getContextMenuEvent()
-        }, {
-            model: {
-                selectionHighlightEnabled: true,
-                selectParagraph: true
             },
             event: gpii.tests.getContextMenuEvent(true)
         }];
 
         jqUnit.test("gpii.chrome.enactor.selectionHighlight.handleRightClick tests", function () {
-            jqUnit.expect(4);
+            jqUnit.expect(3);
 
             fluid.each(gpii.tests.handleRightClickTestCases, function (testCase) {
                 gpii.chrome.enactor.selectionHighlight.handleRightClick(testCase.model, testCase.event, function () {
                     jqUnit.assert("The rick click handler was fired");
                     jqUnit.assertEquals("The second button should have been pressed", 2, testCase.event.button);
-                    jqUnit.assertTrue("The selectionHighlightEnabled model value should be set to true", testCase.model.selectionHighlightEnabled);
                     jqUnit.assertTrue("The selectParagraph model value should be set to true", testCase.model.selectParagraph);
                 });
             });
@@ -169,8 +140,7 @@
                     container: ".gpii-test-selectionHighlight",
                     options: {
                         model: {
-                            selectionHighlightEnabled: false,
-                            selectionHighlightTheme: "yellow"
+                            value: "default"
                         }
                     }
                 },
@@ -198,7 +168,7 @@
                         args: ["The model.value should be set to \"default\"", "default", "{selectionHighlight}.model.value"]
                     }, {
                         func: "{selectionHighlight}.applier.change",
-                        args: ["selectionHighlightEnabled", true]
+                        args: ["value", "yellow"]
                     }, {
                         changeEvent: "{selectionHighlight}.applier.modelChanged",
                         path: "value",
@@ -209,7 +179,7 @@
                         args: ["{selectionHighlight}", "yellow"]
                     }, {
                         func: "{selectionHighlight}.applier.change",
-                        args: ["selectionHighlightTheme", "pink"]
+                        args: ["value", "pink"]
                     }, {
                         changeEvent: "{selectionHighlight}.applier.modelChanged",
                         path: "value",
@@ -220,7 +190,7 @@
                         args: ["{selectionHighlight}", "pink"]
                     }, {
                         func: "{selectionHighlight}.applier.change",
-                        args: ["selectionHighlightTheme", "green"]
+                        args: ["value", "green"]
                     }, {
                         changeEvent: "{selectionHighlight}.applier.modelChanged",
                         path: "value",
@@ -231,7 +201,7 @@
                         args: ["{selectionHighlight}", "green"]
                     }, {
                         func: "{selectionHighlight}.applier.change",
-                        args: ["selectionHighlightEnabled", false]
+                        args: ["value", "default"]
                     }, {
                         changeEvent: "{selectionHighlight}.applier.modelChanged",
                         path: "value",
@@ -247,7 +217,7 @@
                     sequence: [{
                         func: "{selectionHighlight}.applier.change",
                         args: ["", {
-                            selectionHighlightEnabled: true,
+                            value: "yellow",
                             selectParagraph: true
                         }]
                     }, {
@@ -284,30 +254,6 @@
 
         jqUnit.module("Contrast Tests");
 
-        gpii.tests.convertContrastTestCases = [{
-            highContrastEnabled: true,
-            highContrastTheme: "black-yellow",
-            mapping: {
-                "black-yellow": "by"
-            },
-            expected: "by"
-        }, {
-            highContrastEnabled: false,
-            highContrastTheme: "black-yellow",
-            mapping: {
-                "black-yellow": "by"
-            },
-            expected: "default"
-        }];
-
-        jqUnit.test("test the gpii.chrome.enactor.contrast.convertContrast function", function () {
-            jqUnit.expect(gpii.tests.convertContrastTestCases.length);
-            fluid.each(gpii.tests.convertContrastTestCases, function (model) {
-                var result = gpii.chrome.enactor.contrast.convertContrast(model);
-                jqUnit.assertEquals("The output of the contrast conversion should be \"" + model.expected + "\"", model.expected, result);
-            });
-        });
-
         fluid.defaults("gpii.tests.contrastTests", {
             gradeNames: ["fluid.test.testEnvironment"],
             components: {
@@ -316,8 +262,7 @@
                     container: ".gpii-test-contrast",
                     options: {
                         model: {
-                            highContrastEnabled: false,
-                            highContrastTheme: "black-yellow"
+                            value: "default"
                         }
                     }
                 },
@@ -339,29 +284,29 @@
                         args: ["The model.value should be set to \"default\"", "default", "{contrast}.model.value"]
                     }, {
                         func: "{contrast}.applier.change",
-                        args: ["highContrastEnabled", true]
+                        args: ["value", "by"]
                     }, {
                         changeEvent: "{contrast}.applier.modelChanged",
                         path: "value",
                         listener: "jqUnit.assertEquals",
-                        args: ["The model.value should be set to \"yb\"", "by", "{contrast}.model.value"]
+                        args: ["The model.value should be set to \"by\"", "by", "{contrast}.model.value"]
                     }, {
                         func: "gpii.tests.assertClasses",
                         args: ["{contrast}", "by"]
                     }, {
                         func: "{contrast}.applier.change",
-                        args: ["highContrastTheme", "yellow-black"]
+                        args: ["value", "yb"]
                     }, {
                         changeEvent: "{contrast}.applier.modelChanged",
                         path: "value",
                         listener: "jqUnit.assertEquals",
-                        args: ["The model.value should be set to \"by\"", "yb", "{contrast}.model.value"]
+                        args: ["The model.value should be set to \"yb\"", "yb", "{contrast}.model.value"]
                     }, {
                         func: "gpii.tests.assertClasses",
                         args: ["{contrast}", "yb"]
                     }, {
                         func: "{contrast}.applier.change",
-                        args: ["highContrastTheme", "white-black"]
+                        args: ["value", "wb"]
                     }, {
                         changeEvent: "{contrast}.applier.modelChanged",
                         path: "value",
@@ -372,7 +317,7 @@
                         args: ["{contrast}", "wb"]
                     }, {
                         func: "{contrast}.applier.change",
-                        args: ["highContrastTheme", "black-white"]
+                        args: ["value", "bw"]
                     }, {
                         changeEvent: "{contrast}.applier.modelChanged",
                         path: "value",
@@ -383,7 +328,7 @@
                         args: ["{contrast}", "bw"]
                     }, {
                         func: "{contrast}.applier.change",
-                        args: ["highContrastEnabled", false]
+                        args: ["value", "default"]
                     }, {
                         changeEvent: "{contrast}.applier.modelChanged",
                         path: "value",

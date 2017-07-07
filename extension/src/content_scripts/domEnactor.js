@@ -182,8 +182,8 @@
     gpii.chrome.enactor.selectionHighlight.handleRightClick = function (model, event, handler) {
         // Check if the right mouse button was pressed so that this isn't
         // triggered by the context menu key ( https://api.jquery.com/contextmenu/ ).
-        // Only trigger the handler if the appropriate model conditions are met.
-        if (event.button === 2 && model.selectionHighlightEnabled && model.selectParagraph) {
+        // Only trigger the handler if the appropriate model condition is met.
+        if (event.button === 2 && model.selectParagraph) {
             handler(event.target);
             event.preventDefault();
         }
