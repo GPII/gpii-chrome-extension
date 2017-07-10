@@ -142,13 +142,24 @@
         fluid.defaults("fluid.tests.portBindingStoreTester", {
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
-                origPrefs: {
+                origModel: {
                     preferences: {
+                        setting: "original"
+                    },
+                    remote: {
                         setting: "original"
                     }
                 },
-                setPref: {
+                prefsToUpdate: {
                     preferences: {
+                        setting: "set"
+                    }
+                },
+                updatedModel: {
+                    preferences: {
+                        setting: "set"
+                    },
+                    remote: {
                         setting: "set"
                     }
                 }
@@ -157,33 +168,28 @@
                 name: "portBinding store Tests",
                 tests: [{
                     name: "getting/setting",
-                    expect: 7,
+                    expect: 6,
                     sequence: [{
                         func: "gpii.tests.portBindingTests.assertConnection",
                         args: ["{portBindingStore}", "{that}.options.testOpts.expectedPortName"]
                     }, {
                         func: "jqUnit.assertDeepEq",
-                        args: ["The remote model path holds the original value", "{that}.options.testOpts.origPrefs.preferences", "{portBindingStore}.model.remote"]
-                    }, {
-                        func: "jqUnit.assertDeepEq",
-                        args: ["The preferences model path holds the original value", "{that}.options.testOpts.origPrefs.preferences", "{portBindingStore}.model.preferences"]
+                        args: ["The model holds the original values", "{that}.options.testOpts.origModel", "{portBindingStore}.model"]
                     }, {
                         func: "gpii.tests.portBindingStoreTests.assertGet",
-                        args: ["{portBindingStore}", "{that}.options.testOpts.origPrefs"]
+                        args: ["{portBindingStore}", "{that}.options.testOpts.origModel"]
                     }, {
                         func: "{portBindingStore}.set",
-                        args: ["{that}.options.testOpts.setPref"]
+                        args: ["{that}.options.testOpts.prefsToUpdate"]
                     }, {
-                        changeEvent: "{portBindingStore}.applier.modelChanged",
-                        spec: {path: "remote", priority: "last:testing"},
-                        listener: "jqUnit.assertDeepEq",
-                        args: ["The model.remote path should have been updated after receiving the message", "{that}.options.testOpts.setPref.preferences", "{portBindingStore}.model.remote"]
+                        func: "jqUnit.assertDeepEq",
+                        args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.updatedModel", "{portBindingStore}.model"]
                     }, {
                         func: "gpii.tests.portBindingTests.assertPostMessage",
-                        args: ["{that}.options.testOpts.setPref.preferences"]
+                        args: ["{portBindingStore}.port", "{that}.options.testOpts.updatedModel.preferences"]
                     }, {
                         func: "gpii.tests.portBindingStoreTests.assertGet",
-                        args: ["{portBindingStore}", "{that}.options.testOpts.setPref.preferences"]
+                        args: ["{portBindingStore}", "{that}.options.testOpts.updatedModel"]
                     }]
                 }]
             }]

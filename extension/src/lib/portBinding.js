@@ -56,11 +56,17 @@
      * port binding data store *
      ***************************/
 
+    // TODO: Once FLUID-6169 has been addressed, use "fluid.prefs.tempStore" as a basegrade and remove any
+    //       duplicate configuration.
     fluid.defaults("gpii.chrome.portBinding.store", {
-        gradeNames: ["fluid.prefs.tempStore", "gpii.chrome.portBinding"],
+        gradeNames: ["fluid.prefs.dataSource", "gpii.chrome.portBinding"],
         // The model relay between the "preferences" and "remote" model paths must be supplied by the integrator
         // modelRelay: []
         invokers: {
+            get: {
+                funcName: "fluid.identity",
+                args: "{that}.model"
+            },
             set: {
                 funcName: "gpii.chrome.portBinding.store.set",
                 args: ["{that}", "{arguments}.0"]
