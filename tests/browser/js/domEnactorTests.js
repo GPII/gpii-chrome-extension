@@ -26,24 +26,6 @@
         // using the sinon-chrome stub, we return the correct path to the table of contents template
         chrome.runtime.getURL.returns("../../../node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html");
 
-        // mock message port
-        gpii.tests.mockPort = {
-            onMessage: {
-                addListener: function (fn) {
-                    gpii.tests.mockPort.onMessage.listeners.push(fn);
-                },
-                listeners: []
-            },
-            postMessage: function (msg) {
-                fluid.each(gpii.tests.mockPort.onMessage.listeners, function (fn) {
-                    fn(msg);
-                });
-            }
-        };
-
-        // using the sinon-chrome stub we return the mockPort
-        chrome.runtime.connect.returns(gpii.tests.mockPort);
-
         /*********************
          * Common Assertions *
          *********************/
@@ -588,15 +570,15 @@
                         func: "gpii.tests.domEnactorTests.assertConnection",
                         args: ["{domEnactor}"]
                     }, {
-                        func: "gpii.tests.mockPort.postMessage",
-                        args: ["{that}.options.testOpts.messages.one"]
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.one"]
                     }, {
                         event: "{domEnactor}.events.onMessage",
                         listener: "jqUnit.assertDeepEq",
                         args: ["The onMessage event was fired", "{that}.options.testOpts.messages.one", "{arguments}.0"]
                     }, {
-                        func: "gpii.tests.mockPort.postMessage",
-                        args: ["{that}.options.testOpts.messages.two"]
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.two"]
                     }, {
                         changeEvent: "{domEnactor}.applier.modelChanged",
                         path: "testTwo",

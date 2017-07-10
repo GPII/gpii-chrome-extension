@@ -52,8 +52,14 @@
         }
     };
 
+    /***************************
+     * port binding data store *
+     ***************************/
+
     fluid.defaults("gpii.chrome.portBinding.store", {
         gradeNames: ["fluid.prefs.tempStore", "gpii.chrome.portBinding"],
+        // The model relay between the "preferences" and "remote" model paths must be supplied by the integrator
+        // modelRelay: []
         invokers: {
             set: {
                 funcName: "gpii.chrome.portBinding.store.set",
