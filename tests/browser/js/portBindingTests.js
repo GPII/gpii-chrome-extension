@@ -52,7 +52,7 @@
                     }
                 },
                 portBindingTester: {
-                    type: "fluid.tests.portBindingTester"
+                    type: "gpii.tests.portBindingTester"
                 }
             }
         });
@@ -65,7 +65,7 @@
             jqUnit.assertTrue("postMessage called with the correct arguments", port.postMessage.calledWith(postedMessage));
         };
 
-        fluid.defaults("fluid.tests.portBindingTester", {
+        fluid.defaults("gpii.tests.portBindingTester", {
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
                 messages: {
@@ -129,7 +129,7 @@
                     }
                 },
                 portBindingStoreTester: {
-                    type: "fluid.tests.portBindingStoreTester"
+                    type: "gpii.tests.portBindingStoreTester"
                 }
             }
         });
@@ -139,7 +139,7 @@
             jqUnit.assertDeepEq("The get method returns the model correctly", expected, actual);
         };
 
-        fluid.defaults("fluid.tests.portBindingStoreTester", {
+        fluid.defaults("gpii.tests.portBindingStoreTester", {
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
                 origModel: {
