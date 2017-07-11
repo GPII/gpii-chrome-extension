@@ -3,6 +3,6 @@
     "selectionHighlight-yellow": "Yellow highlight",
     "selectionHighlight-green": "Green highlight",
     "selectionHighlight-pink": "Pink highlight",
-    "selectionHighlightLabel": "Selection Highlight",
-    "selectionHighlightDescr": "Change the highlight colour for text selections"
+    "label": "Selection Highlight",
+    "description": "Change the highlight colour for text selections"
 }

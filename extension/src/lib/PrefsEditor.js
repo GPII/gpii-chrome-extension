@@ -114,11 +114,6 @@
                 "model.value": "default",
                 "controlValues.theme": "enum"
             }
-        },
-        // TODO: Remove the merge policy after FLUID-6165 has been addressed
-        //       https://issues.fluidproject.org/browse/FLUID-6165
-        mergePolicy: {
-            "controlValues.theme": "replace"
         }
     });
 
@@ -149,73 +144,19 @@
         }
     });
 
-    // TODO: After FLUID-6166 has been addressed, make use of the new base grade to simplify this configuration.
     fluid.defaults("gpii.chrome.prefs.panel.highlight", {
-        gradeNames: ["fluid.prefs.panel"],
+        gradeNames: ["fluid.prefs.panel.themePicker"],
         preferenceMap: {
             "gpii.chrome.prefs.highlight": {
                 "model.value": "default",
                 "controlValues.theme": "enum"
             }
         },
-        mergePolicy: {
-            "controlValues.theme": "replace",
-            "stringArrayIndex.theme": "replace"
-        },
-        selectors: {
-            themeRow: ".flc-prefsEditor-themeRow",
-            themeLabel: ".flc-prefsEditor-theme-label",
-            themeInput: ".flc-prefsEditor-themeInput",
-            label: ".flc-prefsEditor-selectionHighlight-label",
-            selectionHighlightDescr: ".flc-prefsEditor-selectionHighlight-descr"
-        },
-        listeners: {
-            "afterRender.style": "{that}.style"
-        },
         stringArrayIndex: {
             theme: ["selectionHighlight-default", "selectionHighlight-yellow", "selectionHighlight-green", "selectionHighlight-pink"]
         },
-        styles: {
-            defaultThemeLabel: "fl-prefsEditor-contrast-defaultThemeLabel"
-        },
-        repeatingSelectors: ["themeRow"],
-        protoTree: {
-            label: {messagekey: "selectionHighlightLabel"},
-            selectionHighlightDescr: {messagekey: "selectionHighlightDescr"},
-            expander: {
-                type: "fluid.renderer.selection.inputs",
-                rowID: "themeRow",
-                labelID: "themeLabel",
-                inputID: "themeInput",
-                selectID: "theme-radio",
-                tree: {
-                    optionnames: "${{that}.msgLookup.theme}",
-                    optionlist: "${{that}.options.controlValues.theme}",
-                    selection: "${value}"
-                }
-            }
-        },
         controlValues: {
             theme: ["default", "yellow", "green", "pink"]
-        },
-        markup: {
-            // Aria-hidden needed on fl-preview-A and Display 'a' created as pseudo-content in css to prevent AT from reading out display 'a' on IE, Chrome, and Safari
-            // Aria-hidden needed on fl-crossout to prevent AT from trying to read crossout symbol in Safari
-            label: "<span class=\"fl-preview-A\" aria-hidden=\"true\"></span><span class=\"fl-hidden-accessible\">%theme</span><div class=\"fl-crossout\" aria-hidden=\"true\"></div>"
-        },
-        invokers: {
-            style: {
-                funcName: "fluid.prefs.panel.contrast.style",
-                args: [
-                    "{that}.dom.themeLabel",
-                    "{that}.msgLookup.theme",
-                    "{that}.options.markup.label",
-                    "{that}.options.controlValues.theme",
-                    "default",
-                    "{that}.options.classnameMap.theme",
-                    "{that}.options.styles.defaultThemeLabel"
-                ]
-            }
         }
     });
 

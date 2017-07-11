@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
   "dependencies": {
-    "infusion": "3.0.0-dev.20170529T140350Z.aa043f795"
+    "infusion": "3.0.0-dev.20170711T145149Z.8402ae7dc"
   },
   "devDependencies": {
     "fluid-grunt-eslint": "18.1.1",
