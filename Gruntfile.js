@@ -60,7 +60,8 @@ module.exports = function (grunt) {
             // templateLoader
             "node_modules/infusion/dist/infusion-all.js",
             "extension/src/lib/portBinding.js",
-            "extension/src/lib/PrefsEditor.js"
+            "extension/src/lib/PrefsEditor.js",
+            "extension/src/lib/PrefsEditorInstantiation.js"
         ],
         templates: [
             "node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html",

@@ -79,14 +79,6 @@
         }
     });
 
-    $("document").ready(function () {
-        fluid.prefs.create("#gpiic-ext-adjusters", {
-            build: {
-                gradeNames: ["gpii.chrome.prefs.auxSchema"]
-            }
-        });
-    });
-
     /**********
      * panels *
      **********/
