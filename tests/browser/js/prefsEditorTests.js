@@ -403,6 +403,68 @@
             }]
         });
 
+        //simplify
+        fluid.defaults("fluid.tests.prefs.panel.simplify", {
+            gradeNames: ["gpii.chrome.prefs.panel.simplify", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
+            model: {
+                value: false
+            },
+            messageBase: {
+                "label": "Simplify",
+                "description": "Only display the main content",
+                "switchOn": "ON",
+                "switchOff": "OFF"
+            },
+            resources: {
+                template: {
+                    href: "../../../build/templates/SimplifyPanelTemplate.html"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.simplifyAdjusterTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                simplify: {
+                    type: "fluid.tests.prefs.panel.simplify",
+                    container: ".gpiic-simplify",
+                    createOnEvent: "{simplifyTester}.events.onTestCaseStart"
+                },
+                simplifyTester: {
+                    type: "gpii.tests.simplifyTester"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.simplifyTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            testOptions: {
+                defaultInputStatus: false,
+                newValue: true
+            },
+            modules: [{
+                name: "Simplify Adjuster",
+                tests: [{
+                    expect: 7,
+                    name: "rendering",
+                    sequence: [{
+                        listener: "fluid.tests.panels.checkSwitchAdjusterRendering",
+                        event: "{gpii.tests.simplifyAdjusterTests simplify}.events.afterRender",
+                        priority: "last:testing",
+                        args: ["{simplify}", "{that}.options.testOptions.defaultInputStatus"]
+                    }, {
+                        jQueryTrigger: "click",
+                        element: "{simplify}.switchUI.dom.control"
+                    }, {
+                        listener: "fluid.tests.panels.utils.checkModel",
+                        args: ["value", "{that}.options.testOptions.newValue"],
+                        spec: {path: "value", priority: "last"},
+                        changeEvent: "{simplify}.applier.modelChanged"
+                    }]
+                }]
+            }]
+        });
+
         /*********************
          * PrefsEditor Tests *
          *********************/
@@ -468,7 +530,8 @@
             "gpii.tests.textSizeAdjusterTests",
             "gpii.tests.lineSpaceAdjusterTests",
             "gpii.tests.contrastAdjusterTests",
-            "gpii.tests.highlightAdjusterTests"
+            "gpii.tests.highlightAdjusterTests",
+            "gpii.tests.simplifyAdjusterTests"
         ]);
     });
 })(jQuery);
