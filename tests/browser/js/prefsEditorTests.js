@@ -92,6 +92,37 @@
             fluid.changeElementValue(container.find("input"), newValue);
         };
 
+        fluid.registerNamespace("gpii.tests.themePicker");
+
+        gpii.tests.themePicker.testDefault = function (that, expectedNumOfOptions, expectedContrast) {
+            var inputs = that.locate("themeInput");
+            var labels = that.locate("themeLabel");
+            var messageBase = that.options.messageBase;
+
+            jqUnit.assertEquals("The label text is " + messageBase.label, messageBase.label, that.locate("label").text());
+            jqUnit.assertEquals("The description text is " + messageBase.description, messageBase.description, that.locate("description").text());
+
+            jqUnit.assertEquals("There are " + expectedNumOfOptions + " contrast selections in the control", expectedNumOfOptions, inputs.length);
+            jqUnit.assertEquals("The first theme is " + expectedContrast, expectedContrast, inputs.filter(":checked").val());
+
+            var inputValue, label;
+            fluid.each(inputs, function (input, index) {
+                inputValue = input.value;
+                label = labels.eq(index);
+                jqUnit.assertTrue("The theme label has appropriate css applied", label.hasClass(that.options.classnameMap.theme[inputValue]));
+
+                jqUnit.assertEquals("The aria-label is " + that.options.messageBase.contrast[index], that.options.messageBase.contrast[index], label.attr("aria-label"));
+            });
+
+            jqUnit.assertTrue("The default theme label has the default label css applied", labels.eq(0).hasClass(that.options.styles.defaultThemeLabel));
+        };
+
+        gpii.tests.themePicker.changeChecked = function (inputs, newValue) {
+            inputs.prop("checked", false);
+            var matchingInput = inputs.filter("[value='" + newValue + "']");
+            matchingInput.prop("checked", "checked").change();
+        };
+
         // Text Size
         fluid.defaults("gpii.tests.chrome.prefs.panel.textSize", {
             gradeNames: ["gpii.chrome.prefs.panel.textSize", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
@@ -268,35 +299,6 @@
             }
         });
 
-        gpii.tests.contrastAdjusterTests.testDefault = function (that, expectedNumOfOptions, expectedContrast) {
-            var inputs = that.locate("themeInput");
-            var labels = that.locate("themeLabel");
-            var messageBase = that.options.messageBase;
-
-            jqUnit.assertEquals("The label text is " + messageBase.label, messageBase.label, that.locate("label").text());
-            jqUnit.assertEquals("The description text is " + messageBase.description, messageBase.description, that.locate("description").text());
-
-            jqUnit.assertEquals("There are " + expectedNumOfOptions + " contrast selections in the control", expectedNumOfOptions, inputs.length);
-            jqUnit.assertEquals("The first contrast is " + expectedContrast, expectedContrast, inputs.filter(":checked").val());
-
-            var inputValue, label;
-            fluid.each(inputs, function (input, index) {
-                inputValue = input.value;
-                label = labels.eq(index);
-                jqUnit.assertTrue("The contrast label has appropriate css applied", label.hasClass(that.options.classnameMap.theme[inputValue]));
-
-                jqUnit.assertEquals("The aria-label is " + that.options.messageBase.contrast[index], that.options.messageBase.contrast[index], label.attr("aria-label"));
-            });
-
-            jqUnit.assertTrue("The default contrast label has the default label css applied", labels.eq(0).hasClass(that.options.styles.defaultThemeLabel));
-        };
-
-        gpii.tests.contrastAdjusterTests.changeChecked = function (inputs, newValue) {
-            inputs.prop("checked", false);
-            var matchingInput = inputs.filter("[value='" + newValue + "']");
-            matchingInput.prop("checked", "checked").change();
-        };
-
         fluid.defaults("gpii.tests.contrastTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             testOptions: {
@@ -305,23 +307,97 @@
                 newValue: "bw"
             },
             modules: [{
-                name: "Test the contrast settings panel",
+                name: "Contrast Adjuster",
                 tests: [{
                     expect: 16,
-                    name: "Test the rendering of the contrast panel",
+                    name: "rendering",
                     sequence: [{
-                        listener: "gpii.tests.contrastAdjusterTests.testDefault",
+                        listener: "gpii.tests.themePicker.testDefault",
                         args: ["{contrast}", "{that}.options.testOptions.expectedNumOfOptions", "{that}.options.testOptions.defaultValue"],
                         spec: {priority: "last"},
                         event: "{contrastAdjusterTests contrast}.events.afterRender"
                     }, {
-                        func: "gpii.tests.contrastAdjusterTests.changeChecked",
+                        func: "gpii.tests.themePicker.changeChecked",
                         args: ["{contrast}.dom.themeInput", "{that}.options.testOptions.newValue"]
                     }, {
                         listener: "fluid.tests.panels.utils.checkModel",
                         args: ["value", "{contrast}.model", "{that}.options.testOptions.newValue"],
                         spec: {path: "value", priority: "last"},
                         changeEvent: "{contrast}.applier.modelChanged"
+                    }]
+                }]
+            }]
+        });
+
+        // Highlight
+        fluid.defaults("gpii.chrome.tests.prefs.panel.highlight", {
+            gradeNames: ["gpii.chrome.prefs.panel.highlight", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
+            messageBase: {
+                "contrast": ["Default", "Yellow highlight", "Green highlight", "Pink highlight"],
+                "selectionHighlight-default": "Default",
+                "selectionHighlight-yellow": "Yellow highlight",
+                "selectionHighlight-green": "Green highlight",
+                "selectionHighlight-pink": "Pink highlight",
+                "label": "Selection Highlight",
+                "description": "Change the highlight colour for text selections"
+            },
+            model: {
+                value: "default"
+            },
+            resources: {
+                template: {
+                    href: "../../../build/templates/SelectionHighlightPanelTemplate.html"
+                }
+            },
+            classnameMap: {
+                "theme": {
+                    "default": "fl-theme-prefsEditor-default",
+                    "yellow": "gpii-ext-selection-preview-yellow",
+                    "green": "gpii-ext-selection-preview-green",
+                    "pink": "gpii-ext-selection-preview-pink"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.highlightAdjusterTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                highlight: {
+                    type: "gpii.chrome.tests.prefs.panel.highlight",
+                    container: ".gpiic-highlight",
+                    createOnEvent: "{highlightTester}.events.onTestCaseStart"
+                },
+                highlightTester: {
+                    type: "gpii.tests.highlightTester"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.highlightTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            testOptions: {
+                expectedNumOfOptions: 4,
+                defaultValue: "default",
+                newValue: "green"
+            },
+            modules: [{
+                name: "Highlight Adjuster",
+                tests: [{
+                    expect: 14,
+                    name: "rendering",
+                    sequence: [{
+                        listener: "gpii.tests.themePicker.testDefault",
+                        args: ["{highlight}", "{that}.options.testOptions.expectedNumOfOptions", "{that}.options.testOptions.defaultValue"],
+                        spec: {priority: "last"},
+                        event: "{highlightAdjusterTests highlight}.events.afterRender"
+                    }, {
+                        func: "gpii.tests.themePicker.changeChecked",
+                        args: ["{highlight}.dom.themeInput", "{that}.options.testOptions.newValue"]
+                    }, {
+                        listener: "fluid.tests.panels.utils.checkModel",
+                        args: ["value", "{highlight}.model", "{that}.options.testOptions.newValue"],
+                        spec: {path: "value", priority: "last"},
+                        changeEvent: "{highlight}.applier.modelChanged"
                     }]
                 }]
             }]
@@ -391,7 +467,8 @@
         fluid.test.runTests([
             "gpii.tests.textSizeAdjusterTests",
             "gpii.tests.lineSpaceAdjusterTests",
-            "gpii.tests.contrastAdjusterTests"
+            "gpii.tests.contrastAdjusterTests",
+            "gpii.tests.highlightAdjusterTests"
         ]);
     });
 })(jQuery);
