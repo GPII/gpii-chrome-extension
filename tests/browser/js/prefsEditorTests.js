@@ -402,8 +402,60 @@
                 }]
             }]
         });
+        // Swith Adjuster Sequences
 
-        //simplify
+        fluid.defaults("gppi.tests.sequence.switchAdjusterRendering", {
+            gradeNames: "fluid.test.sequenceElement",
+            sequence: [{
+                listener: "fluid.tests.panels.checkSwitchAdjusterRendering",
+                event: "{testEnvironment panel}.events.afterRender",
+                priority: "last:testing",
+                args: ["{panel}", "{that}.options.defaultInputStatus"]
+            }]
+        });
+
+        fluid.defaults("gppi.tests.sequence.switchAdjusterChange", {
+            gradeNames: "fluid.test.sequenceElement",
+            sequence: [{
+                jQueryTrigger: "click",
+                element: "{panel}.switchUI.dom.control"
+            }, {
+                listener: "fluid.tests.panels.utils.checkModel",
+                args: ["value", "{panel}.model", "{that}.options.newValue"],
+                spec: {path: "value", priority: "last"},
+                changeEvent: "{panel}.applier.modelChanged"
+            }, {
+                jQueryTrigger: "click",
+                element: "{panel}.switchUI.dom.control"
+            }, {
+                listener: "fluid.tests.panels.utils.checkModel",
+                args: ["value", "{panel}.model", "{that}.options.originalValue"],
+                spec: {path: "value", priority: "last"},
+                changeEvent: "{panel}.applier.modelChanged"
+            }]
+        });
+
+        fluid.defaults("fluid.tests.switchAdjusterSequences", {
+            gradeNames: "fluid.test.sequence",
+            sequenceElements: {
+                initialRendering: {
+                    gradeNames: "gppi.tests.sequence.switchAdjusterRendering",
+                    options: {
+                        defaultInputStatus: "{fluid.test.testCaseHolder}.options.testOptions.defaultInputStatus"
+                    }
+                },
+                inputChange: {
+                    gradeNames: "gppi.tests.sequence.switchAdjusterChange",
+                    priority: "after:initialRendering",
+                    options: {
+                        newValue: "{fluid.test.testCaseHolder}.options.testOptions.newValue",
+                        originalValue: "{fluid.test.testCaseHolder}.options.testOptions.defaultInputStatus"
+                    }
+                }
+            }
+        });
+
+        // Simplify
         fluid.defaults("fluid.tests.prefs.panel.simplify", {
             gradeNames: ["gpii.chrome.prefs.panel.simplify", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             model: {
@@ -445,22 +497,107 @@
             modules: [{
                 name: "Simplify Adjuster",
                 tests: [{
-                    expect: 7,
-                    name: "rendering",
-                    sequence: [{
-                        listener: "fluid.tests.panels.checkSwitchAdjusterRendering",
-                        event: "{gpii.tests.simplifyAdjusterTests simplify}.events.afterRender",
-                        priority: "last:testing",
-                        args: ["{simplify}", "{that}.options.testOptions.defaultInputStatus"]
-                    }, {
-                        jQueryTrigger: "click",
-                        element: "{simplify}.switchUI.dom.control"
-                    }, {
-                        listener: "fluid.tests.panels.utils.checkModel",
-                        args: ["value", "{that}.options.testOptions.newValue"],
-                        spec: {path: "value", priority: "last"},
-                        changeEvent: "{simplify}.applier.modelChanged"
-                    }]
+                    expect: 8,
+                    name: "rendering and input change",
+                    sequenceGrade: "fluid.tests.switchAdjusterSequences"
+                }]
+            }]
+        });
+
+        // Dictionary
+        fluid.defaults("fluid.tests.prefs.panel.dictionary", {
+            gradeNames: ["gpii.chrome.prefs.panel.dictionary", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
+            model: {
+                value: false
+            },
+            messageBase: {
+                "label": "Dictionary",
+                "description": "Double click a word to show its definition",
+                "switchOn": "ON",
+                "switchOff": "OFF"
+            },
+            resources: {
+                template: {
+                    href: "../../../build/templates/DictionaryPanelTemplate.html"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.dictionaryAdjusterTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                dictionary: {
+                    type: "fluid.tests.prefs.panel.dictionary",
+                    container: ".gpiic-dictionary",
+                    createOnEvent: "{dictionaryTester}.events.onTestCaseStart"
+                },
+                dictionaryTester: {
+                    type: "gpii.tests.dictionaryTester"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.dictionaryTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            testOptions: {
+                defaultInputStatus: false,
+                newValue: true
+            },
+            modules: [{
+                name: "Dictionary Adjuster",
+                tests: [{
+                    expect: 8,
+                    name: "rendering and input change",
+                    sequenceGrade: "fluid.tests.switchAdjusterSequences"
+                }]
+            }]
+        });
+
+        // Click to Select
+        fluid.defaults("fluid.tests.prefs.panel.clickToSelect", {
+            gradeNames: ["gpii.chrome.prefs.panel.clickToSelect", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
+            model: {
+                value: false
+            },
+            messageBase: {
+                "label": "Click To Select",
+                "description": "Right click to select paragraph",
+                "switchOn": "ON",
+                "switchOff": "OFF"
+            },
+            resources: {
+                template: {
+                    href: "../../../build/templates/DictionaryPanelTemplate.html"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.clickToSelectAdjusterTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                clickToSelect: {
+                    type: "fluid.tests.prefs.panel.clickToSelect",
+                    container: ".gpiic-clickToSelect",
+                    createOnEvent: "{clickToSelectTester}.events.onTestCaseStart"
+                },
+                clickToSelectTester: {
+                    type: "gpii.tests.clickToSelectTester"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.clickToSelectTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            testOptions: {
+                defaultInputStatus: false,
+                newValue: true
+            },
+            modules: [{
+                name: "Click to Select Adjuster",
+                tests: [{
+                    expect: 8,
+                    name: "rendering and input change",
+                    sequenceGrade: "fluid.tests.switchAdjusterSequences"
                 }]
             }]
         });
@@ -531,7 +668,9 @@
             "gpii.tests.lineSpaceAdjusterTests",
             "gpii.tests.contrastAdjusterTests",
             "gpii.tests.highlightAdjusterTests",
-            "gpii.tests.simplifyAdjusterTests"
+            "gpii.tests.simplifyAdjusterTests",
+            "gpii.tests.dictionaryAdjusterTests",
+            "gpii.tests.clickToSelectAdjusterTests"
         ]);
     });
 })(jQuery);
