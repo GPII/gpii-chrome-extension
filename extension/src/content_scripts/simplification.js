@@ -55,6 +55,7 @@
                 args: ["{that}.model.showNav"]
             }
         },
+        injectNavToggle: true,
         invokers: {
             findContent: {
                 funcName: "gpii.simplify.findByStrategy",
@@ -118,7 +119,9 @@
         if (state && content.length) {
             that.container.css("visibility", "hidden");
             content.css("visibility", "visible");
-            gpii.simplify.injectToggle(that, content);
+            if (that.options.injectNavToggle) {
+                gpii.simplify.injectToggle(that, content);
+            }
             that.locate("navToggle").show();
         } else {
             that.locate("navToggle").hide();

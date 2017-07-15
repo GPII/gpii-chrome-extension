@@ -94,8 +94,6 @@
             var that = gpii.simplify(".gpiic-simplify-allContent");
             var content = that.findContent();
 
-            console.log(content);
-
             jqUnit.assertEquals("Should have only found all article like elements", 4, content.length);
 
             content.each(function (idx, node) {
@@ -114,6 +112,7 @@
 
         fluid.defaults("gpii.tests.simplifyTests", {
             gradeNames: ["fluid.test.testEnvironment"],
+            markupFixture: ".gpii-test-simplify",
             components: {
                 simplify: {
                     type: "gpii.simplify",
@@ -151,7 +150,7 @@
             jqUnit.assertEquals("The aria-pressed state for the nav toggle should be set to true", "true", that.locate("navToggle").attr("aria-pressed"));
         };
 
-        gpii.tests.simplifyTests.assertNotNavShown = function (that) {
+        gpii.tests.simplifyTests.assertNavNotShown = function (that) {
             that.findNav().each(function (idx, node) {
                 jqUnit.assertEquals("The navigation element at index " + idx + " should be set to hidden", "hidden", $(node).css("visibility"));
             });
@@ -187,7 +186,7 @@
                     }, {
                         changeEvent: "{simplify}.applier.modelChanged",
                         path: "showNav",
-                        listener: "gpii.tests.simplifyTests.assertNotNavShown",
+                        listener: "gpii.tests.simplifyTests.assertNavNotShown",
                         args: ["{simplify}"]
                     }, {
                         func: "{simplify}.applier.change",
@@ -202,8 +201,62 @@
             }]
         });
 
+        fluid.defaults("gpii.tests.simplifyNoNavToggleTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            markupFixture: ".gpii-test-simplify",
+            components: {
+                simplify: {
+                    type: "gpii.simplify",
+                    container: ".gpii-test-simplify",
+                    options: {
+                        injectNavToggle: false,
+                        model: {
+                            simplify: false,
+                            showNav: false
+                        }
+                    }
+                },
+                simplifyTester: {
+                    type: "fluid.tests.simplifyNoNavToggleTester"
+                }
+            }
+        });
+
+        gpii.tests.simplifyNoNavToggleTests.assertNoNavToggle = function (navToggleElm) {
+            jqUnit.assertEquals("The nav toggle element should not exist", 0, navToggleElm.length);
+        };
+
+        fluid.defaults("fluid.tests.simplifyNoNavToggleTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            modules: [{
+                name: "Simplification Tests ",
+                tests: [{
+                    name: "No Nav Toggle",
+                    expect: 2,
+                    sequence: [{
+                        func: "{simplify}.applier.change",
+                        args: ["simplify", true]
+                    }, {
+                        changeEvent: "{simplify}.applier.modelChanged",
+                        path: "simplify",
+                        listener: "gpii.tests.simplifyNoNavToggleTests.assertNoNavToggle",
+                        args: ["{simplify}.dom.navToggle"]
+                    }, {
+                        func: "{simplify}.applier.change",
+                        args: ["simplify", false]
+                    }, {
+                        changeEvent: "{simplify}.applier.modelChanged",
+                        path: "simplify",
+                        listener: "gpii.tests.simplifyNoNavToggleTests.assertNoNavToggle",
+                        args: ["{simplify}.dom.navToggle"]
+                    }]
+                }]
+            }]
+        });
+
         fluid.test.runTests([
-            "gpii.tests.simplifyTests"
+            "gpii.tests.simplifyTests",
+            "gpii.tests.simplifyNoNavToggleTests"
         ]);
     });
 })(jQuery);

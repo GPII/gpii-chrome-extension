@@ -192,7 +192,8 @@
 
     // Simplification
     fluid.defaults("gpii.chrome.enactor.simplify", {
-        gradeNames: ["fluid.prefs.enactor", "gpii.simplify"]
+        gradeNames: ["fluid.prefs.enactor", "gpii.simplify"],
+        injectNavToggle: false
     });
 
     // Table of contents
