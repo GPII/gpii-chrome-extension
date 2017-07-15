@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid */
+/* global fluid, gpii */
 "use strict";
 
 (function ($, fluid) {
@@ -57,10 +57,10 @@
         components: {
             prefsEditor: {
                 options: {
-                    // Set the initialModel to an empty object so that all of the model preferences are sent to the
-                    // settings store.
-                    members: {
-                        initialModel: {}
+                    invokers: {
+                        save: {
+                            funcName: "gpii.chrome.prefs.extensionPanel.save"
+                        }
                     },
                     modelListeners: {
                         "": {
@@ -78,6 +78,24 @@
             }
         }
     });
+
+    /**
+     * Sends the prefsEditor.model to the store and fires onSave
+     * Overrides the default save functionality as all of the model, including the default values, must be sent
+     * to the store.
+     *
+     * @param that: A fluid.prefs.prefsEditor instance
+     * @return the saved model
+     */
+    gpii.chrome.prefs.extensionPanel.save = function (that) {
+        if (!that.model || $.isEmptyObject(that.model)) {  // Don't save a reset model
+            return;
+        }
+
+        that.events.onSave.fire(that.model);
+        that.setSettings(that.model);
+        return that.model;
+    };
 
     /**********
      * panels *
