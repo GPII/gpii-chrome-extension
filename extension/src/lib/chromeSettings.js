@@ -34,17 +34,6 @@ fluid.defaults("gpii.chrome.settings", {
         syllabificationEnabled: false // from syllabificationEnabled
     },
     components: {
-        // chromeVox: {
-        //     type: "gpii.chrome.extensionHolder",
-        //     options: {
-        //         extensionId: "kgejglhpjiefppelpmljglcjbhoiplfn",
-        //         name: "ChromeVox",
-        //         installationUrl: "https://chrome.google.com/webstore/detail/chromevox/kgejglhpjiefppelpmljglcjbhoiplfn",
-        //         model: {
-        //             extensionEnabled: "{settings}.model.selfVoicingEnabled"
-        //         }
-        //     }
-        // },
         click2Speech: {
             type: "gpii.chrome.extensionHolder",
             options: {
@@ -73,38 +62,6 @@ fluid.defaults("gpii.chrome.settings", {
                 model: "{settings}.model"
             }
         },
-        // highContrast: {
-        //     type: "gpii.chrome.highContrast",
-        //     options: {
-        //         model: {
-        //             highContrastEnabled: "{settings}.model.highContrastEnabled"
-        //         },
-        //         modelRelay: {
-        //             highContrastTheme: {
-        //                 source: "{settings}.model.highContrastTheme",
-        //                 target: "highContrastTheme",
-        //                 singleTransform: {
-        //                     type: "fluid.transforms.valueMapper",
-        //                     defaultInputValue: "black-white",
-        //                     options: {
-        //                         "black-white": {
-        //                             outputValue: "bw"
-        //                         },
-        //                         "white-black": {
-        //                             outputValue: "wb"
-        //                         },
-        //                         "black-yellow": {
-        //                             outputValue: "by"
-        //                         },
-        //                         "yellow-black": {
-        //                             outputValue: "yb"
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // },
         zoom: {
             type: "gpii.chrome.zoom",
             options: {

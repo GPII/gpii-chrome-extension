@@ -14,7 +14,6 @@
 "use strict";
 
 require("./extensionHolderTests.js");
-require("./nodeHighContrastTests.js");
 require("./wsConnectorTests.js");
 require("./nodeZoomTests.js");
 require("./domSettingsApplierTests.js");
