@@ -90,7 +90,7 @@
                 type: "gpii.chrome.enactor.tableOfContents",
                 options: {
                     model: {
-                        toc: "{domEnactor}.model.tableOfContents"
+                        toc: "{domEnactor}.model.tableOfContentsEnabled"
                     }
                 }
             }

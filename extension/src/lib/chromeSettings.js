@@ -21,22 +21,17 @@ fluid.defaults("gpii.chrome.settings", {
     defaultSettings: {
         // not all of the following settings are in the common terms yet.
         // and may need to be updated once they are added there.
-        fontSize: 1,
-        lineSpace: 1,
-        selectionHighlightEnabled: false,
-        selectionHighlightTheme: "yellow",
-        highContrastEnabled: false,
-        highContrastTheme: "black-yellow",
-        characterSpace: 1,
-        inputsLargerEnabled: false,
-        selfVoicingEnabled: false,
-        tableOfContentsEnabled: false,
-        dictionaryEnabled: false,
-        simplifiedUiEnabled: false,
-        syllabificationEnabled: false
-        // the following model paths are created by the modelRelay to combine model paths
-        // selectionTheme combines selectionHighlightTheme and selectionHighlightEnabled
-        // contrastTheme combines highContrastTheme highContrastEnabled
+        fontSize: 1, // from fontSize
+        lineSpace: 1, // from lineSpace
+        selectionTheme: "default", // from highlightColour
+        contrastTheme: "default", // from highContrastEnabled and highContrastTheme
+        characterSpace: 1, // from characterSpace
+        inputsLargerEnabled: false, // from inputsLargerEnabled
+        selfVoicingEnabled: false, // from selfVoicingEnabled
+        tableOfContentsEnabled: false, // from tableOfContents
+        dictionaryEnabled: false, // from supportTool
+        simplifiedUiEnabled: false, // from contentDensity
+        syllabificationEnabled: false // from syllabificationEnabled
     },
     components: {
         // chromeVox: {
@@ -132,31 +127,32 @@ fluid.defaults("gpii.chrome.settings", {
         }
     },
     model: "{settings}.options.defaultSettings",  // Defaults
-    modelRelay: [{
-        target: "selectionTheme",
-        singleTransform: {
-            type: "fluid.transforms.condition",
-            condition: "{that}.model.selectionHighlightEnabled",
-            true: "{that}.model.selectionHighlightTheme",
-            false: "default"
-        }
-    }, {
-        target: "contrastTheme",
-        singleTransform: {
-            type: "fluid.transforms.free",
-            func: "gpii.chrome.settings.convertContrast",
-            args: {
-                highContrastEnabled: "{that}.model.highContrastEnabled",
-                highContrastTheme: "{that}.model.highContrastTheme",
-                mapping: {
-                    "black-white": "bw",
-                    "white-black": "wb",
-                    "black-yellow": "by",
-                    "yellow-black": "yb"
-                }
-            }
-        }
-    }],
+    // should be handled by the solutions registry entry
+    // modelRelay: [{
+    //     target: "selectionTheme",
+    //     singleTransform: {
+    //         type: "fluid.transforms.condition",
+    //         condition: "{that}.model.highlightEnabled",
+    //         true: "{that}.model.highlightColour",
+    //         false: "default"
+    //     }
+    // }, {
+    //     target: "contrastTheme",
+    //     singleTransform: {
+    //         type: "fluid.transforms.free",
+    //         func: "gpii.chrome.settings.convertContrast",
+    //         args: {
+    //             highContrastEnabled: "{that}.model.highContrastEnabled",
+    //             highContrastTheme: "{that}.model.highContrastTheme",
+    //             mapping: {
+    //                 "black-white": "bw",
+    //                 "white-black": "wb",
+    //                 "black-yellow": "by",
+    //                 "yellow-black": "yb"
+    //             }
+    //         }
+    //     }
+    // }],
     invokers: {
         updateSettings: {
             funcName: "gpii.chrome.settings.updateSettings",
@@ -177,9 +173,9 @@ fluid.defaults("gpii.chrome.settings", {
     }]
 });
 
-gpii.chrome.settings.convertContrast = function (model) {
-    return model.highContrastEnabled ? fluid.get(model.mapping, [model.highContrastTheme]) : "default";
-};
+// gpii.chrome.settings.convertContrast = function (model) {
+//     return model.highContrastEnabled ? fluid.get(model.mapping, [model.highContrastTheme]) : "default";
+// };
 
 gpii.chrome.settings.updateSettings = function (that, settings) {
     that.applier.change("", settings || that.options.defaultSettings);

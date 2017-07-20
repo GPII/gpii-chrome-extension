@@ -34,7 +34,7 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         // inputsLarger: boolean,
         // selectionTheme: string,
         // simplifiedUiEnabled: boolean,
-        // tableOfContents: boolean
+        // tableOfContentsEnabled: boolean
     },
     listeners: {
         "onCreate.bindOnConnect": {
