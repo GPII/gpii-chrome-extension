@@ -58,8 +58,9 @@
         injectNavToggle: true,
         invokers: {
             findContent: {
-                funcName: "gpii.simplify.findByStrategy",
-                args: ["{that}", ["article", "main", "genericContent"]]
+                funcName: "gpii.chrome.utils.findFirstSelector",
+                // returns an empty jQuery elemment by default to ensure jQuery methods are present
+                args: ["{that}", ["article", "main", "genericContent"], $()]
             },
             findNav: {
                 funcName: "gpii.simplify.findNav",
@@ -75,20 +76,6 @@
             }
         }
     });
-
-    gpii.simplify.findByStrategy = function (that, strategy) {
-        strategy = fluid.makeArray(strategy);
-        var elms;
-
-        for (var pos in strategy) {
-            elms = that.locate(strategy[pos]);
-            if (elms.length) {
-                break;
-            }
-        }
-
-        return elms;
-    };
 
     gpii.simplify.findNav = function (that) {
         var content = that.findContent();

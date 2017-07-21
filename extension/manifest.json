@@ -24,6 +24,7 @@
         ],
         "js": [
             "dist/gpii-chrome-extension-contentScriptsLib.min.js",
+            "content_scripts/utils.js",
             "content_scripts/simplification.js",
             "content_scripts/domEnactor.js",
             "content_scripts/domSettingsHandler.js"
