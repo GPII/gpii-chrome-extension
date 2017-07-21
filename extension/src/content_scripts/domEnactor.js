@@ -206,14 +206,48 @@
                 args: ["templates/TableOfContents.html"]
             }
         },
+        selectors: {
+            tocContainer: ".flc-toc-tocContainer",
+            article: "article, [role~='article'], .article, #article",
+            main: "main, [role~='main'], .main, #main",
+            genericContent: ".content, #content, .body:not('body'), #body:not('body')"
+        },
         // Handle the initial model value when the component creation cycle completes instead of
         // relying on model listeners. See https://issues.fluidproject.org/browse/FLUID-5519
         listeners: {
             "onCreate.handleInitialModelValue": {
                 listener: "{that}.applyToc",
                 args: ["{that}.model.toc"]
+            },
+            "onCreateTOCReady.injectToCContainer": {
+                listener: "{that}.injectToCContainer",
+                priority: "first"
             }
+        },
+        invokers: {
+            injectToCContainer: {
+                funcName: "gpii.chrome.enactor.tableOfContents.injectToCContainer",
+                args: ["{that}"]
+            },
+            findContentRegion: {
+                funcName: "gpii.chrome.utils.findFirstSelector",
+                args: ["{that}", ["article", "main", "genericContent"], "{that}.container"]
+            }
+        },
+        markup: {
+            tocContainer: "<div class=\"flc-toc-tocContainer gpii-toc-tocContainer\"></div>"
+        },
+        distributeOptions: {
+            source: "{that}.options.selectors.tocContainer",
+            target: "{that tableOfContents}.options.selectors.tocContainer"
         }
     });
+
+    gpii.chrome.enactor.tableOfContents.injectToCContainer = function (that) {
+        if (!that.locate("tocContainer").length) {
+            var contentRegion = that.findContentRegion();
+            contentRegion.prepend(that.options.markup.tocContainer);
+        }
+    };
 
 })(jQuery, fluid);

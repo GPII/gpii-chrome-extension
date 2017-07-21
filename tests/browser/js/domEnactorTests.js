@@ -134,7 +134,6 @@
 
         gpii.tests.selectionHighlightTests.assertSelectedText = function (expectedSelector) {
             var selectedNode = gpii.tests.cloneSelectedNode();
-            console.log("selectedNode:", selectedNode);
             jqUnit.assertTrue("The node with selector '" + expectedSelector + "' should be selected", $(selectedNode).is(expectedSelector));
         };
 
@@ -489,7 +488,6 @@
         gpii.tests.tocTests.assertToc = function (that, applied) {
             var tocElm = that.locate("tocContainer");
             if (applied) {
-                console.log("ToC elm:", tocElm.html(), "isVisible:", tocElm.css("display"));
                 jqUnit.isVisible("The Table of Contents should be visible", tocElm);
                 jqUnit.assertTrue("The Table of Contents should be populated", 0 < tocElm.children("ul").length);
             } else {
