@@ -23,7 +23,7 @@ fluid.defaults("gpii.chrome.settings", {
         // and may need to be updated once they are added there.
         fontSize: 1, // from fontSize
         lineSpace: 1, // from lineSpace
-        selectionTheme: "default", // from highlightColour
+        selectionTheme: "default", // from highlightColor
         contrastTheme: "default", // from highContrastEnabled and highContrastTheme
         characterSpace: 1, // from characterSpace
         inputsLargerEnabled: false, // from inputsLargerEnabled
