@@ -63,11 +63,3 @@ Follow these steps if you want to use the unpacked version of the extension:
 4. Navigate to the directory in which your local copy of the extension lives, and select the *build* folder.
 
 Alternatively, you can install the *crx* package that you created yourself by opening it from Google Chrome. Soon, you will be able to install the extension just by clicking on a link, but this won't happen until we release the first time.
-
-### Testing the auto-personalization
-
-We have included two users in the GPII in order to demonstrate this extension:
-* *chrome1*: Enables _chromeVox_ (in case you have the _chromeVox_ extension added to your browser)
-* *chrome2*: Applies a white-on-black high contrast theme and turns magnification on
-
-Key-in as any of these users to see the extension in action.
