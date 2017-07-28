@@ -22,6 +22,7 @@ Perform a build so you can run an unpacked version of the extension on your brow
     grunt build
 
 You can also create a development build which creates an unpacked version that includes source maps.
+
     grunt buildDev
 
 
