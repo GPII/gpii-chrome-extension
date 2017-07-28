@@ -84,32 +84,6 @@ fluid.defaults("gpii.chrome.settings", {
         }
     },
     model: "{settings}.options.defaultSettings",  // Defaults
-    // should be handled by the solutions registry entry
-    // modelRelay: [{
-    //     target: "selectionTheme",
-    //     singleTransform: {
-    //         type: "fluid.transforms.condition",
-    //         condition: "{that}.model.highlightEnabled",
-    //         true: "{that}.model.highlightColour",
-    //         false: "default"
-    //     }
-    // }, {
-    //     target: "contrastTheme",
-    //     singleTransform: {
-    //         type: "fluid.transforms.free",
-    //         func: "gpii.chrome.settings.convertContrast",
-    //         args: {
-    //             highContrastEnabled: "{that}.model.highContrastEnabled",
-    //             highContrastTheme: "{that}.model.highContrastTheme",
-    //             mapping: {
-    //                 "black-white": "bw",
-    //                 "white-black": "wb",
-    //                 "black-yellow": "by",
-    //                 "yellow-black": "yb"
-    //             }
-    //         }
-    //     }
-    // }],
     invokers: {
         updateSettings: {
             funcName: "gpii.chrome.settings.updateSettings",
