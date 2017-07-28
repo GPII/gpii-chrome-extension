@@ -3,9 +3,15 @@
 The GPII for Google Chrome is an extension that allows Google Chrome to be configured by the GPII and improve the accessibility of the browser in different ways.
 
 Although the extension is in development right now, it includes support for:
-* High Contrast themes
-* Enable/Disable TTS output - you need to install *ChromeVox* on your browser
-* Zoom
+* font size
+* line space
+* dictionary (requires the *Google Dictionary* extension)
+* selection highlight
+* text-to-speech (requires the *click2speech* extension)
+* contrast
+* simplify
+* enhance inputs
+* table of contents
 
 ## Building the extension
 
