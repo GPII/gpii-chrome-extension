@@ -56,7 +56,6 @@ _**NOTE:** Browser tests should be served through a web server. The exact URL ma
 
 Requirements:
 * Google Chrome browser. You can download it [here](https://www.google.com/chrome/browser/desktop/).
-* The GPII running locally on your system. More information about how to install and run the GPII on your machine can be found [here](https://github.com/GPII/universal#installation).
 
 Follow these steps if you want to use the unpacked version of the extension:
 
