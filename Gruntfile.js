@@ -168,6 +168,10 @@ module.exports = function (grunt) {
                         dest: "build/src/background.js"
                     },
                     {
+                        src: ["extension/src/lib/adjusterScriptLoader.js"],
+                        dest: "build/src/adjusterScriptLoader.js"
+                    },
+                    {
                         expand: true,
                         cwd: "extension/css/",
                         src: "*",

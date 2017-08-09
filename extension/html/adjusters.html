@@ -12,7 +12,12 @@
         <link rel="stylesheet" type="text/css" href="../css/SeparatedPanelPrefsEditorFrame.css" />
         <link rel="stylesheet" type="text/css" href="../css/adjusters.css" />
 
-        <script type="text/javascript" src="../dist/gpii-chrome-extension-adjustersLib.min.js"></script>
+        <!--
+            Uses the script loader so that popup opens right immediately.
+            Although the contents take longer to load, it doesn't look like the
+            popup failed to open.
+        -->
+        <script type="text/javascript" src="../src/adjusterScriptLoader.js"></script>
 
         <title>Preferences Editor</title>
      </head>
