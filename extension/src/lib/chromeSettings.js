@@ -104,10 +104,6 @@ fluid.defaults("gpii.chrome.settings", {
     }]
 });
 
-// gpii.chrome.settings.convertContrast = function (model) {
-//     return model.highContrastEnabled ? fluid.get(model.mapping, [model.highContrastTheme]) : "default";
-// };
-
 gpii.chrome.settings.updateSettings = function (that, settings) {
     that.applier.change("", settings || that.options.defaultSettings);
 };
@@ -117,21 +113,18 @@ gpii.chrome.settings.handleExtensionHolderError = function (that, extension, err
         var options = {
             type: "basic",
             title: "GPII notifications",
-            message: extension.options.name + " couldn't be found. Do you want to add it from the chrome store?",
+            message: extension.options.name + " couldn't be found.",
             iconUrl: chrome.extension.getURL("./") + "images/gpii.png",
+            requireInteraction: true,
             buttons: [{
-                title: "Yes, please"
-            }, {
-                title: "No, thanks"
+                title: "Install from Chrome Web Store"
             }]
         };
 
         that.notifications.create(options, function (id) {
-            var cb = function (notificationId, buttonId) {
+            var cb = function (notificationId) {
                 if (notificationId === id) {
-                    if (buttonId === 0) {
-                        window.open(extension.options.installationUrl);
-                    }
+                    window.open(extension.options.installationUrl);
                     that.notifications.events.onButtonClicked.removeListener(cb);
                     that.notifications.clear(notificationId, function (wasCleared) {
                         fluid.log("Clearing notification:", notificationId, wasCleared);
