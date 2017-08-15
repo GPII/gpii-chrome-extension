@@ -74,7 +74,7 @@ fluid.defaults("gpii.chrome.settings", {
         wsConnector: {
             type: "gpii.wsConnector",
             options: {
-                solutionId: "net.gpii.browserExtension",
+                solutionId: "net.gpii.uioPlus",
                 flowManager: "ws://localhost:8081/browserChannel",
                 retryTime: 10
             }
