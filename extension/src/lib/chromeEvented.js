@@ -23,7 +23,8 @@ fluid.defaults("gpii.chrome.eventedComponent", {
     gradeNames: "fluid.component",
     events: {
         onTabOpened: null,
-        onTabUpdated: null
+        onTabUpdated: null,
+        onWindowFocusChanged: null
     },
     listeners: {
         "onCreate.init": {
@@ -34,10 +35,7 @@ fluid.defaults("gpii.chrome.eventedComponent", {
 });
 
 gpii.chrome.eventedComponent.init = function (that) {
-    chrome.tabs.onCreated.addListener(function (tab) {
-        that.events.onTabOpened.fire(tab);
-    });
-    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, oldTabStatus) {
-        that.events.onTabUpdated.fire(tabId, changeInfo, oldTabStatus);
-    });
+    chrome.tabs.onCreated.addListener(that.events.onTabOpened.fire);
+    chrome.tabs.onUpdated.addListener(that.events.onTabUpdated.fire);
+    chrome.windows.onFocusChanged.addListener(that.events.onWindowFocusChanged.fire);
 };
