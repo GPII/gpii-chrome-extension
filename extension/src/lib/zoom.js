@@ -44,8 +44,7 @@ fluid.defaults("gpii.chrome.zoom", {
     modelListeners: {
         "zoom.modelChanged": {
             path: ["magnifierEnabled", "magnification"],
-            funcName: "{that}.applyZoomSettings",
-            excludeSource: "init"
+            funcName: "{that}.applyZoomSettings"
         }
     },
     listeners: {
@@ -56,25 +55,33 @@ fluid.defaults("gpii.chrome.zoom", {
         "onTabUpdated.setupTab": {
             funcName: "{that}.updateTab",
             args: "{arguments}.2"
-        }
+        },
+        "onWindowFocusChanged.applyZoomSettings": "{that}.applyZoomSettings"
     }
 });
 
 gpii.chrome.zoom.applyZoomInTab = function (that, tab, value) {
-    chrome.tabs.setZoom(tab.id, value, function () {
-        if (chrome.runtime.lastError) {
-            fluid.log("Could not apply zoom in tab'",
-                      tab.url, "', error was: ",
-                      chrome.runtime.lastError.message);
-            that.events.onError.fire(chrome.runtime.lastError);
+    // set the zoom value if it hasn't already been set.
+    chrome.tabs.getZoom(tab.id, function (currentZoom) {
+        if (currentZoom !== value) {
+            chrome.tabs.setZoom(tab.id, value, function () {
+                if (chrome.runtime.lastError) {
+                    fluid.log("Could not apply zoom in tab'",
+                              tab.url, "', error was: ",
+                              chrome.runtime.lastError.message);
+                    that.events.onError.fire(chrome.runtime.lastError);
+                }
+            });
         }
     });
 };
 
 gpii.chrome.zoom.applyZoomSettings = function (that) {
     var value = that.model.magnifierEnabled ? that.model.magnification : 1;
-    // Iterate over all tabs and set the zoom factor
-    chrome.tabs.query({}, function (tabs) {
+    // Iterate over all tabs in the current window and set the zoom factor
+    // Only changing in the current window to address cases where changing the
+    // zoom level in other windows causes it to gain focus. See: https://issues.gpii.net/browse/GPII-2525
+    chrome.tabs.query({currentWindow: true}, function (tabs) {
         fluid.each(tabs, function (tab) {
             that.applyZoomInTab(tab, value);
         });
