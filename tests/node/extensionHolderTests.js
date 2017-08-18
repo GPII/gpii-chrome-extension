@@ -2,6 +2,7 @@
  * GPII Chrome Extension for Google Chrome
  *
  * Copyright 2016 RtF-US
+ * Copyright 2017 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -60,7 +61,7 @@ jqUnit.test("Running unit tests for extensionHolder", function () {
     chrome.management.get.yields(gpii.tests.extensionHolder.extInfoMock);
     var ext = gpii.chrome.tests.extensionMock();
 
-    jqUnit.assertDeepEq("Check that the extensionMock has been successfully populated", gpii.tests.extensionHolder.disabledInstance, ext.extensionInstance);
+    jqUnit.assertDeepEq("Check that the extensionMock has been successfully populated", gpii.tests.extensionHolder.extInfoMock, ext.extensionInstance);
 
     chrome.management.setEnabled.func = function (id, value) {
         jqUnit.assertTrue("setEnabled gets a boolean value", "boolean", typeof(value));

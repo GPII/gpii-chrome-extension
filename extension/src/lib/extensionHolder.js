@@ -2,6 +2,7 @@
  * GPII Chrome Extension for Google Chrome
  *
  * Copyright 2016 RtF-US
+ * Copyright 2017 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -42,8 +43,12 @@ fluid.defaults("gpii.chrome.extensionHolder", {
             funcName: "gpii.chrome.extensionHolder.updateEnabledStatus",
             args: "{that}"
         },
-        setup: {
-            funcName: "gpii.chrome.extensionHolder.setup",
+        updateModel: {
+            changePath: "extensionEnabled",
+            value: "{arguments}.0"
+        },
+        populate: {
+            funcName: "gpii.chrome.extensionHolder.populate",
             args: ["{that}", "{arguments}.0"]
         }
     },
@@ -53,31 +58,21 @@ fluid.defaults("gpii.chrome.extensionHolder", {
             args: "{that}"
         },
         "onCreate.populate": {
-            funcName: "gpii.chrome.extensionHolder.populate",
-            args: "{that}",
+            listener: "{that}.populate",
+            args: [true],
             priority: "after:bindChromeEvents"
         },
         "onSetEnabled.complete": {
-            funcName: "gpii.chrome.extensionHolder.setEnabledComplete",
+            listener: "gpii.chrome.extensionHolder.setEnabledComplete",
             args: "{that}"
         },
         "onExtInstalled.populate": {
-            funcName: "gpii.chrome.extensionHolder.populate",
-            args: "{that}"
+            listener: "{that}.populate",
+            args: [false]
         },
         "onExtUninstalled.populate": {
-            funcName: "gpii.chrome.extensionHolder.populate",
-            args: "{that}"
-        },
-        "onExtDisabled.updateModel": {
-            changePath: "extensionEnabled",
-            value: false,
-            source: "chrome"
-        },
-        "onExtEnabled.updateModel": {
-            changePath: "extensionEnabled",
-            value: true,
-            source: "chrome"
+            listener: "{that}.populate",
+            args: [false]
         }
     },
     modelListeners: {
@@ -111,31 +106,51 @@ gpii.chrome.extensionHolder.bindChromeEvents = function (that) {
     });
 };
 
-gpii.chrome.extensionHolder.setup = function (that, extInfo) {
-    if (chrome.runtime.lastError) {
-        // clear out any partial or old extension instance
-        that.extensionInstance = undefined;
-        fluid.log(fluid.logLevel.FAIL,
-                  "Could not get extensionInfo, error was:",
-                  chrome.runtime.lastError.message);
-        that.events.onError.fire(chrome.runtime.lastError);
-    } else {
-        that.extensionInstance = extInfo;
-        that.updateEnabledStatus();
-    }
-};
+gpii.chrome.extensionHolder.populate = function (that, useExtensionState) {
+    chrome.management.get(that.options.extensionId, function (extInfo) {
+        if (chrome.runtime.lastError) {
+            // clear out any partial or old extension instance
+            that.extensionInstance = undefined;
+            // remove events when no extension instance present
+            that.events.onExtDisabled.removeListener("updateModel");
+            that.events.onExtEnabled.removeListener("updateModel");
+            fluid.log(fluid.logLevel.FAIL,
+                      "Could not get extensionInfo, error was:",
+                      chrome.runtime.lastError.message);
+            that.events.onError.fire(chrome.runtime.lastError);
+        } else {
+            that.extensionInstance = extInfo;
+            // Manually binding the events because the onEnabled event is fired
+            // with onInstall. We want to ignore that initial onEnabled event
+            // otherwise the event handler will update the model.
+            that.events.onExtDisabled.addListener(function () {
+                that.updateModel(false);
+            }, "updateModel");
+            that.events.onExtEnabled.addListener(function () {
+                that.updateModel(true);
+            }, "updateModel");
 
-gpii.chrome.extensionHolder.populate = function (that) {
-    chrome.management.get(that.options.extensionId, that.setup);
+            if (useExtensionState) {
+                that.updateModel(that.extensionInstance.enabled);
+            } else {
+                that.updateEnabledStatus();
+            }
+        }
+    });
 };
 
 gpii.chrome.extensionHolder.updateEnabledStatus = function (that) {
-    that.extensionInstance.enabled = that.model.extensionEnabled;
-    chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, that.events.onSetEnabled.fire);
+    if (that.extensionInstance) {
+        that.extensionInstance.enabled = that.model.extensionEnabled;
+        chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, that.events.onSetEnabled.fire);
+    }
 };
 
 gpii.chrome.extensionHolder.setEnabledComplete = function (that) {
-    if (chrome.runtime.lastError) {
+    // Only fire the error if an error, it is enabled, and an extension instance exists
+    // This condition is needed because it will through two errors when removing an enabled extension through
+    // the chrome interface. It first fires a onDisabled then an onUninstalled event.
+    if (chrome.runtime.lastError && !that.model.extensionEnabled && !that.extensionInstance) {
         fluid.log(fluid.logLevel.FAIL,
                   "Could not enable extension, error was:",
                   chrome.runtime.lastError.message);
