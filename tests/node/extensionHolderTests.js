@@ -19,8 +19,28 @@ var fluid = require("infusion");
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 var jqUnit = fluid.require("node-jqunit", require, "jqUnit");
 var gpii = fluid.registerNamespace("gpii");
+fluid.registerNamespace("gpii.tests.extensionHolder");
 
 require("../../extension/src/lib/extensionHolder.js");
+
+gpii.tests.extensionHolder.extInfoMock = {
+    "description": "Chrome Extension Mock",
+    "disabledReason": "unknown",
+    "enabled": true,
+    "id": "abcdefghijklmnoprstuvwxyz0123456",
+    "mayDisable": true,
+    "name": "ChromeExtensionMock",
+    "shortName": "Mocky",
+    "type": "extension",
+    "version": "0.1"
+};
+
+gpii.tests.extensionHolder.disabledInstance = fluid.merge("replace", gpii.tests.extensionHolder.extInfoMock, {"enabled": false});
+
+gpii.tests.extensionHolder.assertState = function (ext, state) {
+    jqUnit.assertEquals("Checking that ext.model.extensionEnabled is " + state, state, ext.model.extensionEnabled);
+    jqUnit.assertEquals("Checking that ext.extensionInstance.enabled is " + state, state, ext.extensionInstance.enabled);
+};
 
 jqUnit.module("GPII Chrome Extension extensionHolder unit tests");
 
@@ -35,48 +55,36 @@ jqUnit.test("Running unit tests for extensionHolder", function () {
         }
     });
 
-    var extInfoMock = {
-        "description": "Chrome Extension Mock",
-        "disabledReason": "unknown",
-        "enabled": true,
-        "id": "abcdefghijklmnoprstuvwxyz0123456",
-        "mayDisable": true,
-        "name": "ChromeExtensionMock",
-        "shortName": "Mocky",
-        "type": "extension",
-        "version": "0.1"
-    };
-
-    var expectedInstance = fluid.copy(extInfoMock);
-    // set enabled state to false, to match model value
-    expectedInstance.enabled = false;
-
     // Mock this call to chrome.management.get
     //
-    chrome.management.get.yields(extInfoMock);
+    chrome.management.get.yields(gpii.tests.extensionHolder.extInfoMock);
     var ext = gpii.chrome.tests.extensionMock();
 
-    jqUnit.assertDeepEq("Check that the extensionMock has been successfully populated", expectedInstance, ext.extensionInstance);
+    jqUnit.assertDeepEq("Check that the extensionMock has been successfully populated", gpii.tests.extensionHolder.disabledInstance, ext.extensionInstance);
 
     chrome.management.setEnabled.func = function (id, value) {
         jqUnit.assertTrue("setEnabled gets a boolean value", "boolean", typeof(value));
     };
 
     ext.applier.change("extensionEnabled", true);
-    jqUnit.assertTrue("Checking that ext.model.extensionEnabled is true", ext.model.extensionEnabled);
-    jqUnit.assertTrue("Checking that ext.extensionInstance.enabled is true", ext.extensionInstance.enabled);
+    gpii.tests.extensionHolder.assertState(ext, true);
 
     ext.applier.change("extensionEnabled", false);
-    jqUnit.assertFalse("Checking that ext.model.extensionEnabled is false", ext.model.extensionEnabled);
-    jqUnit.assertFalse("Checking that ext.extensionInstance.enabled is false", ext.extensionInstance.enabled);
+    gpii.tests.extensionHolder.assertState(ext, false);
+
+    ext.events.onExtEnabled.fire();
+    gpii.tests.extensionHolder.assertState(ext, true);
+
+    ext.events.onExtDisabled.fire();
+    gpii.tests.extensionHolder.assertState(ext, false);
 
     chrome.runtime.lastError = true;
-    ext.events.onExtUninstalled.fire(extInfoMock.id);
+    ext.events.onExtUninstalled.fire(gpii.tests.extensionHolder.extInfoMock.id);
     jqUnit.assertUndefined("Checking that the extensionInstance has been cleared", ext.extensionInstance);
     chrome.runtime.lastError = undefined;
 
-    ext.events.onExtInstalled.fire(extInfoMock);
-    jqUnit.assertDeepEq("Check that the extensionInstance has been successfully repopulated", expectedInstance, ext.extensionInstance);
+    ext.events.onExtInstalled.fire(gpii.tests.extensionHolder.extInfoMock);
+    jqUnit.assertDeepEq("Check that the extensionInstance has been successfully repopulated", gpii.tests.extensionHolder.disabledInstance, ext.extensionInstance);
 
     chrome.flush();
 });

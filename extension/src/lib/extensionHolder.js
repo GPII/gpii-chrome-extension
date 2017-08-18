@@ -68,6 +68,16 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         "onExtUninstalled.populate": {
             funcName: "gpii.chrome.extensionHolder.populate",
             args: "{that}"
+        },
+        "onExtDisabled.updateModel": {
+            changePath: "extensionEnabled",
+            value: false,
+            source: "chrome"
+        },
+        "onExtEnabled.updateModel": {
+            changePath: "extensionEnabled",
+            value: true,
+            source: "chrome"
         }
     },
     modelListeners: {
