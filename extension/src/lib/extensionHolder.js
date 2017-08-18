@@ -28,7 +28,11 @@ fluid.defaults("gpii.chrome.extensionHolder", {
     },
     events: {
         onError: null,
-        onSetEnabled: null
+        onSetEnabled: null,
+        onExtInstalled: null,
+        onExtUninstalled: null,
+        onExtEnabled: null,
+        onExtDisabled: null
     },
     model: {
         extensionEnabled: undefined
@@ -44,12 +48,25 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         }
     },
     listeners: {
+        "onCreate.bindChromeEvents": {
+            listener: "gpii.chrome.extensionHolder.bindChromeEvents",
+            args: "{that}"
+        },
         "onCreate.populate": {
             funcName: "gpii.chrome.extensionHolder.populate",
-            args: "{that}"
+            args: "{that}",
+            priority: "after:bindChromeEvents"
         },
         "onSetEnabled.complete": {
             funcName: "gpii.chrome.extensionHolder.setEnabledComplete",
+            args: "{that}"
+        },
+        "onExtInstalled.populate": {
+            funcName: "gpii.chrome.extensionHolder.populate",
+            args: "{that}"
+        },
+        "onExtUninstalled.populate": {
+            funcName: "gpii.chrome.extensionHolder.populate",
             args: "{that}"
         }
     },
@@ -61,15 +78,40 @@ fluid.defaults("gpii.chrome.extensionHolder", {
     }
 });
 
+gpii.chrome.extensionHolder.bindChromeEvents = function (that) {
+    chrome.management.onInstalled.addListener(function (extInfo) {
+        if (extInfo.id === that.options.extensionId) {
+            that.events.onExtInstalled.fire(extInfo);
+        }
+    });
+    chrome.management.onUninstalled.addListener(function (id) {
+        if (id === that.options.extensionId) {
+            that.events.onExtUninstalled.fire(id);
+        }
+    });
+    chrome.management.onEnabled.addListener(function (extInfo) {
+        if (extInfo.id === that.options.extensionId) {
+            that.events.onExtEnabled.fire(extInfo);
+        }
+    });
+    chrome.management.onDisabled.addListener(function (extInfo) {
+        if (extInfo.id === that.options.extensionId) {
+            that.events.onExtDisabled.fire(extInfo);
+        }
+    });
+};
+
 gpii.chrome.extensionHolder.setup = function (that, extInfo) {
     if (chrome.runtime.lastError) {
+        // clear out any partial or old extension instance
+        that.extensionInstance = undefined;
         fluid.log(fluid.logLevel.FAIL,
                   "Could not get extensionInfo, error was:",
                   chrome.runtime.lastError.message);
         that.events.onError.fire(chrome.runtime.lastError);
     } else {
         that.extensionInstance = extInfo;
-        that.applier.change("extensionEnabled", that.extensionInstance.enabled);
+        that.updateEnabledStatus();
     }
 };
 

@@ -29,13 +29,16 @@ jqUnit.test("Running unit tests for extensionHolder", function () {
     //
     fluid.defaults("gpii.chrome.tests.extensionMock", {
         gradeNames: "gpii.chrome.extensionHolder",
-        extensionId: "abcdefghijklmnoprstuvwxyz0123456"
+        extensionId: "abcdefghijklmnoprstuvwxyz0123456",
+        model: {
+            extensionEnabled: false
+        }
     });
 
     var extInfoMock = {
         "description": "Chrome Extension Mock",
         "disabledReason": "unknown",
-        "enabled": false,
+        "enabled": true,
         "id": "abcdefghijklmnoprstuvwxyz0123456",
         "mayDisable": true,
         "name": "ChromeExtensionMock",
@@ -44,12 +47,16 @@ jqUnit.test("Running unit tests for extensionHolder", function () {
         "version": "0.1"
     };
 
+    var expectedInstance = fluid.copy(extInfoMock);
+    // set enabled state to false, to match model value
+    expectedInstance.enabled = false;
+
     // Mock this call to chrome.management.get
     //
     chrome.management.get.yields(extInfoMock);
     var ext = gpii.chrome.tests.extensionMock();
 
-    jqUnit.assertDeepEq("Check that the extensionMock has been successfully populated", extInfoMock, ext.extensionInstance);
+    jqUnit.assertDeepEq("Check that the extensionMock has been successfully populated", expectedInstance, ext.extensionInstance);
 
     chrome.management.setEnabled.func = function (id, value) {
         jqUnit.assertTrue("setEnabled gets a boolean value", "boolean", typeof(value));
@@ -62,6 +69,14 @@ jqUnit.test("Running unit tests for extensionHolder", function () {
     ext.applier.change("extensionEnabled", false);
     jqUnit.assertFalse("Checking that ext.model.extensionEnabled is false", ext.model.extensionEnabled);
     jqUnit.assertFalse("Checking that ext.extensionInstance.enabled is false", ext.extensionInstance.enabled);
+
+    chrome.runtime.lastError = true;
+    ext.events.onExtUninstalled.fire(extInfoMock.id);
+    jqUnit.assertUndefined("Checking that the extensionInstance has been cleared", ext.extensionInstance);
+    chrome.runtime.lastError = undefined;
+
+    ext.events.onExtInstalled.fire(extInfoMock);
+    jqUnit.assertDeepEq("Check that the extensionInstance has been successfully repopulated", expectedInstance, ext.extensionInstance);
 
     chrome.flush();
 });
