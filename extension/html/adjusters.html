@@ -23,7 +23,11 @@
      </head>
 
     <body class="fl-prefsEditor-separatedPanel fl-focus">
-        <div id="gpiic-ext-adjusters"></div>
+        <div id="gpiic-ext-adjusters" aria-busy=true>
+            <div class="flc-loading fl-loading" aria-describedby="flc-loading-text" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <div class="fl-spinner"><div id="flc-loading-text">Loading…</div></div>
+            </div>
+        </div>
     </body>
 
 </html>

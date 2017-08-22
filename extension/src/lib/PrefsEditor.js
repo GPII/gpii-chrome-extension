@@ -54,6 +54,21 @@
 
     fluid.defaults("gpii.chrome.prefs.extensionPanel", {
         gradeNames: ["fluid.prefs.fullNoPreview"],
+        selectors: {
+            loading: ".flc-loading"
+        },
+        listeners: {
+            "onReady.removeSpinner": {
+                "this": "{that}.dom.loading",
+                method: "remove",
+                args: []
+            },
+            "onReady.updateAria": {
+                "this": "{that}.container",
+                method: "removeAttr",
+                args: ["aria-busy"]
+            }
+        },
         components: {
             prefsEditor: {
                 options: {

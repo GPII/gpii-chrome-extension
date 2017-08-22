@@ -637,6 +637,8 @@
             var prefsEditorLoader = prefsEditorStack.prefsEditorLoader;
             jqUnit.assertValue("The prefsEditorLoader has been initialized", prefsEditorLoader);
             jqUnit.assertDeepEq("The prefsEditor's default model should be set", defaultModel.preferences, prefsEditorLoader.prefsEditor.model.preferences);
+            jqUnit.assertUndefined("The aria-busy attribute should be removed", prefsEditorLoader.container.attr("aria-busy"));
+            jqUnit.assertNodeNotExists("The loading spinner should be removed", prefsEditorLoader.options.selectors.loading);
             fluid.each(adjusters, function (adjuster) {
                 jqUnit.assertValue("The " + adjuster + " has been initialized", prefsEditorLoader.prefsEditor[adjuster]);
             });
@@ -722,7 +724,7 @@
                 name: "Prefs Editor Tests",
                 tests: [{
                     name: "Instantiation",
-                    expect:19,
+                    expect:21,
                     sequence: [{
                         event: "{testEnvironment prefsEditorStack prefsEditorLoader}.events.onReady",
                         listener: "gpii.tests.prefsEditorTests.assertInit",

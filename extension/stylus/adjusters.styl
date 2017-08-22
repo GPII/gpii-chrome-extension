@@ -1,33 +1,111 @@
 @import "utils/selection"
 
+// variables
+
+panelHeight = 183px;
+panelWidth = 400px;
+
 // Overriding the fonts to correct the path to the font file
 @font-face {
-  font-family: "OpenSans";
-  src: url("../fonts/OpenSans-Light.ttf");
-  font-weight: 300;
-  font-style: normal;
+    font-family: "OpenSans";
+    src: url("../fonts/OpenSans-Light.ttf");
+    font-weight: 300;
+    font-style: normal;
 }
 @font-face {
-  font-family: 'OpenSans';
-  src: url("../fonts/OpenSans-Regular.ttf");
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'OpenSans';
+    src: url("../fonts/OpenSans-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
 }
 @font-face {
-  font-family: 'OpenSans';
-  src: url("../fonts/OpenSans-Semibold.ttf");
-  font-weight: 600;
-  font-style: normal;
+    font-family: 'OpenSans';
+    src: url("../fonts/OpenSans-Semibold.ttf");
+    font-weight: 600;
+    font-style: normal;
 }
 
-// Overriding the background-image to correct the path to the image file
+// Overrides
 .fl-prefsEditor-separatedPanel {
-  background-image: url("../images/separatedpanelbg.png");
+    background-image: none;
+
+    .fl-prefsEditor-panels {
+        .fl-prefsEditor-panel {
+            border-top: transparent;
+            border-bottom: transparent;
+        }
+    }
 }
+
+.fl-prefsEditor-separatedPanel .fl-prefsEditor-panels .fl-prefsEditor-panel
 
 body {
     font-size: 1rem;
-    width: 400px;
+    width: panelWidth;
+    min-height: panelHeight;
+}
+
+/**
+ * CSS Spinner adapted from Lea Verou's Cleanest CSS Spinner
+ * http://lea.verou.me/2013/11/cleanest-css-spinner-ever/
+ */
+
+@keyframes spin {
+    to { transform: rotate(1turn); }
+}
+
+.fl-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: panelHeight;
+}
+
+.fl-spinner {
+    position: relative;
+    display: inline-block;
+    width: 5em;
+    height: 5em;
+    margin: 0 .5em;
+    font-size: 12px;
+    text-indent: 999em;
+    overflow: hidden;
+    animation: spin 1s infinite steps(8);
+}
+
+.fl-spinner:before,
+.fl-spinner:after,
+.fl-spinner > div:before,
+.fl-spinner > div:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 2.25em; /* (container width - part width)/2  */
+    width: .5em;
+    height: 1.5em;
+    border-radius: .2em;
+    background: #eee;
+    box-shadow: 0 3.5em #eee; /* container height - part height */
+    transform-origin: 50% 2.5em; /* container height / 2 */
+}
+
+.fl-spinner:before {
+    background: #555;
+}
+
+.fl-spinner:after {
+    transform: rotate(-45deg);
+    background: #777;
+}
+
+.fl-spinner > div:before {
+    transform: rotate(-90deg);
+    background: #999;
+}
+
+.fl-spinner > div:after {
+    transform: rotate(-135deg);
+    background: #bbb;
 }
 
 // Selection Highlight Preview
