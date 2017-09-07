@@ -37,7 +37,7 @@
             "onCreate.bindPortEvents": "gpii.chrome.domEnactor.bindPortEvents",
             "onMessage.updateModel": {
                 changePath: "",
-                value: "{arguments}.0"
+                value: "{arguments}.0.settings"
             }
         },
         distributeOptions: {

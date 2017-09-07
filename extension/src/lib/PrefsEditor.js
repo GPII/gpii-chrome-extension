@@ -21,16 +21,16 @@
             // TODO: if possible automate the model relay bindings so that we don't
             //       have to know the model paths ahead of time.
             preferences: {
-                gpii_chrome_prefs_contrast: "{that}.model.remote.contrastTheme",
-                fluid_prefs_enhanceInputs: "{that}.model.remote.inputsLargerEnabled",
-                gpii_chrome_prefs_lineSpace: "{that}.model.remote.lineSpace",
-                fluid_prefs_tableOfContents: "{that}.model.remote.tableOfContentsEnabled",
-                gpii_chrome_prefs_textSize: "{that}.model.remote.fontSize",
-                fluid_prefs_speak: "{that}.model.remote.selfVoicingEnabled",
-                gpii_chrome_prefs_simplify: "{that}.model.remote.simplifiedUiEnabled",
-                gpii_chrome_prefs_dictionary: "{that}.model.remote.dictionaryEnabled",
-                gpii_chrome_prefs_highlight: "{that}.model.remote.selectionTheme",
-                gpii_chrome_prefs_clickToSelect: "{that}.model.remote.clickToSelectEnabled"
+                gpii_chrome_prefs_contrast: "{that}.model.remote.settings.contrastTheme",
+                fluid_prefs_enhanceInputs: "{that}.model.remote.settings.inputsLargerEnabled",
+                gpii_chrome_prefs_lineSpace: "{that}.model.remote.settings.lineSpace",
+                fluid_prefs_tableOfContents: "{that}.model.remote.settings.tableOfContentsEnabled",
+                gpii_chrome_prefs_textSize: "{that}.model.remote.settings.fontSize",
+                fluid_prefs_speak: "{that}.model.remote.settings.selfVoicingEnabled",
+                gpii_chrome_prefs_simplify: "{that}.model.remote.settings.simplifiedUiEnabled",
+                gpii_chrome_prefs_dictionary: "{that}.model.remote.settings.dictionaryEnabled",
+                gpii_chrome_prefs_highlight: "{that}.model.remote.settings.selectionTheme",
+                gpii_chrome_prefs_clickToSelect: "{that}.model.remote.settings.clickToSelectEnabled"
                 // TODO: Add adjusters and model relays for the following:
                 // characterSpace
                 // syllabificationEnabled

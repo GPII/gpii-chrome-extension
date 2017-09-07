@@ -29,12 +29,12 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
     },
     model: {
         // Accepted model values:
-        // contrastTheme: string,
-        // lineSpace: number,    // the multiplier to the current line space
-        // inputsLarger: boolean,
-        // selectionTheme: string,
-        // simplifiedUiEnabled: boolean,
-        // tableOfContentsEnabled: boolean
+        // settings.contrastTheme: string,
+        // settings.lineSpace: number,    // the multiplier to the current line space
+        // settings.inputsLarger: boolean,
+        // settings.selectionTheme: string,
+        // settings.simplifiedUiEnabled: boolean,
+        // settings.tableOfContentsEnabled: boolean
     },
     listeners: {
         "onCreate.bindOnConnect": {

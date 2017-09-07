@@ -41,7 +41,7 @@ fluid.defaults("gpii.chrome.settings", {
                 name: "click2speech",
                 installationUrl: "https://chrome.google.com/webstore/detail/click2speech/djfpbemmcokhlllnafdmomgecdlicfhj",
                 model: {
-                    extensionEnabled: "{settings}.model.selfVoicingEnabled"
+                    extensionEnabled: "{settings}.model.settings.selfVoicingEnabled"
                 }
             }
         },
@@ -52,7 +52,7 @@ fluid.defaults("gpii.chrome.settings", {
                 name: "Google Dictionary (by Google)",
                 installationUrl: "https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja",
                 model: {
-                    extensionEnabled: "{settings}.model.dictionaryEnabled"
+                    extensionEnabled: "{settings}.model.settings.dictionaryEnabled"
                 }
             }
         },
