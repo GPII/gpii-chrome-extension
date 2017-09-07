@@ -37,6 +37,7 @@ fluid.defaults("gpii.chrome.settings", {
         click2Speech: {
             type: "gpii.chrome.extensionHolder",
             options: {
+                settingName: "text-to-speech",
                 extensionId: "djfpbemmcokhlllnafdmomgecdlicfhj",
                 name: "click2speech",
                 installationUrl: "https://chrome.google.com/webstore/detail/click2speech/djfpbemmcokhlllnafdmomgecdlicfhj",
@@ -48,6 +49,7 @@ fluid.defaults("gpii.chrome.settings", {
         dictionary: {
             type: "gpii.chrome.extensionHolder",
             options: {
+                settingName: "dictionary",
                 extensionId: "mgijmajocgfcbeboacabfgobmjgjcoja",
                 name: "Google Dictionary (by Google)",
                 installationUrl: "https://chrome.google.com/webstore/detail/google-dictionary-by-goog/mgijmajocgfcbeboacabfgobmjgjcoja",
@@ -67,7 +69,7 @@ fluid.defaults("gpii.chrome.settings", {
             options: {
                 model: {
                     magnifierEnabled: true, // set to true because fontSize is always enabled
-                    magnification: "{settings}.model.fontSize"
+                    magnification: "{settings}.model.settings.fontSize"
                 }
             }
         },
@@ -83,7 +85,9 @@ fluid.defaults("gpii.chrome.settings", {
             type: "gpii.chrome.notifications"
         }
     },
-    model: "{settings}.options.defaultSettings",  // Defaults
+    model: {
+        settings: "{settings}.options.defaultSettings"  // Defaults
+    },
     invokers: {
         updateSettings: {
             funcName: "gpii.chrome.settings.updateSettings",
@@ -95,9 +99,9 @@ fluid.defaults("gpii.chrome.settings", {
     },
     distributeOptions: [{
         record: {
-            "onError.missingExtension": {
-                funcName: "gpii.chrome.settings.handleExtensionHolderError",
-                args: ["{settings}", "{that}", "{arguments}.0"]
+            "onExtensionMissing.handle": {
+                funcName: "gpii.chrome.settings.handleExtensionMissing",
+                args: ["{settings}", "{that}"]
             }
         },
         target: "{settings > gpii.chrome.extensionHolder}.options.listeners"
@@ -105,33 +109,32 @@ fluid.defaults("gpii.chrome.settings", {
 });
 
 gpii.chrome.settings.updateSettings = function (that, settings) {
-    that.applier.change("", settings || that.options.defaultSettings);
+    that.applier.change("settings", settings || that.options.defaultSettings);
 };
 
-gpii.chrome.settings.handleExtensionHolderError = function (that, extension, error) {
-    if (error.message === "Failed to find extension with id " + extension.options.extensionId + ".") {
-        var options = {
-            type: "basic",
-            title: "GPII notifications",
-            message: extension.options.name + " couldn't be found.",
-            iconUrl: chrome.extension.getURL("./") + "images/gpii.png",
-            requireInteraction: true,
-            buttons: [{
-                title: "Install from Chrome Web Store"
-            }]
-        };
+gpii.chrome.settings.handleExtensionMissing = function (that, extension) {
+    // if (extension.prompt || extension.model.extensionEnabled)
+    var options = {
+        type: "basic",
+        title: "GPII notifications",
+        message: "To use " + extension.options.settingName + ", please install " + extension.options.name + ".",
+        iconUrl: chrome.extension.getURL("./") + "images/gpii.png",
+        requireInteraction: true,
+        buttons: [{
+            title: "Install from Chrome Web Store"
+        }]
+    };
 
-        that.notifications.create(options, function (id) {
-            var cb = function (notificationId) {
-                if (notificationId === id) {
-                    window.open(extension.options.installationUrl);
-                    that.notifications.events.onButtonClicked.removeListener(cb);
-                    that.notifications.clear(notificationId, function (wasCleared) {
-                        fluid.log("Clearing notification:", notificationId, wasCleared);
-                    });
-                }
-            };
-            that.notifications.events.onButtonClicked.addListener(cb);
-        });
-    }
+    that.notifications.create(options, function (id) {
+        var cb = function (notificationId) {
+            if (notificationId === id) {
+                window.open(extension.options.installationUrl);
+                that.notifications.events.onButtonClicked.removeListener(cb);
+                that.notifications.clear(notificationId, function (wasCleared) {
+                    fluid.log("Clearing notification:", notificationId, wasCleared);
+                });
+            }
+        };
+        that.notifications.events.onButtonClicked.addListener(cb);
+    });
 };

@@ -29,6 +29,7 @@ fluid.defaults("gpii.chrome.extensionHolder", {
     },
     events: {
         onError: null,
+        onExtensionMissing: null,
         onSetEnabled: null,
         onExtInstalled: null,
         onExtUninstalled: null,
@@ -50,6 +51,10 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         populate: {
             funcName: "gpii.chrome.extensionHolder.populate",
             args: ["{that}", "{arguments}.0"]
+        },
+        unpopulate: {
+            funcName: "gpii.chrome.extensionHolder.unpopulate",
+            args: ["{that}"]
         }
     },
     listeners: {
@@ -70,9 +75,12 @@ fluid.defaults("gpii.chrome.extensionHolder", {
             listener: "{that}.populate",
             args: [false]
         },
-        "onExtUninstalled.populate": {
-            listener: "{that}.populate",
-            args: [false]
+        "onExtUninstalled.unpopulate": {
+            listener: "{that}.unpopulate"
+        },
+        "onError.translateToOnExtensionMissing": {
+            listener: "gpii.chrome.extensionHolder.translateToOnExtensionMissing",
+            args: ["{that}", "{arguments}.0"]
         }
     },
     modelListeners: {
@@ -106,14 +114,18 @@ gpii.chrome.extensionHolder.bindChromeEvents = function (that) {
     });
 };
 
+gpii.chrome.extensionHolder.unpopulate = function (that) {
+    // clear out any partial or old extension instance
+    that.extensionInstance = undefined;
+    // remove events when no extension instance present
+    that.events.onExtDisabled.removeListener("updateModel");
+    that.events.onExtEnabled.removeListener("updateModel");
+};
+
 gpii.chrome.extensionHolder.populate = function (that, useExtensionState) {
     chrome.management.get(that.options.extensionId, function (extInfo) {
         if (chrome.runtime.lastError) {
-            // clear out any partial or old extension instance
-            that.extensionInstance = undefined;
-            // remove events when no extension instance present
-            that.events.onExtDisabled.removeListener("updateModel");
-            that.events.onExtEnabled.removeListener("updateModel");
+            that.unpopulate();
             fluid.log(fluid.logLevel.FAIL,
                       "Could not get extensionInfo, error was:",
                       chrome.runtime.lastError.message);
@@ -143,6 +155,8 @@ gpii.chrome.extensionHolder.updateEnabledStatus = function (that) {
     if (that.extensionInstance) {
         that.extensionInstance.enabled = that.model.extensionEnabled;
         chrome.management.setEnabled(that.extensionInstance.id, that.model.extensionEnabled, that.events.onSetEnabled.fire);
+    } else if (that.model.extensionEnabled) {
+        that.events.onExtensionMissing.fire();
     }
 };
 
@@ -156,4 +170,10 @@ gpii.chrome.extensionHolder.setEnabledComplete = function (that) {
                   chrome.runtime.lastError.message);
         that.events.onError.fire(chrome.runtime.lastError);
     };
+};
+
+gpii.chrome.extensionHolder.translateToOnExtensionMissing = function (that, error) {
+    if (error.message === "Failed to find extension with id " + that.options.extensionId + ".") {
+        that.events.onExtensionMissing.fire();
+    }
 };
