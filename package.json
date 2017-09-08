@@ -13,11 +13,14 @@
     "personalization",
     "gpii"
   ],
-  "author": "Javier Hernández",
+  "author": "GPII",
   "bugs": {
-    "url": "https://github.com/GPII/gpii-chrome-extension/issues"
+    "url": "http://issues.gpii.net/browse/GPII"
   },
   "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
+  "scripts": {
+      "test": "node tests/node/all-tests.js"
+  },
   "dependencies": {
     "infusion": "3.0.0-dev.20170727T201856Z.8c48d077a"
   },
