@@ -20,7 +20,7 @@
     // The main component to handle settings that require DOM manipulations.
     // It contains various subcomponents for handling various settings.
     fluid.defaults("gpii.chrome.domEnactor", {
-        gradeNames: ["fluid.viewComponent"],
+        gradeNames: ["fluid.contextAware", "fluid.viewComponent"],
         model: {
             // Accepted model values:
             // contrastTheme: string,
@@ -38,6 +38,16 @@
             "onMessage.updateModel": {
                 changePath: "",
                 value: "{arguments}.0"
+            }
+        },
+        contextAwareness: {
+            simplify: {
+                checks: {
+                    allowSimplification: {
+                        contextValue: "{gpii.chrome.allowSimplification}",
+                        gradeNames: "gpii.chrome.domEnactor.simplify"
+                    }
+                }
             }
         },
         distributeOptions: {
@@ -78,19 +88,24 @@
                     }
                 }
             },
-            simplify: {
-                type: "gpii.chrome.enactor.simplify",
-                options: {
-                    model: {
-                        simplify: "{domEnactor}.model.simplifiedUiEnabled"
-                    }
-                }
-            },
             tableOfContents: {
                 type: "gpii.chrome.enactor.tableOfContents",
                 options: {
                     model: {
                         toc: "{domEnactor}.model.tableOfContentsEnabled"
+                    }
+                }
+            }
+        }
+    });
+
+    fluid.defaults("gpii.chrome.domEnactor.simplify", {
+        components: {
+            simplify: {
+                type: "gpii.chrome.enactor.simplify",
+                options: {
+                    model: {
+                        simplify: "{domEnactor}.model.simplifiedUiEnabled"
                     }
                 }
             }
