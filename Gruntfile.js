@@ -50,6 +50,8 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/renderer/js/fluidParser.js",
             "node_modules/infusion/src/framework/renderer/js/fluidRenderer.js",
             "node_modules/infusion/src/framework/renderer/js/RendererUtilities.js",
+            "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
+            "node_modules/infusion/src/framework/enhancement/js/ProgressiveEnhancement.js",
             "node_modules/infusion/src/components/tableOfContents/js/TableOfContents.js",
             "node_modules/infusion/src/framework/preferences/js/Enactors.js"
         ],

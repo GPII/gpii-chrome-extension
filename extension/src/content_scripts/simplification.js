@@ -23,8 +23,10 @@
             article: "article, [role~='article'], .article, #article",
             main: "main, [role~='main'], .main, #main",
             genericContent: ".content, #content, .body:not('body'), #body:not('body')",
-            nav: "nav, [role~='navigation'], .navigation, .nav, #nav, #navigation, [role~='search'], [type~='search']"
+            nav: "nav, [role~='navigation'], .navigation, .nav, #nav, #navigation",
+            search: "[role~='search'], [type~='search']"
         },
+        alwaysVisible: ["search"],
         markup: {
             navToggle: "<button class='gpiic-simplify-navToggle'></button>"
         },
@@ -104,16 +106,22 @@
     gpii.simplify.set = function (that, state) {
         var content = that.findContent();
         if (state && content.length) {
-            that.container.css("visibility", "hidden");
             content.css("visibility", "visible");
+            fluid.each(that.options.alwaysVisible, function (selector) {
+                that.locate(selector).css("visibility", "visible");
+            });
+            that.container.css("visibility", "hidden");
             if (that.options.injectNavToggle) {
                 gpii.simplify.injectToggle(that, content);
             }
             that.locate("navToggle").show();
-        } else {
+        } else if (content.length) {
             that.locate("navToggle").hide();
             that.container.css("visibility", "");
             content.css("visibility", "");
+            fluid.each(that.options.alwaysVisible, function (selector) {
+                that.locate(selector).css("visibility", "");
+            });
         }
     };
 

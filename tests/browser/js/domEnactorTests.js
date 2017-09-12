@@ -551,6 +551,10 @@
             jqUnit.assertTrue("Connection called with the correct arguments", chrome.runtime.connect.withArgs({name: "domEnactor-" + that.id}));
         };
 
+        gpii.tests.domEnactorTests.assertHasGrade = function (that, grade, expected) {
+            jqUnit.assertEquals("The " + grade + " grade should " + (expected ? "" : "not ") + "be applied", expected, fluid.hasGrade(that.options, grade));
+        };
+
         fluid.defaults("fluid.tests.domEnactorTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             testOpts: {
@@ -583,6 +587,63 @@
                         listener: "jqUnit.assertEquals",
                         args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.testTwo", "{domEnactor}.model.testTwo"]
                     }]
+                }, {
+                    name: "Simplification",
+                    expect: 2,
+                    sequence: [{
+                        func: "gpii.tests.domEnactorTests.assertHasGrade",
+                        args: ["{domEnactor}", "gpii.chrome.domEnactor.simplify", true]
+                    }, {
+                        func: "jqUnit.assertValue",
+                        args: ["The simplify subcomponent should have been added", "{domEnactor}.simplify"]
+                    }]
+                }]
+            }]
+        });
+
+        fluid.defaults("gpii.tests.domEnactorWithoutSimplificationTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            events: {
+                afterSetup: null
+            },
+            components: {
+                domEnactor: {
+                    type: "gpii.chrome.domEnactor",
+                    container: ".gpii-test-domEnactor",
+                    createOnEvent: "afterSetup"
+                },
+                domEnactorTester: {
+                    type: "fluid.tests.domEnactorWithoutSimplificationTester",
+                    createOnEvent: "afterSetup"
+                }
+            },
+            listeners: {
+                "onCreate.setup": {
+                    listener: "gpii.tests.domEnactorWithoutSimplificationTests.setup",
+                    priority: "first"
+                }
+            }
+        });
+
+        gpii.tests.domEnactorWithoutSimplificationTests.setup = function (that) {
+            fluid.contextAware.forgetChecks(["gpii.chrome.allowSimplification"]);
+            that.events.afterSetup.fire();
+        };
+
+        fluid.defaults("fluid.tests.domEnactorWithoutSimplificationTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            modules: [{
+                name: "domEnactor without Simplify Tests",
+                tests: [{
+                    name: "Simplification",
+                    expect: 2,
+                    sequence: [{
+                        func: "gpii.tests.domEnactorTests.assertHasGrade",
+                        args: ["{domEnactor}", "gpii.tests.domEnactorTests.assertHasGrade", false]
+                    }, {
+                        func: "jqUnit.assertUndefined",
+                        args: ["The simplify subcomponent should not have been added", "{domEnactor}.simplify"]
+                    }]
                 }]
             }]
         });
@@ -593,7 +654,8 @@
             "gpii.tests.lineSpaceTests",
             "gpii.tests.inputsLargerTests",
             "gpii.tests.tocTests",
-            "gpii.tests.domEnactorTests"
+            "gpii.tests.domEnactorTests",
+            "gpii.tests.domEnactorWithoutSimplificationTests"
         ]);
     });
 })(jQuery);

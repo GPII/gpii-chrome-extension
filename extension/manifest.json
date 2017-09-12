@@ -14,16 +14,18 @@
         "default_popup": "html/adjusters.html"
     },
     "content_scripts": [{
-        "matches": [
-            "http://*/",
-            "https://*/",
-            "<all_urls>"
-        ],
-        "css": [
-            "css/enactors.css"
-        ],
+        "matches": ["<all_urls>"],
+        "css": ["css/enactors.css"],
+        "js": ["dist/gpii-chrome-extension-contentScriptsLib.min.js"],
+        "all_frames": true
+    }, {
+        "matches": ["<all_urls>"],
+        "exclude_globs": ["*://*.google.*/*"],
+        "js": ["content_scripts/simplificationContext.js"],
+        "all_frames": true
+    }, {
+        "matches": ["<all_urls>"],
         "js": [
-            "dist/gpii-chrome-extension-contentScriptsLib.min.js",
             "content_scripts/utils.js",
             "content_scripts/simplification.js",
             "content_scripts/domEnactor.js",
@@ -31,12 +33,8 @@
         ],
         "all_frames": true
     }, {
-        "matches": [
-            "https://www.caljobs.ca.gov/*"
-        ],
-        "css": [
-            "css/calJobs.css"
-        ],
+        "matches": ["https://www.caljobs.ca.gov/*"],
+        "css": ["css/calJobs.css"],
         "all_frames": true
     }],
     "background": {

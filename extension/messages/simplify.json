@@ -1,5 +1,5 @@
 {
-    "label": "Simplify",
+    "label": "Reading Mode",
     "description": "Only display the main content",
     "switchOn": "ON",
     "switchOff": "OFF"
