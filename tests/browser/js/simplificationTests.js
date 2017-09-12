@@ -106,7 +106,7 @@
             var that = gpii.simplify(".gpiic-simplify-navigation");
             var nav = that.findNav();
 
-            jqUnit.assertEquals("Should have found all of the nav elements", 8, nav.length);
+            jqUnit.assertEquals("Should have found all of the nav elements", 6, nav.length);
         });
 
 
@@ -134,6 +134,11 @@
             jqUnit.assertEquals("The container should be set to hidden", "hidden", that.container.css("visibility"));
             that.findContent().each(function (idx, node) {
                 jqUnit.isVisible("The content element at index " + idx + " should be visible", node);
+            });
+            fluid.each(that.options.alwaysVisible, function (selector) {
+                that.locate(selector).each(function (idx, node) {
+                    jqUnit.isVisible("The always visible element at index " + idx + " should be visible", node);
+                });
             });
             jqUnit.isVisible("The navigation toggle should be visible", that.locate("navToggle"));
         };
@@ -163,7 +168,7 @@
                 name: "Simplification Tests",
                 tests: [{
                     name: "Model Changes",
-                    expect: 12,
+                    expect: 11,
                     sequence: [{
                         func: "{simplify}.applier.change",
                         args: ["simplify", true]
