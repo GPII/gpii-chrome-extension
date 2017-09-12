@@ -18,6 +18,12 @@
 
 fluid.defaults("gpii.chrome.settings", {
     gradeNames: "fluid.modelComponent",
+    events: {
+        onInstalled: null,
+        onUpdated: null,
+        onStartup: null,
+        onLoadExtensionHolders: null
+    },
     defaultSettings: {
         // not all of the following settings are in the common terms yet.
         // and may need to be updated once they are added there.
@@ -36,6 +42,7 @@ fluid.defaults("gpii.chrome.settings", {
     components: {
         click2Speech: {
             type: "gpii.chrome.extensionHolder",
+            createOnEvent: "onLoadExtensionHolders",
             options: {
                 settingName: "text-to-speech",
                 extensionId: "djfpbemmcokhlllnafdmomgecdlicfhj",
@@ -48,6 +55,7 @@ fluid.defaults("gpii.chrome.settings", {
         },
         dictionary: {
             type: "gpii.chrome.extensionHolder",
+            createOnEvent: "onLoadExtensionHolders",
             options: {
                 settingName: "dictionary",
                 extensionId: "mgijmajocgfcbeboacabfgobmjgjcoja",
@@ -86,7 +94,8 @@ fluid.defaults("gpii.chrome.settings", {
         }
     },
     model: {
-        settings: "{settings}.options.defaultSettings"  // Defaults
+        settings: "{settings}.options.defaultSettings",  // Defaults
+        promptInstall: true
     },
     invokers: {
         updateSettings: {
@@ -95,7 +104,18 @@ fluid.defaults("gpii.chrome.settings", {
         }
     },
     listeners: {
-        "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings"
+        "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings",
+        "onCreate.bindChromeEvents": "gpii.chrome.settings.bindChromeEvents",
+        "onStartup.updateModel": {
+            changePath: "promptInstall",
+            value: false
+        },
+        "onInstalled.loadExtensionHolders": "{that}.events.onLoadExtensionHolders",
+        "onUpdated.loadExtensionHolders": "{that}.events.onLoadExtensionHolders",
+        "onStartup.loadExtensionHolders": {
+            listener: "{that}.events.onLoadExtensionHolders",
+            priority: "after:updateModel"
+        }
     },
     distributeOptions: [{
         record: {
@@ -108,33 +128,49 @@ fluid.defaults("gpii.chrome.settings", {
     }]
 });
 
+gpii.chrome.settings.bindChromeEvents = function (that) {
+    chrome.runtime.onInstalled.addListener(function (object) {
+        if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+            that.events.onInstalled.fire();
+        }
+        if (object.reason === chrome.runtime.OnInstalledReason.UPDATE) {
+            that.events.onUpdated.fire();
+        }
+    });
+
+    chrome.runtime.onStartup.addListener(function () {
+        that.events.onStartup.fire();
+    });
+};
+
 gpii.chrome.settings.updateSettings = function (that, settings) {
     that.applier.change("settings", settings || that.options.defaultSettings);
 };
 
 gpii.chrome.settings.handleExtensionMissing = function (that, extension) {
-    // if (extension.prompt || extension.model.extensionEnabled)
-    var options = {
-        type: "basic",
-        title: "GPII notifications",
-        message: "To use " + extension.options.settingName + ", please install " + extension.options.name + ".",
-        iconUrl: chrome.extension.getURL("./") + "images/gpii.png",
-        requireInteraction: true,
-        buttons: [{
-            title: "Install from Chrome Web Store"
-        }]
-    };
-
-    that.notifications.create(options, function (id) {
-        var cb = function (notificationId) {
-            if (notificationId === id) {
-                window.open(extension.options.installationUrl);
-                that.notifications.events.onButtonClicked.removeListener(cb);
-                that.notifications.clear(notificationId, function (wasCleared) {
-                    fluid.log("Clearing notification:", notificationId, wasCleared);
-                });
-            }
+    if (that.model.promptInstall || extension.model.extensionEnabled) {
+        var options = {
+            type: "basic",
+            title: "GPII notifications",
+            message: "To use " + extension.options.settingName + ", please install " + extension.options.name + ".",
+            iconUrl: chrome.extension.getURL("./") + "images/gpii.png",
+            requireInteraction: true,
+            buttons: [{
+                title: "Install from Chrome Web Store"
+            }]
         };
-        that.notifications.events.onButtonClicked.addListener(cb);
-    });
+
+        that.notifications.create(options, function (id) {
+            var cb = function (notificationId) {
+                if (notificationId === id) {
+                    window.open(extension.options.installationUrl);
+                    that.notifications.events.onButtonClicked.removeListener(cb);
+                    that.notifications.clear(notificationId, function (wasCleared) {
+                        fluid.log("Clearing notification:", notificationId, wasCleared);
+                    });
+                }
+            };
+            that.notifications.events.onButtonClicked.addListener(cb);
+        });
+    }
 };
