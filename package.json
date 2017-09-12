@@ -22,7 +22,8 @@
       "test": "node tests/node/all-tests.js"
   },
   "dependencies": {
-    "infusion": "3.0.0-dev.20170727T201856Z.8c48d077a"
+    "infusion": "3.0.0-dev.20170727T201856Z.8c48d077a",
+    "ws": "1.1.0"
   },
   "devDependencies": {
     "fluid-grunt-eslint": "18.1.1",
@@ -36,7 +37,6 @@
     "grunt-jsonlint": "1.0.4",
     "grunt-shell": "1.3.0",
     "node-jqunit": "1.1.4",
-    "sinon-chrome": "1.1.2",
-    "ws": "1.1.0"
+    "sinon-chrome": "1.1.2"
   }
 }
