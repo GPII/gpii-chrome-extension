@@ -29,16 +29,18 @@
             gradeNames: ["gpii.chrome.prefs.extensionPanel.store"],
             model: {
                 remote: {
-                    contrastTheme: "test-contrastTheme",
-                    inputsLargerEnabled: "test-inputsLargerEnabled",
-                    lineSpace: "test-lineSpace",
-                    tableOfContentsEnabled: "test-tableOfContents",
-                    fontSize: "test-fontSize",
-                    selfVoicingEnabled: "test-selfVoicingEnabled",
-                    simplifiedUiEnabled: "test-simplifiedUiEnabled",
-                    dictionaryEnabled: "test-dictionaryEnabled",
-                    selectionTheme: "test-selectionTheme",
-                    clickToSelectEnabled: "test-clickToSelectEnabled"
+                    settings: {
+                        contrastTheme: "test-contrastTheme",
+                        inputsLargerEnabled: "test-inputsLargerEnabled",
+                        lineSpace: "test-lineSpace",
+                        tableOfContentsEnabled: "test-tableOfContents",
+                        fontSize: "test-fontSize",
+                        selfVoicingEnabled: "test-selfVoicingEnabled",
+                        simplifiedUiEnabled: "test-simplifiedUiEnabled",
+                        dictionaryEnabled: "test-dictionaryEnabled",
+                        selectionTheme: "test-selectionTheme",
+                        clickToSelectEnabled: "test-clickToSelectEnabled"
+                    }
                 }
             }
         });
@@ -671,16 +673,18 @@
             testOpts: {
                 defaultModel: {
                     remote: {
-                        inputsLargerEnabled: false,
-                        selfVoicingEnabled: false,
-                        tableOfContentsEnabled: false,
-                        contrastTheme: "default",
-                        selectionTheme: "default",
-                        clickToSelectEnabled: false,
-                        dictionaryEnabled: false,
-                        lineSpace: 1,
-                        simplifiedUiEnabled: false,
-                        fontSize: 1
+                        settings: {
+                            inputsLargerEnabled: false,
+                            selfVoicingEnabled: false,
+                            tableOfContentsEnabled: false,
+                            contrastTheme: "default",
+                            selectionTheme: "default",
+                            clickToSelectEnabled: false,
+                            dictionaryEnabled: false,
+                            lineSpace: 1,
+                            simplifiedUiEnabled: false,
+                            fontSize: 1
+                        }
                     },
                     preferences: {
                         fluid_prefs_enhanceInputs: false,
@@ -740,7 +744,7 @@
                         args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_contrast.dom.themeInput", "{that}.options.testOpts.newModel.gpii_chrome_prefs_contrast"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_contrast", "remote.contrastTheme", "{that}.options.testOpts.newModel.gpii_chrome_prefs_contrast"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_contrast", "remote.settings.contrastTheme", "{that}.options.testOpts.newModel.gpii_chrome_prefs_contrast"],
                         spec: {path: "preferences.gpii_chrome_prefs_contrast", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -749,7 +753,7 @@
                         args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_highlight.dom.themeInput", "{that}.options.testOpts.newModel.gpii_chrome_prefs_highlight"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_highlight", "remote.selectionTheme", "{that}.options.testOpts.newModel.gpii_chrome_prefs_highlight"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_highlight", "remote.settings.selectionTheme", "{that}.options.testOpts.newModel.gpii_chrome_prefs_highlight"],
                         spec: {path: "preferences.gpii_chrome_prefs_highlight", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -758,7 +762,7 @@
                         args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_textSize.dom.textSize", "{that}.options.testOpts.newModel.gpii_chrome_prefs_textSize"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_textSize", "remote.fontSize", "{that}.options.testOpts.newModel.gpii_chrome_prefs_textSize"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_textSize", "remote.settings.fontSize", "{that}.options.testOpts.newModel.gpii_chrome_prefs_textSize"],
                         spec: {path: "preferences.gpii_chrome_prefs_textSize", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -767,7 +771,7 @@
                         args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_lineSpace.dom.lineSpace", "{that}.options.testOpts.newModel.gpii_chrome_prefs_lineSpace"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_lineSpace", "remote.lineSpace", "{that}.options.testOpts.newModel.gpii_chrome_prefs_lineSpace"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_lineSpace", "remote.settings.lineSpace", "{that}.options.testOpts.newModel.gpii_chrome_prefs_lineSpace"],
                         spec: {path: "preferences.gpii_chrome_prefs_lineSpace", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -776,7 +780,7 @@
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_enhanceInputs.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_enhanceInputs", "remote.inputsLargerEnabled", "{that}.options.testOpts.newModel.fluid_prefs_enhanceInputs"],
+                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_enhanceInputs", "remote.settings.inputsLargerEnabled", "{that}.options.testOpts.newModel.fluid_prefs_enhanceInputs"],
                         spec: {path: "preferences.fluid_prefs_enhanceInputs", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -785,7 +789,7 @@
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_speak.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_speak", "remote.selfVoicingEnabled", "{that}.options.testOpts.newModel.fluid_prefs_speak"],
+                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_speak", "remote.settings.selfVoicingEnabled", "{that}.options.testOpts.newModel.fluid_prefs_speak"],
                         spec: {path: "preferences.fluid_prefs_speak", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -794,7 +798,7 @@
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_layoutControls.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_tableOfContents", "remote.tableOfContentsEnabled", "{that}.options.testOpts.newModel.fluid_prefs_tableOfContents"],
+                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_tableOfContents", "remote.settings.tableOfContentsEnabled", "{that}.options.testOpts.newModel.fluid_prefs_tableOfContents"],
                         spec: {path: "preferences.fluid_prefs_tableOfContents", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -803,7 +807,7 @@
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_clickToSelect.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_clickToSelect", "remote.clickToSelectEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_clickToSelect"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_clickToSelect", "remote.settings.clickToSelectEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_clickToSelect"],
                         spec: {path: "preferences.gpii_chrome_prefs_clickToSelect", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -812,7 +816,7 @@
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_dictionary.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_dictionary", "remote.dictionaryEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_dictionary"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_dictionary", "remote.settings.dictionaryEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_dictionary"],
                         spec: {path: "preferences.gpii_chrome_prefs_dictionary", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
@@ -821,7 +825,7 @@
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_simplify.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_simplify", "remote.simplifiedUiEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_simplify"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_simplify", "remote.settings.simplifiedUiEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_simplify"],
                         spec: {path: "preferences.gpii_chrome_prefs_simplify", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {

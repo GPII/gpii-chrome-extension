@@ -559,8 +559,8 @@
             gradeNames: ["fluid.test.testCaseHolder"],
             testOpts: {
                 messages: {
-                    one: {testOne: 1},
-                    two: {testTwo: 2}
+                    one: {settings: {testOne: 1}},
+                    two: {settings: {testTwo: 2}}
                 }
             },
             modules: [{
@@ -585,7 +585,7 @@
                         changeEvent: "{domEnactor}.applier.modelChanged",
                         path: "testTwo",
                         listener: "jqUnit.assertEquals",
-                        args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.testTwo", "{domEnactor}.model.testTwo"]
+                        args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.settings.testTwo", "{domEnactor}.model.testTwo"]
                     }]
                 }, {
                     name: "Simplification",
