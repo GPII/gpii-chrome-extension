@@ -185,6 +185,10 @@
                 "controlValues.theme": "enum"
             }
         },
+        selectors: {
+            header: ".flc-prefsEditor-highlight-header"
+        },
+        selectorsToIgnore: ["header"],
         stringArrayIndex: {
             theme: ["selectionHighlight-default", "selectionHighlight-yellow", "selectionHighlight-green", "selectionHighlight-pink"]
         },
