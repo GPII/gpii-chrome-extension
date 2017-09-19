@@ -70,6 +70,7 @@
 
     gpii.chrome.portBinding.store.set = function (that, settings) {
         that.applier.fireChangeRequest({path: "preferences", type: "DELETE"});
+        that.applier.fireChangeRequest({path: "panelIndex", value: settings.panelIndex, type: "ADD"});
         that.applier.change("preferences", settings.preferences);
         that.postMessage(that.model.remote);
     };

@@ -18,6 +18,7 @@
     fluid.defaults("gpii.chrome.prefs.extensionPanel.store", {
         gradeNames: ["gpii.chrome.portBinding.store"],
         model: {
+            panelIndex: "{that}.model.remote.panelIndex",
             // TODO: if possible automate the model relay bindings so that we don't
             //       have to know the model paths ahead of time.
             preferences: {
@@ -84,6 +85,11 @@
                             excludeSource: "init"
                         },
                         "{fluid.prefs.store}.model.preferences": {
+                            listener: "{that}.fetch",
+                            args: [], // removes the default arguments passed in by the model change event
+                            includeSource: "onMessage"
+                        },
+                        "{fluid.prefs.store}.model.panelIndex": {
                             listener: "{that}.fetch",
                             args: [], // removes the default arguments passed in by the model change event
                             includeSource: "onMessage"
