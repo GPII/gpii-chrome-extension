@@ -21,14 +21,6 @@ $("document").ready(function () {
         prefsEditor: {
             prefsEditor: {
                 gradeNames: ["fluid.prefs.arrowScrolling"],
-                modelListeners: {
-                    "panelIndex": {
-                        listener: "fluid.prefs.arrowScrolling.scrollToPanel",
-                        args: ["{that}", "{change}.value"],
-                        includeSource: ["scrollToPanel"],
-                        namespace: "scrollToPanel"
-                    }
-                },
                 listeners: {
                     "onReady.scrollToPanel": {
                         listener: "fluid.prefs.arrowScrolling.scrollToPanel",
