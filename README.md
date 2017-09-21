@@ -68,3 +68,9 @@ Follow these steps if you want to use the unpacked version of the extension:
 4. Navigate to the directory in which your local copy of the extension lives, and select the *build* folder.
 
 Alternatively, you can install the *crx* package that you created yourself by opening it from Google Chrome. Soon, you will be able to install the extension just by clicking on a link, but this won't happen until we release the first time.
+
+## 3rd Party Software
+
+### MIT License
+
+* [Font-Awesome-SVG-PNG v1.1.5](https://github.com/encharm/Font-Awesome-SVG-PNG)
