@@ -22,7 +22,7 @@
       "test": "node tests/node/all-tests.js"
   },
   "dependencies": {
-    "infusion": "3.0.0-dev.20170727T201856Z.8c48d077a",
+    "infusion": "3.0.0-dev.20171102T191539Z.c0636b395",
     "ws": "1.1.0"
   },
   "devDependencies": {
