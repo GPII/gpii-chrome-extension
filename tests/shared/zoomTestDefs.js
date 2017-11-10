@@ -176,7 +176,9 @@ fluid.defaults("gpii.chrome.tests.zoom.tester", {
 });
 
 gpii.chrome.tests.zoom.clearTestEnv = function () {
-    chrome.flush();
+    chrome.tabs.setZoom.flush();
+    chrome.tabs.getZoom.flush();
+    chrome.tabs.query.flush();
 };
 
 gpii.chrome.tests.zoom.checkSetZoom = function (id, level, expectedId, expectedLevel) {

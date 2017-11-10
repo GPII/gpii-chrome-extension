@@ -22,7 +22,8 @@ fluid.defaults("gpii.chrome.settings", {
         onInstalled: null,
         onUpdated: null,
         onStartup: null,
-        onLoadExtensionHolders: null
+        onLoadExtensionHolders: null,
+        onNotifyOfMissingExtension: null
     },
     defaultSettings: {
         // not all of the following settings are in the common terms yet.
@@ -88,9 +89,38 @@ fluid.defaults("gpii.chrome.settings", {
                 flowManager: "ws://localhost:8081/browserChannel",
                 retryTime: 10
             }
-        },
-        notifications: {
-            type: "gpii.chrome.notifications"
+        }
+    },
+    dynamicComponents: {
+        notification: {
+            type: "gpii.chrome.notification",
+            createOnEvent: "onNotifyOfMissingExtension",
+            options: {
+                members: {
+                    messageData: "{that}.options.managedExtension.options"
+                },
+                managedExtension: "{arguments}.0",
+                strings: {
+                    title: "GPII notifications",
+                    message: "To use %settingName, please install %name.",
+                    install: "Install from Chrome Web Store"
+                },
+                model: {
+                    type: "basic",
+                    iconUrl: "images/gpii.png",
+                    requireInteraction: true,
+                    buttons: [{
+                        title: "{that}.options.strings.install"
+                    }]
+                },
+                listeners: {
+                    "onButtonClicked": {
+                        "this": "window",
+                        method: "open",
+                        args: ["{that}.options.managedExtension.options.installationUrl"]
+                    }
+                }
+            }
         }
     },
     model: {
@@ -149,28 +179,6 @@ gpii.chrome.settings.updateSettings = function (that, settings) {
 
 gpii.chrome.settings.handleExtensionMissing = function (that, extension) {
     if (that.model.promptInstall || extension.model.extensionEnabled) {
-        var options = {
-            type: "basic",
-            title: "GPII notifications",
-            message: "To use " + extension.options.settingName + ", please install " + extension.options.name + ".",
-            iconUrl: chrome.extension.getURL("./") + "images/gpii.png",
-            requireInteraction: true,
-            buttons: [{
-                title: "Install from Chrome Web Store"
-            }]
-        };
-
-        that.notifications.create(options, function (id) {
-            var cb = function (notificationId) {
-                if (notificationId === id) {
-                    window.open(extension.options.installationUrl);
-                    that.notifications.events.onButtonClicked.removeListener(cb);
-                    that.notifications.clear(notificationId, function (wasCleared) {
-                        fluid.log("Clearing notification:", notificationId, wasCleared);
-                    });
-                }
-            };
-            that.notifications.events.onButtonClicked.addListener(cb);
-        });
+        that.events.onNotifyOfMissingExtension.fire(extension);
     }
 };

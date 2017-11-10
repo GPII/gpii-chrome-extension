@@ -87,5 +87,5 @@ jqUnit.test("Running unit tests for extensionHolder", function () {
     ext.events.onExtInstalled.fire(gpii.tests.extensionHolder.extInfoMock);
     jqUnit.assertDeepEq("Check that the extensionInstance has been successfully repopulated", gpii.tests.extensionHolder.disabledInstance, ext.extensionInstance);
 
-    chrome.flush();
+    chrome.management.setEnabled.flush();
 });
