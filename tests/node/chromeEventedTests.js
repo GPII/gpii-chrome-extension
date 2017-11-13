@@ -18,7 +18,7 @@
 var fluid = require("infusion");
 var chrome = fluid.require("sinon-chrome"); // eslint-disable-line no-unused-vars
 var jqUnit = fluid.require("node-jqunit", require, "jqUnit"); // eslint-disable-line no-unused-vars
-var gpii = fluid.registerNamespace("gpii");
+var gpii = fluid.registerNamespace("gpii"); // eslint-disable-line no-unused-vars
 
 require("./testUtils.js");
 require("../../extension/src/lib/chromeEvented.js");
