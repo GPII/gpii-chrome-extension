@@ -21,6 +21,7 @@ var jqUnit = fluid.require("node-jqunit", require, "jqUnit"); // eslint-disable-
 var gpii = fluid.registerNamespace("gpii");
 
 require("./testUtils.js");
+require("../../extension/src/lib/chromeEvented.js");
 require("../../extension/src/lib/chromeNotification.js");
 
 fluid.defaults("gpii.tests.chrome.notification", {
@@ -89,16 +90,6 @@ gpii.tests.chromeNotificationTests.expectedUpdatedModel = {
     iconUrl: "./icons/icon.png"
 };
 
-gpii.tests.chromeNotificationTests.assertCalledWith = function (methodName, args) {
-    var method = fluid.getGlobalValue(methodName);
-    jqUnit.assertTrue(methodName + " should have been called", method.calledWith.apply(method, args));
-};
-
-gpii.tests.chromeNotificationTests.triggerHandleResultFn = function (that) {
-    var fn = that.handleResult(fluid.identity);
-    fn();
-};
-
 fluid.defaults("gpii.tests.chromeNotificationTester", {
     gradeNames: ["fluid.test.testCaseHolder"],
     modules: [{
@@ -115,11 +106,11 @@ fluid.defaults("gpii.tests.chromeNotificationTester", {
                 func: "jqUnit.assertValue",
                 args: ["The notificationID should be generated", "{chromeNotification}.notificationID"]
             }, {
-                func: "gpii.tests.chromeNotificationTester.assertListenersBound",
-                args: ["{chromeNotification}"]
+                func: "gpii.tests.utils.assertEventRelayBound",
+                args: ["{chromeNotification}", "{chromeNotification}.options.eventRelayMap"]
             }, {
                 // Trigger onNotificationCreated event firer callback
-                func: "gpii.tests.chromeNotificationTester.triggerCallback",
+                func: "gpii.tests.utils.triggerCallback",
                 args: [chrome.notifications.create, 2]
             }, {
                 event: "{chromeNotification}.events.onNotificationCreated",
@@ -139,7 +130,7 @@ fluid.defaults("gpii.tests.chromeNotificationTester", {
                 args: ["The model should have been updated", gpii.tests.chromeNotificationTests.expectedUpdatedModel, "{chromeNotification}.model"]
             }, {
                 // Trigger onNotificationUpdated event firer callback
-                func: "gpii.tests.chromeNotificationTester.triggerCallback",
+                func: "gpii.tests.utils.triggerCallback",
                 args: [chrome.notifications.update, 2]
             }, {
                 event: "{chromeNotification}.events.onNotificationUpdated",
@@ -147,7 +138,7 @@ fluid.defaults("gpii.tests.chromeNotificationTester", {
                 args: ["update", "{chromeNotification}.notificationID", "{chromeNotification}.model", "{chromeNotification}.events.onNotificationUpdated.fire"]
             }, {
                 // Trigger onClicked event firer callback
-                func: "gpii.tests.chromeNotificationTester.triggerCallback",
+                func: "gpii.tests.utils.triggerCallback",
                 args: [chrome.notifications.onClicked.addListener, 0, "{chromeNotification}.notificationID"]
             }, {
                 event: "{chromeNotification}.events.onClicked",
@@ -155,7 +146,7 @@ fluid.defaults("gpii.tests.chromeNotificationTester", {
                 args: ["The onClicked event was fired"]
             }, {
                 // Trigger onButtonClicked event firer callback
-                func: "gpii.tests.chromeNotificationTester.triggerCallback",
+                func: "gpii.tests.utils.triggerCallback",
                 args: [chrome.notifications.onButtonClicked.addListener, 0, "{chromeNotification}.notificationID"]
             }, {
                 event: "{chromeNotification}.events.onButtonClicked",
@@ -163,7 +154,7 @@ fluid.defaults("gpii.tests.chromeNotificationTester", {
                 args: ["The onButtonClicked event was fired"]
             }, {
                 // Trigger onClosed event firer callback
-                func: "gpii.tests.chromeNotificationTester.triggerCallback",
+                func: "gpii.tests.utils.triggerCallback",
                 args: [chrome.notifications.onClosed.addListener, 0, "{chromeNotification}.notificationID"]
             }, {
                 event: "{chromeNotification}.events.onClosed",
@@ -185,36 +176,16 @@ fluid.defaults("gpii.tests.chromeNotificationTester", {
     }]
 });
 
-gpii.tests.chromeNotificationTester.assertListenersBound = function (that) {
-    var onClosedBound = chrome.notifications.onClosed.addListener.calledWithExactly(that.relayOnClose);
-    var onClickedBound = chrome.notifications.onClicked.addListener.calledWithExactly(that.relayOnClicked);
-    var onButtonClickedBound = chrome.notifications.onButtonClicked.addListener.calledWithExactly(that.relayOnButtonClicked);
-
-    jqUnit.assertTrue("The onClosed event is relayed to component event", onClosedBound);
-    jqUnit.assertTrue("The onClicked event is relayed to component event", onClickedBound);
-    jqUnit.assertTrue("The onButtonClicked event is relayed to component event", onButtonClickedBound);
-};
-
 gpii.tests.chromeNotificationTester.assertNotificationCall = function (type, id, options, callback) {
     var wasCalled = chrome.notifications[type].calledWithExactly(id, options, callback);
     jqUnit.assertTrue("The " + type + " function should have been called with the correct arguments", wasCalled);
-};
-
-gpii.tests.chromeNotificationTester.triggerCallback = function (method, callbackIndex, args) {
-    method.callArgWith(callbackIndex, args);
 };
 
 gpii.tests.chromeNotificationTester.assertDestroy = function (that) {
     var cleared = chrome.notifications.clear.calledWithExactly(that.notificationID);
     jqUnit.assertTrue("The clear function should have been called with the correct arguments", cleared);
 
-    var onClosedUnbound = chrome.notifications.onClosed.removeListener.calledWithExactly(that.relayOnClose);
-    var onClickedUnbound = chrome.notifications.onClicked.removeListener.calledWithExactly(that.relayOnClicked);
-    var onButtonClickedUnbound = chrome.notifications.onButtonClicked.removeListener.calledWithExactly(that.relayOnButtonClicked);
-
-    jqUnit.assertTrue("The onClosed event is removed", onClosedUnbound);
-    jqUnit.assertTrue("The onClicked event is removed", onClickedUnbound);
-    jqUnit.assertTrue("The onButtonClicked event is removed", onButtonClickedUnbound);
+    gpii.tests.utils.assertEventRelayUnbound(that, that.options.eventRelayMap);
 };
 
 

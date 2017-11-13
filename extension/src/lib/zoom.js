@@ -25,7 +25,15 @@ fluid.defaults("gpii.chrome.zoom", {
         magnification: 1
     },
     events: {
-        onError: null
+        onError: null,
+        onTabOpened: null,
+        onTabUpdated: null,
+        onWindowFocusChanged: null
+    },
+    eventRelayMap: {
+        "chrome.tabs.onCreated": "onTabOpened",
+        "chrome.tabs.onUpdated": "onTabUpdated",
+        "chrome.windows.onFocusChanged": "onWindowFocusChanged"
     },
     invokers: {
         applyZoomSettings: {

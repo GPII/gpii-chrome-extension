@@ -18,3 +18,4 @@ require("./wsConnectorTests.js");
 require("./nodeZoomTests.js");
 require("./domSettingsApplierTests.js");
 require("./chromeNotificationTests.js");
+require("./chromeEventedTests.js");

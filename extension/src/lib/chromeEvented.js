@@ -2,6 +2,7 @@
  * GPII Chrome Extension for Google Chrome
  *
  * Copyright 2016 RtF-US
+ * Copyright 2017 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -16,26 +17,31 @@
 "use strict";
 
 var gpii = fluid.registerNamespace("gpii");
-// TODO: Get rid of this repeated code by using the ContextAwareness API
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 fluid.defaults("gpii.chrome.eventedComponent", {
-    gradeNames: "fluid.component",
-    events: {
-        onTabOpened: null,
-        onTabUpdated: null,
-        onWindowFocusChanged: null
+    gradeNames: ["fluid.component"],
+    // The left hand side is the name of a chrome event. Must be the full path to a valid chrome event.
+    // The right hand side is the component event to be called from the corresponding chrome event handler.
+    eventRelayMap: {
+        // "chromeEventName": "componentEventName"
     },
     listeners: {
-        "onCreate.init": {
-            funcName: "gpii.chrome.eventedComponent.init",
+        "onCreate.bindListeners": {
+            funcName: "gpii.chrome.eventedComponent.processEventRelay",
             args: "{that}"
+        },
+        "onDestroy.unbindListeners": {
+            funcName: "gpii.chrome.eventedComponent.processEventRelay",
+            args: ["{that}", true]
         }
     }
 });
 
-gpii.chrome.eventedComponent.init = function (that) {
-    chrome.tabs.onCreated.addListener(that.events.onTabOpened.fire);
-    chrome.tabs.onUpdated.addListener(that.events.onTabUpdated.fire);
-    chrome.windows.onFocusChanged.addListener(that.events.onWindowFocusChanged.fire);
+gpii.chrome.eventedComponent.processEventRelay = function (that, remove) {
+    fluid.each(that.options.eventRelayMap, function (componentEventName, chromeEventName) {
+        var chromeEvent = fluid.getGlobalValue(chromeEventName);
+        var chromeEventFunc = chromeEvent[remove ? "removeListener" : "addListener"];
+        chromeEventFunc.call(chromeEvent, that.events[componentEventName].fire);
+    });
 };

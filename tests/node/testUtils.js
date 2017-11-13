@@ -16,9 +16,10 @@
 "use strict";
 
 var fluid = require("infusion");
+var jqUnit = fluid.require("node-jqunit", require, "jqUnit"); // eslint-disable-line no-unused-vars
 var gpii = fluid.registerNamespace("gpii"); // eslint-disable-line no-unused-vars
 
-console.log("File run: testUtils.js");
+fluid.registerNamespace("gpii.tests.utils");
 
 fluid.defaults("gpii.tests.testEnvironmentWithSetup", {
     gradeNames: ["fluid.test.testEnvironment"],
@@ -34,3 +35,23 @@ fluid.defaults("gpii.tests.testEnvironmentWithSetup", {
         "onDestroy.tearDown": "{that}.tearDown"
     }
 });
+
+gpii.tests.utils.triggerCallback = function (method, callbackIndex, args) {
+    method.callArgWith(callbackIndex, args);
+};
+
+gpii.tests.utils.assertEventRelayBound = function (that, eventRelayMap) {
+    fluid.each(eventRelayMap, function (componentEventName, chromeEventName) {
+        var addListenerFunc = fluid.getGlobalValue(chromeEventName).addListener;
+        var isBound = addListenerFunc.calledWithExactly(that.events[componentEventName].fire);
+        jqUnit.assertTrue("The " + chromeEventName + " event is relayed to the " + componentEventName + " component event.", isBound);
+    });
+};
+
+gpii.tests.utils.assertEventRelayUnbound = function (that, eventRelayMap) {
+    fluid.each(eventRelayMap, function (componentEventName, chromeEventName) {
+        var removeListenerFunc = fluid.getGlobalValue(chromeEventName).removeListener;
+        var isUnbound = removeListenerFunc.calledWithExactly(that.events[componentEventName].fire);
+        jqUnit.assertTrue("The " + chromeEventName + " event relay was removed.", isUnbound);
+    });
+};
