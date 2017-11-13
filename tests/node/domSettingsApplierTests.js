@@ -20,6 +20,8 @@ var chrome = chrome || fluid.require("sinon-chrome", require, "chrome"); // esli
 var jqUnit = fluid.require("node-jqunit", require, "jqUnit"); // eslint-disable-line no-unused-vars
 var gpii = fluid.registerNamespace("gpii");
 
+require("./testUtils.js");
+require("../../extension/src/lib/chromeEvented.js");
 require("../../extension/src/lib/domSettingsApplier.js");
 
 fluid.defaults("gpii.tests.domSettingsApplierTests", {
@@ -80,7 +82,6 @@ gpii.tests.mockPort = {
 };
 
 // TODO: Add tests for the following:
-//       - onConnect port event binding to onConnect component event
 //       - multiple open ports
 //       - onDisconnect destroys port component
 fluid.defaults("gpii.tests.domSettingsApplierTester", {
@@ -94,12 +95,17 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
         name: "GPII Chrome Extension domSettingsApplier unit tests",
         tests: [{
             name: "Port Connection",
-            expect: 2,
+            expect: 4,
             sequence: [{
-                func: "{domSettingsApplier}.events.onConnect.fire",
-                args: [gpii.tests.mockPort]
+                func: "gpii.tests.utils.assertEventRelayBound",
+                args: ["{domSettingsApplier}", "{domSettingsApplier}.options.eventRelayMap"]
             }, {
-                func: "jqUnit.assertValue",
+                // Trigger onConnect event firer callback
+                func: "gpii.tests.utils.triggerCallback",
+                args: [chrome.runtime.onConnect.addListener, 0, gpii.tests.mockPort]
+            }, {
+                event: "{domSettingsApplier}.events.onConnect",
+                listener: "jqUnit.assertValue",
                 args: ["A port component should be created", "{domSettingsApplier}.port"]
             }, {
                 func: "{domSettingsApplier}.applier.change",
@@ -108,6 +114,13 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
                 event: "{domSettingsApplier}.events.messagePosted",
                 listener: "jqUnit.assertDeepEq",
                 args: ["The onMessage event was fired", "{that}.options.testOpts.model", "{arguments}.0"]
+            }, {
+                func: "{domSettingsApplier}.destroy"
+            }, {
+                event: "{domSettingsApplier}.events.onDestroy",
+                priority: "last:testing",
+                listener: "gpii.tests.utils.assertEventRelayUnbound",
+                args: ["{domSettingsApplier}", "{domSettingsApplier}.options.eventRelayMap"]
             }]
         }]
     }]

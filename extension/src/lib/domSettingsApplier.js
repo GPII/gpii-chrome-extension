@@ -27,6 +27,9 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
     events: {
         onConnect: null
     },
+    eventRelayMap: {
+        "chrome.runtime.onConnect": "onConnect"
+    },
     model: {
         // Accepted model values:
         // settings.contrastTheme: string,
@@ -35,13 +38,6 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         // settings.selectionTheme: string,
         // settings.simplifiedUiEnabled: boolean,
         // settings.tableOfContentsEnabled: boolean
-    },
-    listeners: {
-        "onCreate.bindOnConnect": {
-            "this": "chrome.runtime.onConnect",
-            method: "addListener",
-            args: "{that}.events.onConnect.fire"
-        }
     },
     dynamicComponents: {
         port: {
@@ -65,11 +61,6 @@ fluid.defaults("gpii.chrome.portConnection", {
         onMessage: null
     },
     listeners: {
-        "onCreate.bindDisconnect": {
-            "this": "{that}.options.port.onDisconnect",
-            method: "addListener",
-            args: ["{that}.destroy"]
-        },
         "onCreate.bindToPortEvents": {
             funcName: "gpii.chrome.portConnection.bindToPortEvents",
             args: ["{that}", "{that}.options.port"]
