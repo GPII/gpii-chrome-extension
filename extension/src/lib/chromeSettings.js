@@ -12,18 +12,21 @@
  */
 
 /* eslint-env node */
-/* global fluid, gpii, chrome */
+/* global fluid, gpii */
 
 "use strict";
 
 fluid.defaults("gpii.chrome.settings", {
-    gradeNames: "fluid.modelComponent",
+    gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent"],
     events: {
-        onInstalled: null,
-        onUpdated: null,
+        onInstalled: "preventable",
         onStartup: null,
         onLoadExtensionHolders: null,
         onNotifyOfMissingExtension: null
+    },
+    eventRelayMap: {
+        "chrome.runtime.onInstalled": "onInstalled",
+        "chrome.runtime.onStartup": "onStartup"
     },
     defaultSettings: {
         // not all of the following settings are in the common terms yet.
@@ -135,13 +138,11 @@ fluid.defaults("gpii.chrome.settings", {
     },
     listeners: {
         "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings",
-        "onCreate.bindChromeEvents": "gpii.chrome.settings.bindChromeEvents",
         "onStartup.updateModel": {
             changePath: "promptInstall",
             value: false
         },
         "onInstalled.loadExtensionHolders": "{that}.events.onLoadExtensionHolders",
-        "onUpdated.loadExtensionHolders": "{that}.events.onLoadExtensionHolders",
         "onStartup.loadExtensionHolders": {
             listener: "{that}.events.onLoadExtensionHolders",
             priority: "after:updateModel"
@@ -157,21 +158,6 @@ fluid.defaults("gpii.chrome.settings", {
         target: "{settings > gpii.chrome.extensionHolder}.options.listeners"
     }]
 });
-
-gpii.chrome.settings.bindChromeEvents = function (that) {
-    chrome.runtime.onInstalled.addListener(function (object) {
-        if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-            that.events.onInstalled.fire();
-        }
-        if (object.reason === chrome.runtime.OnInstalledReason.UPDATE) {
-            that.events.onUpdated.fire();
-        }
-    });
-
-    chrome.runtime.onStartup.addListener(function () {
-        that.events.onStartup.fire();
-    });
-};
 
 gpii.chrome.settings.updateSettings = function (that, settings) {
     that.applier.change("settings", settings || that.options.defaultSettings);
