@@ -72,8 +72,8 @@ gpii.tests.chromeNotificationTests.setup = function (that) {
 };
 
 gpii.tests.chromeNotificationTests.tearDown = function () {
-    chrome.extension.getURL.flush();
-    chrome.notifications.create.flush();
+    chrome.extension.getURL.resetBehavior;
+    chrome.notifications.create.resetBehavior;
 };
 
 gpii.tests.chromeNotificationTests.expectedModel = {

@@ -72,8 +72,8 @@ fluid.defaults("gpii.tests.extensionHolderTests", {
 });
 
 gpii.tests.extensionHolderTests.tearDown = function () {
-    chrome.management.get.flush();
-    chrome.management.setEnabled.flush();
+    chrome.management.get.resetBehavior;
+    chrome.management.setEnabled.resetBehavior;
 };
 
 fluid.defaults("gpii.tests.extensionHolderTester", {
