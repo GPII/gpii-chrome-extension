@@ -38,7 +38,7 @@ fluid.defaults("gpii.tests.chrome.eventedComponent", {
 });
 
 fluid.defaults("gpii.tests.chromeEventedTests", {
-    gradeNames: ["gpii.tests.testEnvironmentWithSetup"],
+    gradeNames: ["fluid.test.testEnvironment"],
     components: {
         chromeEvented: {
             type: "gpii.tests.chrome.eventedComponent",

@@ -20,7 +20,7 @@ var gpii = fluid.registerNamespace("gpii");
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 fluid.defaults("gpii.chrome.extensionHolder", {
-    gradeNames: "fluid.modelComponent",
+    gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent"],
     extensionId: "",
     name: "",
     installationUrl: "",
@@ -31,10 +31,16 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         onError: null,
         onExtensionMissing: null,
         onSetEnabled: null,
-        onExtInstalled: null,
-        onExtUninstalled: null,
-        onExtEnabled: null,
-        onExtDisabled: null
+        onExtInstalled: "preventable",
+        onExtUninstalled: "preventable",
+        onExtEnabled: "preventable",
+        onExtDisabled: "preventable"
+    },
+    eventRelayMap: {
+        "chrome.management.onInstalled": "onExtInstalled",
+        "chrome.management.onUninstalled": "onExtUninstalled",
+        "chrome.management.onEnabled": "onExtEnabled",
+        "chrome.management.onDisabled": "onExtDisabled"
     },
     model: {
         extensionEnabled: undefined
@@ -58,25 +64,41 @@ fluid.defaults("gpii.chrome.extensionHolder", {
         }
     },
     listeners: {
-        "onCreate.bindChromeEvents": {
-            listener: "gpii.chrome.extensionHolder.bindChromeEvents",
-            args: "{that}"
-        },
         "onCreate.populate": {
             listener: "{that}.populate",
             args: [true],
-            priority: "after:bindChromeEvents"
+            priority: "after:bindListeners"
         },
         "onSetEnabled.complete": {
             listener: "gpii.chrome.extensionHolder.setEnabledComplete",
             args: "{that}"
         },
+        "onExtInstalled.guard": {
+            listener: "gpii.chrome.extensionHolder.guardEventRelay",
+            args: ["{that}.options.extensionId", "{arguments}.0.id"],
+            priority: "first"
+        },
         "onExtInstalled.populate": {
             listener: "{that}.populate",
             args: [false]
         },
+        "onExtUninstalled.guard": {
+            listener: "gpii.chrome.extensionHolder.guardEventRelay",
+            args: ["{that}.options.extensionId", "{arguments}.0"],
+            priority: "first"
+        },
         "onExtUninstalled.unpopulate": {
             listener: "{that}.unpopulate"
+        },
+        "onExtEnabled.guard": {
+            listener: "gpii.chrome.extensionHolder.guardEventRelay",
+            args: ["{that}.options.extensionId", "{arguments}.0.id"],
+            priority: "first"
+        },
+        "onExtDisabled.guard": {
+            listener: "gpii.chrome.extensionHolder.guardEventRelay",
+            args: ["{that}.options.extensionId", "{arguments}.0.id"],
+            priority: "first"
         },
         "onError.translateToOnExtensionMissing": {
             listener: "gpii.chrome.extensionHolder.translateToOnExtensionMissing",
@@ -91,27 +113,9 @@ fluid.defaults("gpii.chrome.extensionHolder", {
     }
 });
 
-gpii.chrome.extensionHolder.bindChromeEvents = function (that) {
-    chrome.management.onInstalled.addListener(function (extInfo) {
-        if (extInfo.id === that.options.extensionId) {
-            that.events.onExtInstalled.fire(extInfo);
-        }
-    });
-    chrome.management.onUninstalled.addListener(function (id) {
-        if (id === that.options.extensionId) {
-            that.events.onExtUninstalled.fire(id);
-        }
-    });
-    chrome.management.onEnabled.addListener(function (extInfo) {
-        if (extInfo.id === that.options.extensionId) {
-            that.events.onExtEnabled.fire(extInfo);
-        }
-    });
-    chrome.management.onDisabled.addListener(function (extInfo) {
-        if (extInfo.id === that.options.extensionId) {
-            that.events.onExtDisabled.fire(extInfo);
-        }
-    });
+// only relay chrome event if it is for the matching extension
+gpii.chrome.extensionHolder.guardEventRelay = function (extensionId, id) {
+    return extensionId === id;
 };
 
 gpii.chrome.extensionHolder.unpopulate = function (that) {
