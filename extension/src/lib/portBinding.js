@@ -69,9 +69,11 @@
     });
 
     gpii.chrome.portBinding.store.set = function (that, settings) {
-        that.applier.fireChangeRequest({path: "preferences", type: "DELETE"});
-        that.applier.fireChangeRequest({path: "panelIndex", value: settings.panelIndex, type: "ADD"});
-        that.applier.change("preferences", settings.preferences);
+        var transaction = that.applier.initiate();
+        transaction.fireChangeRequest({path: "preferences", type: "DELETE"});
+        transaction.fireChangeRequest({path: "panelIndex", value: settings.panelIndex, type: "ADD"});
+        transaction.change("preferences", settings.preferences);
+        transaction.commit();
         that.postMessage(that.model.remote);
     };
 })(jQuery, fluid);
