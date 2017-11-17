@@ -22,7 +22,7 @@ fluid.defaults("gpii.chrome.settings", {
         onInstalled: "preventable",
         onStartup: null,
         onLoadExtensionHolders: null,
-        onNotifyOfMissingExtension: null
+        onCreateNotification: null
     },
     eventRelayMap: {
         "chrome.runtime.onInstalled": "onInstalled",
@@ -97,7 +97,7 @@ fluid.defaults("gpii.chrome.settings", {
     dynamicComponents: {
         notification: {
             type: "gpii.chrome.notification",
-            createOnEvent: "onNotifyOfMissingExtension",
+            createOnEvent: "onCreateNotification",
             options: {
                 members: {
                     messageData: "{that}.options.managedExtension.options"
@@ -165,6 +165,6 @@ gpii.chrome.settings.updateSettings = function (that, settings) {
 
 gpii.chrome.settings.handleExtensionMissing = function (that, extension) {
     if (that.model.promptInstall || extension.model.extensionEnabled) {
-        that.events.onNotifyOfMissingExtension.fire(extension);
+        that.events.onCreateNotification.fire(extension);
     }
 };
