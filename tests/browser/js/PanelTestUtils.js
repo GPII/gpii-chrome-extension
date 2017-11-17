@@ -13,6 +13,7 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 "use strict";
 
 // This file is copied from Infusion 2.0's preference editor tests, because it is not included in the npm package
+// See: https://issues.fluidproject.org/browse/FLUID-6170
 
 (function () {
 
