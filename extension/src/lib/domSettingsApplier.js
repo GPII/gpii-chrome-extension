@@ -58,7 +58,7 @@ fluid.defaults("gpii.chrome.portConnection", {
     port: null, // must be supplied by integrator
     events: {
         onDisconnect: null,
-        onMessage: null
+        onIncomingMessage: null
     },
     listeners: {
         "onCreate.bindToPortEvents": {
@@ -66,7 +66,7 @@ fluid.defaults("gpii.chrome.portConnection", {
             args: ["{that}", "{that}.options.port"]
         },
         "onDisconnect.destroy": "{that}.destroy",
-        "onMessage.updateModel": "{that}.updateModel"
+        "onIncomingMessage.updateModel": "{that}.updateModel"
     },
     modelListeners: {
         "": {
@@ -85,5 +85,5 @@ fluid.defaults("gpii.chrome.portConnection", {
 
 gpii.chrome.portConnection.bindToPortEvents = function (that, port) {
     port.onDisconnect.addListener(that.events.onDisconnect.fire);
-    port.onMessage.addListener(that.events.onMessage.fire);
+    port.onMessage.addListener(that.events.onIncomingMessage.fire);
 };
