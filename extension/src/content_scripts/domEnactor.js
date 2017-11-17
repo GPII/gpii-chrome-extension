@@ -31,13 +31,13 @@
             // tableOfContents: boolean
         },
         events: {
-            onMessage: null
+            onIncomingSettings: null
         },
         listeners: {
             "onCreate.bindPortEvents": "gpii.chrome.domEnactor.bindPortEvents",
-            "onMessage.updateModel": {
+            "onIncomingSettings.updateModel": {
                 changePath: "",
-                value: "{arguments}.0.settings"
+                value: "{arguments}.0"
             }
         },
         contextAwareness: {
@@ -114,7 +114,9 @@
 
     gpii.chrome.domEnactor.bindPortEvents = function (that) {
         that.port = chrome.runtime.connect({name: "domEnactor-" + that.id});
-        that.port.onMessage.addListener(that.events.onMessage.fire);
+        that.port.onMessage.addListener(function (data) {
+            that.events.onIncomingSettings.fire(data.settings);
+        });
     };
 
     // High contrast

@@ -575,9 +575,9 @@
                         func: "gpii.tests.mockPort.trigger.onMessage",
                         args: ["{domEnactor}.port", "{that}.options.testOpts.messages.one"]
                     }, {
-                        event: "{domEnactor}.events.onMessage",
+                        event: "{domEnactor}.events.onIncomingSettings",
                         listener: "jqUnit.assertDeepEq",
-                        args: ["The onMessage event was fired", "{that}.options.testOpts.messages.one", "{arguments}.0"]
+                        args: ["The onIncomingSettings event was fired", "{that}.options.testOpts.messages.one.settings", "{arguments}.0"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
                         args: ["{domEnactor}.port", "{that}.options.testOpts.messages.two"]
