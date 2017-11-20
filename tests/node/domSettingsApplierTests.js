@@ -113,7 +113,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
             }, {
                 event: "{domSettingsApplier}.events.messagePosted",
                 listener: "jqUnit.assertDeepEq",
-                args: ["The onMessage event was fired", "{that}.options.testOpts.model", "{arguments}.0"]
+                args: ["The port's onMessage event was fired", "{that}.options.testOpts.model", "{arguments}.0"]
             }, {
                 func: "{domSettingsApplier}.destroy"
             }, {
