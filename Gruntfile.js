@@ -56,11 +56,55 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/Enactors.js"
         ],
         adjustersLib: [
-            // not concatenating all the individual files because there was an issue when including
-            // "node_modules/infusion/src/framework/preferences/js/PrefsEditor.js" that caused
-            // the distributeOptions to not pass along the configuration to the messageLoader and
-            // templateLoader
-            "node_modules/infusion/dist/infusion-all.js",
+            // jQuery
+            "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
+            "node_modules/infusion/src/lib/jquery/ui/js/jquery-ui.js",
+
+            // Infusion Core
+            "node_modules/infusion/src/framework/core/js/Fluid.js",
+            "node_modules/infusion/src/framework/core/js/FluidDocument.js",
+            "node_modules/infusion/src/framework/core/js/FluidDOMUtilities.js",
+            "node_modules/infusion/src/framework/core/js/FluidIoC.js",
+            "node_modules/infusion/src/framework/core/js/DataBinding.js",
+            "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
+            "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
+            "node_modules/infusion/src/framework/core/js/jquery.keyboard-a11y.js",
+            "node_modules/infusion/src/framework/core/js/FluidView.js",
+            "node_modules/infusion/src/framework/core/js/FluidRequests.js",
+            "node_modules/infusion/src/framework/core/js/ResourceLoader.js",
+            "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
+            "node_modules/infusion/src/framework/enhancement/js/ProgressiveEnhancement.js",
+            "node_modules/infusion/src/lib/fastXmlPull/js/fastXmlPull.js",
+            "node_modules/infusion/src/framework/renderer/js/fluidParser.js",
+            "node_modules/infusion/src/framework/renderer/js/fluidRenderer.js",
+            "node_modules/infusion/src/framework/renderer/js/RendererUtilities.js",
+
+            // Infusion Components
+            "node_modules/infusion/src/components/tableOfContents/js/TableOfContents.js",
+            "node_modules/infusion/src/components/textfieldControl/js/Textfield.js",
+            "node_modules/infusion/src/components/textfieldControl/js/TextfieldStepper.js",
+            "node_modules/infusion/src/components/switch/js/Switch.js",
+            "node_modules/infusion/src/components/slidingPanel/js/SlidingPanel.js",
+
+            // Infusion Prefs Framework
+            "node_modules/infusion/src/framework/preferences/js/URLUtilities.js",
+            "node_modules/infusion/src/framework/preferences/js/Store.js",
+            "node_modules/infusion/src/framework/preferences/js/UIEnhancer.js",
+            "node_modules/infusion/src/framework/preferences/js/PrefsEditor.js",
+            "node_modules/infusion/src/framework/preferences/js/Panels.js",
+            "node_modules/infusion/src/framework/preferences/js/SelfVoicingPanel.js",
+            "node_modules/infusion/src/framework/preferences/js/Enactors.js",
+            "node_modules/infusion/src/framework/preferences/js/StarterGrades.js",
+            "node_modules/infusion/src/framework/preferences/js/ArrowScrolling.js",
+            "node_modules/infusion/src/framework/preferences/js/SeparatedPanelPrefsEditor.js",
+            "node_modules/infusion/src/framework/preferences/js/FullNoPreviewPrefsEditor.js",
+            "node_modules/infusion/src/framework/preferences/js/PrimaryBuilder.js",
+            "node_modules/infusion/src/framework/preferences/js/AuxBuilder.js",
+            "node_modules/infusion/src/framework/preferences/js/StarterSchemas.js",
+            "node_modules/infusion/src/framework/preferences/js/SelfVoicingSchemas.js",
+            "node_modules/infusion/src/framework/preferences/js/Builder.js",
+
+            // from extension
             "extension/src/lib/portBinding.js",
             "extension/src/lib/PrefsEditor.js",
             "extension/src/lib/PrefsEditorInstantiation.js"
