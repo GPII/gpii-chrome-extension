@@ -45,11 +45,9 @@ fluid.defaults("gpii.wsConnector", {
         }
     },
     events: {
-        onCreate: null,
         onConnect: null,
         onConnectionSucceeded: null,
         onError: null,
-        onMessage: null,
         onSettingsChange: null
     },
     listeners: {
