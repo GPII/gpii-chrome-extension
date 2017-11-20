@@ -22,14 +22,14 @@
         gradeNames: ["fluid.modelComponent"],
         connectionName: "",
         events: {
-            onMessage: null
+            onIncomingMessage: null
         },
         listeners: {
             "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents",
-            "onMessage.updateModel": {
+            "onIncomingMessage.updateModel": {
                 changePath: "remote",
                 value: "{arguments}.0",
-                source: "onMessage"
+                source: "onIncomingMessage"
             }
         },
         invokers: {
@@ -42,7 +42,7 @@
 
     gpii.chrome.portBinding.bindPortEvents = function (that) {
         that.port = chrome.runtime.connect({name: that.options.connectionName + "-" + that.id});
-        that.port.onMessage.addListener(that.events.onMessage.fire);
+        that.port.onMessage.addListener(that.events.onIncomingMessage.fire);
     };
 
     gpii.chrome.portBinding.postMessage = function (that, message) {

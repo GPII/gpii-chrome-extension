@@ -87,12 +87,12 @@
                         "{fluid.prefs.store}.model.preferences": {
                             listener: "{that}.fetch",
                             args: [], // removes the default arguments passed in by the model change event
-                            includeSource: "onMessage"
+                            includeSource: "onIncomingMessage"
                         },
                         "{fluid.prefs.store}.model.panelIndex": {
                             listener: "{that}.fetch",
                             args: [], // removes the default arguments passed in by the model change event
-                            includeSource: "onMessage"
+                            includeSource: "onIncomingMessage"
                         }
                     }
                 }
