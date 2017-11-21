@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+
+        <title>GPII Chrome extension in browser tests runner</title>
+
+        <link rel="stylesheet" media="screen" href="../../node_modules/infusion/tests/lib/qunit/css/qunit.css" />
+        <link rel="stylesheet" href="../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.css">
+
+        <script src="../../dist/gpii-chrome-extension-all.min.js"></script>
+        <script src="../../node_modules/infusion/tests/lib/qunit/js/qunit.js"></script>
+        <script src="../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.js"></script>
+
+        <script>
+            // command line search:
+            // find . -name "*Tests.html" | awk '{print "\""$1"\","}'
+
+            QUnit.testSuites("Adaptation/Enactor Tests", [
+                "html/portBindingTests.html",
+                "html/prefsEditorTests.html",
+                "html/utilsTests.html",
+                "html/simplificationTests.html",
+                "html/domEnactorTests.html",
+                "html/zoomTests.html"
+            ]);
+        </script>
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+    </body>
+</html>

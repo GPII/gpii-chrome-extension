@@ -1,0 +1,23 @@
+/* Larger links and inputs */
+.gpii-ext-input-enhanced a {
+    font-size: 125% !important;
+}
+
+/* High contrast */
+.gpii-ext-theme-yb a, .gpii-ext-theme-by a, .gpii-ext-theme-bw a, .gpii-ext-theme-wb a,
+.gpii-ext-theme-yb div, .gpii-ext-theme-by div, .gpii-ext-theme-bw div, .gpii-ext-theme-wb div {
+    background-image: none !important;
+}
+
+.gpii-ext-theme-yb input, .gpii-ext-theme-yb button {
+    border: 1px solid yellow;
+}
+
+.gpii-ext-theme-bw input, .gpii-ext-theme-bw button,
+.gpii-ext-theme-by input, .gpii-ext-theme-by button {
+    border: 1px solid black;
+}
+
+.gpii-ext-theme-wb input, .gpii-ext-theme-wb button {
+    border: 1px solid white;
+}

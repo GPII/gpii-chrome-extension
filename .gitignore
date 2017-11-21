@@ -1,0 +1,5 @@
+/build/
+/dist/
+*.pem
+*.crx
+/node_modules/

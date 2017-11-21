@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>GPII Chrome extension domEnactor tests</title>
+
+        <link rel="stylesheet" media="screen" href="../../../node_modules/infusion/tests/lib/qunit/css/qunit.css" />
+        <link rel="stylesheet" href="../../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.css">
+
+        <script src="../../../dist/gpii-chrome-extension-contentScriptsLib.min.js"></script>
+        <script src="../../../extension/src/content_scripts/utils.js"></script>
+        <script src="../../../extension/src/content_scripts/simplificationContext.js"></script>
+        <script src="../../../extension/src/content_scripts/simplification.js"></script>
+        <script src="../../../extension/src/content_scripts/domEnactor.js"></script>
+
+        <script src="../../../node_modules/infusion/tests/lib/qunit/js/qunit.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/jqUnit/js/jqUnit.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/jqUnit/js/jqUnit-browser.js"></script>
+        <script src="../../../node_modules/infusion/tests/test-core/utils/js/IoCTestUtils.js"></script>
+        <script src="../../../node_modules/sinon-chrome/dist/sinon-chrome.latest.js"></script>
+        <script src="../../../node_modules/sinon/pkg/sinon.js"></script>
+
+        <script src="../js/portTestUtils.js"></script>
+        <script src="../js/domEnactorTests.js"></script>
+    </head>
+
+    <body id="body">
+        <h1 id="qunit-header">GPII Chrome extension domEnactor tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+        <!-- Test Markup -->
+        <div class="gpii-test-selectionHighlight">
+            <p class="gpii-test-selectionHighlight-paragraph">
+                Text in a <strong class="gpii-test-selectionHighlight-nestedElm">paragraph</strong>
+            </p>
+            <div class="gpii-test-selectionHighlight-node">Other text</div>
+        </div>
+        <div class="gpii-test-contrast"></div>
+        <div class="gpii-test-lineSpace" style="line-height: 1.2;"></div>
+        <div class="gpii-test-inputsLarger">
+            <button></button>
+        </div>
+        <div class="gpii-test-toc">
+            <h1>Heading 1</h1>
+            <h2>Heading 1.1</h2>
+            <h1>Heading 2</h1>
+        </div>
+        <div class="gpii-test-domEnactor"></div>
+    </body>
+</html>

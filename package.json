@@ -1,0 +1,42 @@
+{
+  "name": "gpii-chrome-extension",
+  "version": "0.1.0",
+  "description": "GPII extension for Google Chrome",
+  "license": "(BSD-3-Clause OR ECL-2.0)",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/GPII/gpii-chrome-extension.git"
+  },
+  "keywords": [
+    "accessibility",
+    "google-chrome",
+    "personalization",
+    "gpii"
+  ],
+  "author": "GPII",
+  "bugs": {
+    "url": "http://issues.gpii.net/browse/GPII"
+  },
+  "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
+  "scripts": {
+      "test": "node tests/node/all-tests.js"
+  },
+  "dependencies": {
+    "infusion": "3.0.0-dev.20171102T191539Z.c0636b395",
+    "ws": "1.1.0"
+  },
+  "devDependencies": {
+    "fluid-grunt-eslint": "18.1.1",
+    "eslint-config-fluid": "1.0.0",
+    "grunt": "1.0.1",
+    "grunt-contrib-clean": "1.0.0",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-uglify": "3.0.1",
+    "grunt-contrib-stylus": "1.2.0",
+    "grunt-crx": "1.0.5",
+    "grunt-jsonlint": "1.0.4",
+    "grunt-shell": "1.3.0",
+    "node-jqunit": "1.1.4",
+    "sinon-chrome": "1.1.2"
+  }
+}

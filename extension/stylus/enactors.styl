@@ -1,0 +1,56 @@
+@import "../../node_modules/infusion/src/framework/preferences/css/stylus/utils/Themes"
+@import "utils/selection"
+
+@import "utils/enhanceInputs"
+@import "utils/simplify"
+@import "utils/tableOfContents"
+
+// Theming
+// Renamed the theme classes from the Fluid Infusion Preferences Framework
+// to avoid conflicts when the browser extension is run on a page that already
+// includes UI Options.
+extensionThemes = {
+    ".gpii-ext-theme-bw": {
+        foregroundColor: #000000,
+        backgroundColor: #ffffff
+    }
+    ".gpii-ext-theme-wb": {
+        foregroundColor: #ffffff,
+        backgroundColor: #000000
+    }
+    ".gpii-ext-theme-yb": {
+        foregroundColor: #ffff00,
+        backgroundColor: #000000
+    }
+    ".gpii-ext-theme-by": {
+        foregroundColor: #000000,
+        backgroundColor: #ffff00
+    }
+    ".gpii-ext-theme-lgdg": {
+        foregroundColor: #bdbdbb,
+        backgroundColor: #555555
+    }
+}
+
+build-themes-Enactors(extensionThemes);
+
+// Selection Highlight
+selectionThemes = {
+    ".gpii-ext-selection-yellow": {
+        foregroundColor: #000000,
+        backgroundColor: #eeee1a,
+        linkColor: #203bd6
+    }
+    ".gpii-ext-selection-green": {
+        foregroundColor: #000000,
+        backgroundColor: #318712,
+        linkColor: #ffffff
+    }
+    ".gpii-ext-selection-pink": {
+        foregroundColor: #000000,
+        backgroundColor: #de00a2,
+        linkColor: #ffffff
+    }
+}
+
+gpii-stylus-selectionThemes(selectionThemes);

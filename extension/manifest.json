@@ -1,0 +1,56 @@
+{
+    "manifest_version": 2,
+    "name": "GPII chrome extension",
+    "version": "0.1.0",
+    "permissions": [
+        "management",
+        "notifications",
+        "tabs",
+        "http://*/",
+        "https://*/"
+    ],
+    "browser_action": {
+        "default_title": "User Interface Options +",
+        "default_popup": "html/adjusters.html",
+        "default_icon": {
+            "16": "images/gears_16.png",
+            "24": "images/gears_24.png",
+            "32": "images/gears_32.png"
+        }
+    },
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "css": ["css/enactors.css"],
+        "js": ["dist/gpii-chrome-extension-contentScriptsLib.min.js"],
+        "all_frames": true
+    }, {
+        "matches": ["<all_urls>"],
+        "exclude_globs": ["*://*.google.*/*"],
+        "js": ["content_scripts/simplificationContext.js"],
+        "all_frames": true
+    }, {
+        "matches": ["<all_urls>"],
+        "js": [
+            "content_scripts/utils.js",
+            "content_scripts/simplification.js",
+            "content_scripts/domEnactor.js",
+            "content_scripts/domSettingsHandler.js"
+        ],
+        "all_frames": true
+    }, {
+        "matches": ["https://www.caljobs.ca.gov/*"],
+        "css": ["css/calJobs.css"],
+        "all_frames": true
+    }],
+    "background": {
+        "scripts": [
+            "dist/gpii-chrome-extension-all.min.js",
+            "src/background.js"
+        ]
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "web_accessible_resources": [
+        "images/gpii.png",
+        "templates/TableOfContents.html"
+    ]
+}
