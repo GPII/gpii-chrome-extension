@@ -26,6 +26,15 @@ $("document").ready(function () {
                         listener: "fluid.prefs.arrowScrolling.scrollToPanel",
                         args: ["{that}", "{that}.model.panelIndex"]
                     }
+                },
+                // TODO: Remove this modelListener after FLUID-6230 is addressed
+                // https://issues.fluidproject.org/browse/FLUID-6230
+                modelListeners: {
+                    "panelIndex": {
+                        listener: "fluid.prefs.arrowScrolling.scrollToPanel",
+                        args: ["{that}", "{that}.model.panelIndex"],
+                        includeSource: "scrollEvent"
+                    }
                 }
             }
         }
