@@ -310,7 +310,7 @@ module.exports = function (grunt) {
                 "src": [
                     "build/**/*"
                 ],
-                "dest": "./gpii-chrome-extension.crx",
+                "dest": "./ui-options-chrome.crx",
                 "options": {
                     "privateKey": "./key.pem"
                 }

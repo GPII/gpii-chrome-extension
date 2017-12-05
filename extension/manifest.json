@@ -1,7 +1,10 @@
 {
     "manifest_version": 2,
-    "name": "GPII chrome extension",
+    "name": "UI Options Plus (UIO+)",
+    "short_name": "UIO+",
     "version": "0.1.0",
+    "description": "User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.",
+    "author": "Fluid Project",
     "permissions": [
         "management",
         "notifications",
@@ -10,7 +13,7 @@
         "https://*/"
     ],
     "browser_action": {
-        "default_title": "User Interface Options +",
+        "default_title": "UIO+",
         "default_popup": "html/adjusters.html",
         "default_icon": {
             "16": "images/gears_16.png",
@@ -21,7 +24,7 @@
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "css": ["css/enactors.css"],
-        "js": ["dist/gpii-chrome-extension-contentScriptsLib.min.js"],
+        "js": ["dist/ui-options-chrome-contentScriptsLib.min.js"],
         "all_frames": true
     }, {
         "matches": ["<all_urls>"],
@@ -44,7 +47,7 @@
     }],
     "background": {
         "scripts": [
-            "dist/gpii-chrome-extension-all.min.js",
+            "dist/ui-options-chrome-all.min.js",
             "src/background.js"
         ]
     },

@@ -1,17 +1,23 @@
-# GPII extension for Google Chrome
+# UI Options Plus (UIO+)
 
-The GPII for Google Chrome is an extension that allows Google Chrome to be configured by the GPII and improve the accessibility of the browser in different ways.
+User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences. Settings for the adaptations can be set via the UIO+ adjuster panel or, if on a GPII (Global Public Inclusive Infrastructure) enable machine, from a keyed in preference set.
 
-Although the extension is in development right now, it includes support for:
-* font size
-* line space
-* dictionary (requires the *Google Dictionary* extension)
-* selection highlight
-* text-to-speech (requires the *click2speech* extension)
-* contrast
-* simplify
-* enhance inputs
-* table of contents
+The following adaptations are supported:
+
+* Text Size
+* Line Space
+* Contrast
+* Right-Click to Select
+* Selection Highlight
+* Text-to-Speech (requires the click2speech extension)
+* Reading Mode
+* Table of Contents
+* Enhance Inputs
+* Dictionary (requires the Google dictionary extension)
+
+_**Note**: The ability to apply an adaptation will vary from page to page_
+
+UI Options Plus is the result of a joint effort of the Inclusive Design Research Centre at OCAD University and the Trace R&D Center at University of Maryland under funding for the FLOE Project from the William and Flora Hewlett Foundation and the National Institute on Disability, Independent Living, and Rehabilitation Research (NIDILRR), Administration for Community Living under grant #90RE5027.
 
 ## Building the extension
 
@@ -55,11 +61,11 @@ _**NOTE:** Browser tests should be served through a web server. The exact URL ma
 ## Trying out the extension
 
 Requirements:
-* Google Chrome browser. You can download it [here](https://www.google.com/chrome/browser/desktop/).
+* [Google Chrome browser](https://www.google.com/chrome/browser/desktop/)
 
 Follow these steps if you want to use the unpacked version of the extension:
 
-1. Visit *chrome://extensions* in your browser. Alternatively, open the Chrome menu by clicking the icon to the far right of the Omnibox; The menu's icon is three horizontal bars. Select *Extensions* under the *Tools* menu to open Chrome's extension settings.
+1. Visit *chrome://extensions* in your browser. Alternatively, open the Chrome menu by clicking the icon to the far right of the Omnibox; the menu's icon is three horizontal bars. Select *Extensions* under the *Tools* menu to open Chrome's extension settings.
 
 2. Ensure that the *Developer mode* checkbox in the top right-hand corner is checked.
 
@@ -67,7 +73,7 @@ Follow these steps if you want to use the unpacked version of the extension:
 
 4. Navigate to the directory in which your local copy of the extension lives, and select the *build* folder.
 
-Alternatively, you can install the *crx* package that you created yourself by opening it from Google Chrome. Soon, you will be able to install the extension just by clicking on a link, but this won't happen until we release the first time.
+Published versions can be installed from the Chrome Web Store.
 
 ## 3rd Party Software
 
