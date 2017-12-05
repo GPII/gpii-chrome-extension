@@ -17,7 +17,7 @@ The following adaptations are supported:
 
 _**Note**: The ability to apply an adaptation will vary from page to page_
 
-UI Options Plus is the result of a joint effort of the Inclusive Design Research Center at OCAD University and the Trace R&D Center at University of Maryland under funding for the FLOE Project from the William and Flora Hewlett Foundation and the National Institute on Disability, Independent Living, and Rehabilitation Research (NIDILRR), Administration for Community Living under grant #90RE5027.
+UI Options Plus is the result of a joint effort of the Inclusive Design Research Centre at OCAD University and the Trace R&D Center at University of Maryland under funding for the FLOE Project from the William and Flora Hewlett Foundation and the National Institute on Disability, Independent Living, and Rehabilitation Research (NIDILRR), Administration for Community Living under grant #90RE5027.
 
 ## Building the extension
 
