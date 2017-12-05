@@ -1,7 +1,10 @@
 {
     "manifest_version": 2,
-    "name": "GPII chrome extension",
+    "name": "User Interface Options Plus (UIO+)",
+    "short_name": "UIO+",
     "version": "0.1.0",
+    "default_locale": "en",
+    "description": "User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.",
     "permissions": [
         "management",
         "notifications",
@@ -10,7 +13,7 @@
         "https://*/"
     ],
     "browser_action": {
-        "default_title": "User Interface Options +",
+        "default_title": "UIO+",
         "default_popup": "html/adjusters.html",
         "default_icon": {
             "16": "images/gears_16.png",
