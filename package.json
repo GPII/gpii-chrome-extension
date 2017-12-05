@@ -1,7 +1,7 @@
 {
-  "name": "gpii-chrome-extension",
+  "name": "ui-options-chrome",
   "version": "0.1.0",
-  "description": "GPII extension for Google Chrome",
+  "description": "User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.",
   "license": "(BSD-3-Clause OR ECL-2.0)",
   "repository": {
     "type": "git",
@@ -10,10 +10,17 @@
   "keywords": [
     "accessibility",
     "google-chrome",
+    "browser extension",
     "personalization",
+    "infusion",
+    "fluid",
+    "preferences",
+    "uio",
+    "ui options",
+    "user interface options",
     "gpii"
   ],
-  "author": "GPII",
+  "author": "Fluid Project",
   "bugs": {
     "url": "http://issues.gpii.net/browse/GPII"
   },

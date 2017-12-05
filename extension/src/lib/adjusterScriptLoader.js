@@ -15,6 +15,6 @@
 var gpii = gpii || {};
 
 gpii.loadScript = document.createElement("script");
-gpii.loadScript.src = "../dist/gpii-chrome-extension-adjustersLib.min.js";
+gpii.loadScript.src = "../dist/ui-options-chrome-adjustersLib.min.js";
 gpii.loadScript.async = false;
 document.head.appendChild(gpii.loadScript);

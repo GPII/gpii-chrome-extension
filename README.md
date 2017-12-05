@@ -73,7 +73,7 @@ Follow these steps if you want to use the unpacked version of the extension:
 
 4. Navigate to the directory in which your local copy of the extension lives, and select the *build* folder.
 
-Published versions can be installed from the [Chrome Web Store](https://chrome.google.com/webstore/detail/gpii-chrome-extension/okenndailhmikjjfcnmolpaefecbpaek).
+Published versions can be installed from the Chrome Web Store.
 
 ## 3rd Party Software
 
