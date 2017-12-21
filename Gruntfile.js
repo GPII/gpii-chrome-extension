@@ -38,9 +38,12 @@ module.exports = function (grunt) {
         contentScriptsLib: [
             "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
             "node_modules/infusion/src/framework/core/js/Fluid.js",
+            "node_modules/infusion/src/framework/core/js/FluidPromises.js",
+            "node_modules/infusion/src/framework/core/js/DataSource.js",
             "node_modules/infusion/src/framework/core/js/FluidDocument.js",
             "node_modules/infusion/src/framework/core/js/FluidIoC.js",
             "node_modules/infusion/src/framework/core/js/DataBinding.js",
+            "node_modules/infusion/src/framework/core/js/RemoteModel.js",
             "node_modules/infusion/src/framework/core/js/FluidView.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
@@ -62,10 +65,13 @@ module.exports = function (grunt) {
 
             // Infusion Core
             "node_modules/infusion/src/framework/core/js/Fluid.js",
+            "node_modules/infusion/src/framework/core/js/FluidPromises.js",
+            "node_modules/infusion/src/framework/core/js/DataSource.js",
             "node_modules/infusion/src/framework/core/js/FluidDocument.js",
             "node_modules/infusion/src/framework/core/js/FluidDOMUtilities.js",
             "node_modules/infusion/src/framework/core/js/FluidIoC.js",
             "node_modules/infusion/src/framework/core/js/DataBinding.js",
+            "node_modules/infusion/src/framework/core/js/RemoteModel.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
             "node_modules/infusion/src/framework/core/js/jquery.keyboard-a11y.js",

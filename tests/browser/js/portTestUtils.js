@@ -40,7 +40,11 @@
             }
         };
 
-        // using the sinon-chrome stub we return the mockPort
-        chrome.runtime.connect.returns(gpii.tests.mockPort.returnPort());
+        gpii.tests.mockPort.reset = function () {
+            // using the sinon-chrome stub we return a fresh mockPort
+            chrome.runtime.connect.returns(gpii.tests.mockPort.returnPort());
+        };
+
+        gpii.tests.mockPort.reset();
     });
 })(jQuery);

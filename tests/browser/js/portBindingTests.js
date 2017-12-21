@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid, chrome, jqUnit, gpii */
+/* global fluid */
 "use strict";
 
 (function ($) {
@@ -19,36 +19,17 @@
 
         fluid.registerNamespace("gpii.tests");
 
-        /**************
-         * Test utils *
-         **************/
-
-        fluid.defaults("gpii.tests.portBinding.portName", {
-            testOpts: {
-                expectedPortName: {
-                    expander: {
-                        funcName: "fluid.stringTemplate",
-                        args: ["%connectionName-%id", {
-                            connectionName: "{portBinding}.options.connectionName",
-                            id: "{portBinding}.id"
-                        }]
-                    }
-                }
-            }
-        });
-
-
         /*********************
-         * portbinding tests *
+         * portBinding tests *
          *********************/
 
         fluid.defaults("gpii.tests.portBindingTests", {
             gradeNames: ["fluid.test.testEnvironment"],
             components: {
                 portBinding: {
-                    type: "gpii.chrome.portBinding",
+                    type: "gpii.tests.chrome.portBinding",
                     options: {
-                        connectionName: "test"
+                        connectionName: "portBindingTests"
                     }
                 },
                 portBindingTester: {
@@ -57,53 +38,53 @@
             }
         });
 
-        gpii.tests.portBindingTests.assertConnection = function (that, expectedPortName) {
-            jqUnit.assertTrue("Connection called with the correct arguments", chrome.runtime.connect.withArgs({name: expectedPortName}).calledOnce);
-        };
-
-        gpii.tests.portBindingTests.assertPostMessage = function (port, postedMessage) {
-            jqUnit.assertTrue("postMessage called with the correct arguments", port.postMessage.calledWith(postedMessage));
-        };
-
         fluid.defaults("gpii.tests.portBindingTester", {
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
                 messages: {
-                    one: {pref: true},
-                    two: {pref: false},
-                    posted: {prefs: "posted"}
+                    one: {pref: "one"},
+                    two: {pref: "two"},
+                    posted: {pref: "posted"}
                 }
             },
             modules: [{
                 name: "portBinding Tests",
                 tests: [{
                     name: "Port Connection",
-                    expect: 4,
+                    expect: 5,
                     sequence: [{
-                        func: "gpii.tests.portBindingTests.assertConnection",
-                        args: ["{portBinding}", "{that}.options.testOpts.expectedPortName"]
+                        func: "gpii.tests.chrome.portBinding.assertConnection",
+                        args: ["{that}.options.testOpts.expectedPortName"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
                         args: ["{portBinding}.port", "{that}.options.testOpts.messages.one"]
                     }, {
-                        changeEvent: "{portBinding}.applier.modelChanged",
-                        spec: {path: "remote", priority: "last:testing"},
+                        event: "{portBinding}.events.onIncomingMessage",
+                        priority: "last:testing",
                         listener: "jqUnit.assertDeepEq",
-                        args: ["The model.remote path should have been updated after receiving the message", "{that}.options.testOpts.messages.one", "{portBinding}.model.remote"]
+                        args: ["The lastIncomingMessage member should have been updated after receiving the message", "{that}.options.testOpts.messages.one", "{portBinding}.lastIncomingMessage"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
                         args: ["{portBinding}.port", "{that}.options.testOpts.messages.two"]
                     }, {
-                        changeEvent: "{portBinding}.applier.modelChanged",
-                        spec: {path: "remote", priority: "last:testing"},
+                        event: "{portBinding}.events.onIncomingMessage",
+                        priority: "last:testing",
                         listener: "jqUnit.assertDeepEq",
-                        args: ["The model.remote path should have been updated after receiving the message", "{that}.options.testOpts.messages.two", "{portBinding}.model.remote"]
+                        args: ["The lastIncomingMessage member should have been updated after receiving the message", "{that}.options.testOpts.messages.two", "{portBinding}.lastIncomingMessage"]
                     }, {
-                        func: "{portBinding}.postMessage",
-                        args: ["{that}.options.testOpts.messages.posted"]
+                        task: "{portBinding}.postMessage",
+                        args: ["{that}.options.testOpts.messages.posted"],
+                        resolve: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        resolveArgs: ["{portBinding}.port", "{that}.options.testOpts.messages.posted"]
                     }, {
-                        func: "gpii.tests.portBindingTests.assertPostMessage",
-                        args: ["{portBinding}.port", "{that}.options.testOpts.messages.posted"]
+                        // remove port
+                        func: "fluid.set",
+                        args: ["{portBinding}", ["port"], undefined]
+                    }, {
+                        task: "{portBinding}.postMessage",
+                        args: ["{that}.options.testOpts.messages.posted"],
+                        reject: "jqUnit.assert",
+                        rejectArgs: ["The postMessage promise should have been rejected"]
                     }]
                 }]
             }]
@@ -119,12 +100,9 @@
                 portBindingStore: {
                     type: "gpii.chrome.portBinding.store",
                     options: {
-                        connectionName: "storeTest",
-                        model: {
-                            preferences: "{that}.model.remote",
-                            remote: {
-                                setting: "original"
-                            }
+                        gradeNames: ["gpii.tests.chrome.portBinding", "fluid.dataSource.writable"],
+                        options: {
+                            connectionName: "portBindingStoreTests"
                         }
                     }
                 },
@@ -134,32 +112,11 @@
             }
         });
 
-        gpii.tests.portBindingStoreTests.assertGet = function (that, expected) {
-            var actual = that.get();
-            jqUnit.assertDeepEq("The get method returns the model correctly", expected, actual);
-        };
-
         fluid.defaults("gpii.tests.portBindingStoreTester", {
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
-                origModel: {
-                    preferences: {
-                        setting: "original"
-                    },
-                    remote: {
-                        setting: "original"
-                    }
-                },
                 prefsToUpdate: {
                     preferences: {
-                        setting: "set"
-                    }
-                },
-                updatedModel: {
-                    preferences: {
-                        setting: "set"
-                    },
-                    remote: {
                         setting: "set"
                     }
                 }
@@ -170,26 +127,32 @@
                     name: "getting/setting",
                     expect: 6,
                     sequence: [{
-                        func: "gpii.tests.portBindingTests.assertConnection",
-                        args: ["{portBindingStore}", "{that}.options.testOpts.expectedPortName"]
+                        func: "gpii.tests.chrome.portBinding.assertConnection",
+                        args: ["{that}.options.testOpts.expectedPortName"]
                     }, {
                         func: "jqUnit.assertDeepEq",
-                        args: ["The model holds the original values", "{that}.options.testOpts.origModel", "{portBindingStore}.model"]
+                        args: ["The original lastIncomingMessage should be empty", {}, "{portBindingStore}.lastIncomingMessage"]
                     }, {
-                        func: "gpii.tests.portBindingStoreTests.assertGet",
-                        args: ["{portBindingStore}", "{that}.options.testOpts.origModel"]
+                        task: "{portBindingStore}.get",
+                        resolve: "jqUnit.assertDeepEq",
+                        resolveArgs: ["The get method returns the initial model correctly", {}, "{arguments}.0"]
                     }, {
-                        func: "{portBindingStore}.set",
-                        args: ["{that}.options.testOpts.prefsToUpdate"]
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{portBinding}.port", "{that}.options.testOpts.prefsToUpdate"]
                     }, {
-                        func: "jqUnit.assertDeepEq",
-                        args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.updatedModel", "{portBindingStore}.model"]
+                        event: "{portBinding}.events.onIncomingMessage",
+                        priority: "last:testing",
+                        listener: "jqUnit.assertDeepEq",
+                        args: ["The lastIncomingMessage member should have been updated after receiving the message", "{that}.options.testOpts.prefsToUpdate", "{portBindingStore}.lastIncomingMessage"]
                     }, {
-                        func: "gpii.tests.portBindingTests.assertPostMessage",
-                        args: ["{portBindingStore}.port", "{that}.options.testOpts.updatedModel.preferences"]
+                        task: "{portBindingStore}.get",
+                        resolve: "jqUnit.assertDeepEq",
+                        resolveArgs: ["The get method returns the updated model correctly", "{that}.options.testOpts.prefsToUpdate", "{arguments}.0"]
                     }, {
-                        func: "gpii.tests.portBindingStoreTests.assertGet",
-                        args: ["{portBindingStore}", "{that}.options.testOpts.updatedModel"]
+                        task: "{portBindingStore}.set",
+                        args: [null, "{that}.options.testOpts.prefsToUpdate"],
+                        resolve: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        resolveArgs: ["{portBindingStore}.port", "{that}.options.testOpts.prefsToUpdate"]
                     }]
                 }]
             }]
