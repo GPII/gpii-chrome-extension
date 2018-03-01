@@ -23,45 +23,83 @@
          * store tests *
          ***************/
 
-        jqUnit.module("Store Tests");
+        gpii.tests.stored = {
+            testSettings: {
+                panelIndex: 2,
+                settings: {
+                    contrastTheme: "test-contrastTheme",
+                    inputsLargerEnabled: "test-inputsLargerEnabled",
+                    lineSpace: "test-lineSpace",
+                    tableOfContentsEnabled: "test-tableOfContents",
+                    fontSize: "test-fontSize",
+                    selfVoicingEnabled: "test-selfVoicingEnabled",
+                    simplifiedUiEnabled: "test-simplifiedUiEnabled",
+                    dictionaryEnabled: "test-dictionaryEnabled",
+                    selectionTheme: "test-selectionTheme",
+                    clickToSelectEnabled: "test-clickToSelectEnabled"
+                }
+            },
+            testPrefs: {
+                panelIndex: 2,
+                preferences: {
+                    gpii_chrome_prefs_contrast: "test-contrastTheme",
+                    fluid_prefs_enhanceInputs: "test-inputsLargerEnabled",
+                    gpii_chrome_prefs_lineSpace: "test-lineSpace",
+                    fluid_prefs_tableOfContents: "test-tableOfContents",
+                    gpii_chrome_prefs_textSize: "test-fontSize",
+                    fluid_prefs_speak: "test-selfVoicingEnabled",
+                    gpii_chrome_prefs_simplify: "test-simplifiedUiEnabled",
+                    gpii_chrome_prefs_dictionary: "test-dictionaryEnabled",
+                    gpii_chrome_prefs_highlight: "test-selectionTheme",
+                    gpii_chrome_prefs_clickToSelect: "test-clickToSelectEnabled"
+                }
+            }
+        };
 
         fluid.defaults("gpii.tests.chrome.prefs.extensionPanel.store", {
-            gradeNames: ["gpii.chrome.prefs.extensionPanel.store"],
-            model: {
-                remote: {
-                    settings: {
-                        contrastTheme: "test-contrastTheme",
-                        inputsLargerEnabled: "test-inputsLargerEnabled",
-                        lineSpace: "test-lineSpace",
-                        tableOfContentsEnabled: "test-tableOfContents",
-                        fontSize: "test-fontSize",
-                        selfVoicingEnabled: "test-selfVoicingEnabled",
-                        simplifiedUiEnabled: "test-simplifiedUiEnabled",
-                        dictionaryEnabled: "test-dictionaryEnabled",
-                        selectionTheme: "test-selectionTheme",
-                        clickToSelectEnabled: "test-clickToSelectEnabled"
-                    }
+            gradeNames: ["gpii.tests.chrome.portBinding", "gpii.chrome.prefs.extensionPanel.store", "fluid.dataSource.writable"],
+            members: {
+                lastIncomingMessage: gpii.tests.stored.testSettings
+            }
+        });
+
+        fluid.defaults("gpii.tests.chrome.prefs.extensionPanel.store.tests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                store: {
+                    type: "gpii.tests.chrome.prefs.extensionPanel.store"
+                },
+                storeTester: {
+                    type: "gpii.tests.chrome.prefs.extensionPanel.store.tester"
                 }
             }
         });
 
-        gpii.tests.chrome.prefs.extensionPanel.store.prefs = {
-            gpii_chrome_prefs_contrast: "test-contrastTheme",
-            fluid_prefs_enhanceInputs: "test-inputsLargerEnabled",
-            gpii_chrome_prefs_lineSpace: "test-lineSpace",
-            fluid_prefs_tableOfContents: "test-tableOfContents",
-            gpii_chrome_prefs_textSize: "test-fontSize",
-            fluid_prefs_speak: "test-selfVoicingEnabled",
-            gpii_chrome_prefs_simplify: "test-simplifiedUiEnabled",
-            gpii_chrome_prefs_dictionary: "test-dictionaryEnabled",
-            gpii_chrome_prefs_highlight: "test-selectionTheme",
-            gpii_chrome_prefs_clickToSelect: "test-clickToSelectEnabled"
-        };
-
-        jqUnit.test("remote to prefernces model transformation", function () {
-            var that = gpii.tests.chrome.prefs.extensionPanel.store();
-
-            jqUnit.assertDeepEq("The remote model path was transformed to preferences", gpii.tests.chrome.prefs.extensionPanel.store.prefs, that.model.preferences);
+        fluid.defaults("gpii.tests.chrome.prefs.extensionPanel.store.tester", {
+            gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
+            modules: [{
+                name: "Store Tests",
+                tests: [{
+                    name: "getting/setting - transformation",
+                    expect: 4,
+                    sequence: [{
+                        func: "gpii.tests.chrome.portBinding.assertConnection",
+                        args: ["{that}.options.testOpts.expectedPortName"]
+                    }, {
+                        task: "{store}.get",
+                        resolve: "jqUnit.assertDeepEq",
+                        resolveArgs: ["The get method returns the lastIncomingMessage correctly transformed", gpii.tests.stored.testPrefs, "{arguments}.0"]
+                    }, {
+                        task: "{store}.set",
+                        args: [null, gpii.tests.stored.testPrefs],
+                        resolve: "jqUnit.assertDeepEq",
+                        resolveArgs: ["The write response is in the correct form", gpii.tests.stored.testPrefs, "{arguments}.0"]
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        args: ["{store}.port", gpii.tests.stored.testSettings]
+                    }]
+                }]
+            }]
         });
 
         /***************
@@ -610,7 +648,19 @@
                 prefsEditorStack: {
                     type: gpii.tests.built.options.assembledPrefsEditorGrade,
                     container: ".gpiic-prefsEditor",
-                    createOnEvent: "{prefsEditorStackTester}.events.onTestCaseStart"
+                    createOnEvent: "{prefsEditorStackTester}.events.onTestCaseStart",
+                    options: {
+                        distributeOptions: [{
+                            record: {gradeNames: ["gpii.tests.chrome.portBinding"]},
+                            target: "{that gpii.chrome.portBinding.store}.options"
+                        }, {
+                            record: {
+                                gradeNames: ["fluid.resolveRootSingle", "fluid.dataSource.writable"],
+                                singleRootType: "fluid.prefs.store"
+                            },
+                            target: "{that settingsStore}.options"
+                        }]
+                    }
                 },
                 prefsEditorStackTester: {
                     type: "gpii.tests.prefsEditorStackTester"
@@ -623,7 +673,7 @@
             var store = prefsEditorStack.store;
             jqUnit.assertValue("The store has been initialized", store);
             jqUnit.assertValue("The settingsStore has been initialized", store.settingsStore);
-            jqUnit.assertDeepEq("The settingsStore's default model should be empty", defaultModel, store.settingsStore.model);
+            jqUnit.assertDeepEq("The settingsStore's lastIncomingMessage should be empty", {}, store.settingsStore.lastIncomingMessage);
 
             // enhancer initialization
             var enhancer = prefsEditorStack.enhancer;
@@ -646,46 +696,48 @@
             });
         };
 
-        gpii.tests.prefsEditorTests.assertSettingChanged = function (prefsEditorStack, prefsPath, remotePath, value) {
+        gpii.tests.prefsEditorTests.assertSettingChanged = function (prefsEditorStack, prefsPath, value, expectedSettings) {
             var prefsEditorModel = prefsEditorStack.prefsEditorLoader.prefsEditor.model;
-            var storeModel = prefsEditorStack.store.settingsStore.model;
 
             fluid.tests.panels.utils.checkModel(prefsPath, prefsEditorModel, value);
-            jqUnit.assertEquals("The stores expected model value " + value + " at path " + prefsPath, value, fluid.get(storeModel, prefsPath));
-            jqUnit.assertEquals("The stores expected model value " + value + " at path " + remotePath, value, fluid.get(storeModel, remotePath));
-            jqUnit.assertTrue("postMessage called with the 'remote' settings", prefsEditorStack.store.settingsStore.port.postMessage.calledWith(storeModel.remote));
+            jqUnit.assertTrue("postMessage called with the transformed settings", prefsEditorStack.store.settingsStore.port.postMessage.calledWith(expectedSettings));
         };
 
         gpii.tests.prefsEditorTests.assertExternalPrefChange = function (prefsEditorStack, newModel) {
-            // settingsStore model
-            jqUnit.assertDeepEq("The settingsStore's model should be set", newModel, prefsEditorStack.store.settingsStore.model);
-
-            // enhancer model
-            jqUnit.assertDeepEq("The uiEnhancer's model should be set", newModel.preferences, prefsEditorStack.enhancer.uiEnhancer.model);
-
             // prefsEditorLoader
             var prefsEditorLoader = prefsEditorStack.prefsEditorLoader;
             jqUnit.assertDeepEq("The prefsEditor's model should be set", newModel.preferences, prefsEditorLoader.prefsEditor.model.preferences);
+
+            // enhancer model
+            jqUnit.assertDeepEq("The uiEnhancer's model should be set", newModel.preferences, prefsEditorStack.enhancer.uiEnhancer.model);
+        };
+
+        gpii.tests.prefsEditorTests.generateSettings = function (changes, defaults) {
+            return fluid.transform(changes, function (value, setting) {
+                var model = fluid.copy(defaults);
+                model.settings[setting] = value;
+                return model;
+            });
         };
 
         fluid.defaults("gpii.tests.prefsEditorStackTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             testOpts: {
-                defaultModel: {
-                    remote: {
-                        settings: {
-                            inputsLargerEnabled: false,
-                            selfVoicingEnabled: false,
-                            tableOfContentsEnabled: false,
-                            contrastTheme: "default",
-                            selectionTheme: "default",
-                            clickToSelectEnabled: false,
-                            dictionaryEnabled: false,
-                            lineSpace: 1,
-                            simplifiedUiEnabled: false,
-                            fontSize: 1
-                        }
-                    },
+                defaultSettings: {
+                    settings: {
+                        inputsLargerEnabled: false,
+                        selfVoicingEnabled: false,
+                        tableOfContentsEnabled: false,
+                        contrastTheme: "default",
+                        selectionTheme: "default",
+                        clickToSelectEnabled: false,
+                        dictionaryEnabled: false,
+                        lineSpace: 1,
+                        simplifiedUiEnabled: false,
+                        fontSize: 1
+                    }
+                },
+                defaultModel:{
                     preferences: {
                         fluid_prefs_enhanceInputs: false,
                         fluid_prefs_speak: false,
@@ -700,16 +752,38 @@
                     }
                 },
                 newModel: {
-                    fluid_prefs_enhanceInputs: true,
-                    fluid_prefs_speak: true,
-                    fluid_prefs_tableOfContents: true,
-                    gpii_chrome_prefs_contrast: "yb",
-                    gpii_chrome_prefs_highlight: "green",
-                    gpii_chrome_prefs_clickToSelect: true,
-                    gpii_chrome_prefs_dictionary: true,
-                    gpii_chrome_prefs_lineSpace: 2.7,
-                    gpii_chrome_prefs_simplify: true,
-                    gpii_chrome_prefs_textSize: 3.1
+                    preferences: {
+                        fluid_prefs_enhanceInputs: true,
+                        fluid_prefs_speak: true,
+                        fluid_prefs_tableOfContents: true,
+                        gpii_chrome_prefs_contrast: "yb",
+                        gpii_chrome_prefs_highlight: "green",
+                        gpii_chrome_prefs_clickToSelect: true,
+                        gpii_chrome_prefs_dictionary: true,
+                        gpii_chrome_prefs_lineSpace: 2.7,
+                        gpii_chrome_prefs_simplify: true,
+                        gpii_chrome_prefs_textSize: 3.1
+                    }
+                },
+                newSettings: {
+                    settings: {
+                        inputsLargerEnabled: true,
+                        selfVoicingEnabled: true,
+                        tableOfContentsEnabled: true,
+                        contrastTheme: "yb",
+                        selectionTheme: "green",
+                        clickToSelectEnabled: true,
+                        dictionaryEnabled: true,
+                        lineSpace: 2.7,
+                        simplifiedUiEnabled: true,
+                        fontSize: 3.1
+                    }
+                },
+                modelChanges: {
+                    expander: {
+                        funcName: "gpii.tests.prefsEditorTests.generateSettings",
+                        args: ["{that}.options.testOpts.newSettings.settings", "{that}.options.testOpts.defaultSettings"]
+                    }
                 },
                 adjusters: [
                     "fluid_prefs_panel_enhanceInputs",
@@ -737,112 +811,133 @@
                     }]
                 }, {
                     name: "Model Change",
-                    expect:43,
+                    expect:22,
                     sequence: [{
                         // contrast model change
                         func: "gpii.tests.themePicker.changeChecked",
-                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_contrast.dom.themeInput", "{that}.options.testOpts.newModel.gpii_chrome_prefs_contrast"]
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_contrast.dom.themeInput", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_contrast"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_contrast", "remote.settings.contrastTheme", "{that}.options.testOpts.newModel.gpii_chrome_prefs_contrast"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_contrast", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_contrast", "{that}.options.testOpts.modelChanges.contrastTheme"],
                         spec: {path: "preferences.gpii_chrome_prefs_contrast", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
+                    }, {
                         // highlight model change
                         func: "gpii.tests.themePicker.changeChecked",
-                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_highlight.dom.themeInput", "{that}.options.testOpts.newModel.gpii_chrome_prefs_highlight"]
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_highlight.dom.themeInput", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_highlight"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_highlight", "remote.settings.selectionTheme", "{that}.options.testOpts.newModel.gpii_chrome_prefs_highlight"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_highlight", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_highlight", "{that}.options.testOpts.modelChanges.selectionTheme"],
                         spec: {path: "preferences.gpii_chrome_prefs_highlight", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
+                    }, {
                         // text size model change
                         func: "gpii.tests.changeInput",
-                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_textSize.dom.textSize", "{that}.options.testOpts.newModel.gpii_chrome_prefs_textSize"]
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_textSize.dom.textSize", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_textSize"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_textSize", "remote.settings.fontSize", "{that}.options.testOpts.newModel.gpii_chrome_prefs_textSize"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_textSize", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_textSize", "{that}.options.testOpts.modelChanges.fontSize"],
                         spec: {path: "preferences.gpii_chrome_prefs_textSize", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
+                    }, {
                         // line space model change
                         func: "gpii.tests.changeInput",
-                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_lineSpace.dom.lineSpace", "{that}.options.testOpts.newModel.gpii_chrome_prefs_lineSpace"]
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_lineSpace.dom.lineSpace", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_lineSpace"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_lineSpace", "remote.settings.lineSpace", "{that}.options.testOpts.newModel.gpii_chrome_prefs_lineSpace"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_lineSpace", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_lineSpace", "{that}.options.testOpts.modelChanges.lineSpace"],
                         spec: {path: "preferences.gpii_chrome_prefs_lineSpace", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // enhance inputs model change
                         jQueryTrigger: "click",
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_enhanceInputs.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_enhanceInputs", "remote.settings.inputsLargerEnabled", "{that}.options.testOpts.newModel.fluid_prefs_enhanceInputs"],
+                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_enhanceInputs", "{that}.options.testOpts.newModel.preferences.fluid_prefs_enhanceInputs", "{that}.options.testOpts.modelChanges.inputsLargerEnabled"],
                         spec: {path: "preferences.fluid_prefs_enhanceInputs", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // speak model change
                         jQueryTrigger: "click",
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_speak.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_speak", "remote.settings.selfVoicingEnabled", "{that}.options.testOpts.newModel.fluid_prefs_speak"],
+                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_speak", "{that}.options.testOpts.newModel.preferences.fluid_prefs_speak", "{that}.options.testOpts.modelChanges.selfVoicingEnabled"],
                         spec: {path: "preferences.fluid_prefs_speak", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // table of contents model change
                         jQueryTrigger: "click",
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_layoutControls.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_tableOfContents", "remote.settings.tableOfContentsEnabled", "{that}.options.testOpts.newModel.fluid_prefs_tableOfContents"],
+                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_tableOfContents", "{that}.options.testOpts.newModel.preferences.fluid_prefs_tableOfContents", "{that}.options.testOpts.modelChanges.tableOfContentsEnabled"],
                         spec: {path: "preferences.fluid_prefs_tableOfContents", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // click to select model change
                         jQueryTrigger: "click",
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_clickToSelect.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_clickToSelect", "remote.settings.clickToSelectEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_clickToSelect"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_clickToSelect", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_clickToSelect", "{that}.options.testOpts.modelChanges.clickToSelectEnabled"],
                         spec: {path: "preferences.gpii_chrome_prefs_clickToSelect", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // dictionary model change
                         jQueryTrigger: "click",
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_dictionary.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_dictionary", "remote.settings.dictionaryEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_dictionary"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_dictionary", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_dictionary", "{that}.options.testOpts.modelChanges.dictionaryEnabled"],
                         spec: {path: "preferences.gpii_chrome_prefs_dictionary", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // simplify model change
                         jQueryTrigger: "click",
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_simplify.switchUI.dom.control"
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_simplify", "remote.settings.simplifiedUiEnabled", "{that}.options.testOpts.newModel.gpii_chrome_prefs_simplify"],
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_simplify", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_simplify", "{that}.options.testOpts.modelChanges.simplifiedUiEnabled"],
                         spec: {path: "preferences.gpii_chrome_prefs_simplify", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
+                    }, {
                         // simulate external model change
                         func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{prefsEditorStack}.store.settingsStore.port", "{that}.options.testOpts.defaultModel.remote"]
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "{that}.options.testOpts.newSettings"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertExternalPrefChange",
-                        args: ["{prefsEditorStack}", "{that}.options.testOpts.defaultModel"],
-                        spec: {path: "preferences", priority: "last:testing"},
-                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                        args: ["{prefsEditorStack}", "{that}.options.testOpts.newModel"],
+                        priority: "last:testing",
+                        event: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.events.afterFetch"
                     }]
                 }]
             }]
         });
 
         fluid.test.runTests([
+            "gpii.tests.chrome.prefs.extensionPanel.store.tests",
             "gpii.tests.textSizeAdjusterTests",
             "gpii.tests.lineSpaceAdjusterTests",
             "gpii.tests.contrastAdjusterTests",

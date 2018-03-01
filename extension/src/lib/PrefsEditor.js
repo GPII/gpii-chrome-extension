@@ -15,29 +15,47 @@
 
 (function ($, fluid) {
 
+    // TODO: if possible automate the model transformation bindings so we don't
+    //       have to know the model paths ahead of time.
     fluid.defaults("gpii.chrome.prefs.extensionPanel.store", {
         gradeNames: ["gpii.chrome.portBinding.store"],
-        model: {
-            panelIndex: "{that}.model.remote.panelIndex",
-            // TODO: if possible automate the model relay bindings so that we don't
-            //       have to know the model paths ahead of time.
-            preferences: {
-                gpii_chrome_prefs_contrast: "{that}.model.remote.settings.contrastTheme",
-                fluid_prefs_enhanceInputs: "{that}.model.remote.settings.inputsLargerEnabled",
-                gpii_chrome_prefs_lineSpace: "{that}.model.remote.settings.lineSpace",
-                fluid_prefs_tableOfContents: "{that}.model.remote.settings.tableOfContentsEnabled",
-                gpii_chrome_prefs_textSize: "{that}.model.remote.settings.fontSize",
-                fluid_prefs_speak: "{that}.model.remote.settings.selfVoicingEnabled",
-                gpii_chrome_prefs_simplify: "{that}.model.remote.settings.simplifiedUiEnabled",
-                gpii_chrome_prefs_dictionary: "{that}.model.remote.settings.dictionaryEnabled",
-                gpii_chrome_prefs_highlight: "{that}.model.remote.settings.selectionTheme",
-                gpii_chrome_prefs_clickToSelect: "{that}.model.remote.settings.clickToSelectEnabled"
-                // TODO: Add adjusters and model relays for the following:
-                // characterSpace
-                // syllabificationEnabled
+        connectionName: "extensionPanel",
+        rules: {
+            "panelIndex": "panelIndex",
+            "preferences.gpii_chrome_prefs_contrast": "settings.contrastTheme",
+            "preferences.fluid_prefs_enhanceInputs": "settings.inputsLargerEnabled",
+            "preferences.gpii_chrome_prefs_lineSpace": "settings.lineSpace",
+            "preferences.fluid_prefs_tableOfContents": "settings.tableOfContentsEnabled",
+            "preferences.gpii_chrome_prefs_textSize": "settings.fontSize",
+            "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
+            "preferences.gpii_chrome_prefs_simplify": "settings.simplifiedUiEnabled",
+            "preferences.gpii_chrome_prefs_dictionary": "settings.dictionaryEnabled",
+            "preferences.gpii_chrome_prefs_highlight": "settings.selectionTheme",
+            "preferences.gpii_chrome_prefs_clickToSelect": "settings.clickToSelectEnabled"
+        },
+        listeners: {
+            "onRead.transform": {
+                func: "gpii.chrome.prefs.extensionPanel.store.transform",
+                priority: "after:encoding",
+                args: ["{that}.options.rules", false, "{arguments}.0"]
+            },
+            "onWrite.transform": {
+                func: "gpii.chrome.prefs.extensionPanel.store.transform",
+                priority: "before:encoding",
+                args: ["{that}.options.rules", true, "{arguments}.0"]
+            },
+            "onWriteResponse.transform": {
+                func: "gpii.chrome.prefs.extensionPanel.store.transform",
+                priority: "after:encoding",
+                args: ["{that}.options.rules", false, "{arguments}.0"]
             }
         }
     });
+
+    gpii.chrome.prefs.extensionPanel.store.transform = function (rules, invert, data) {
+        rules = invert ? fluid.model.transform.invertConfiguration(rules) : rules;
+        return fluid.model.transform(data, rules);
+    };
 
     fluid.contextAware.makeChecks({"gpii.chrome.prefs.portBinding": true});
 
@@ -74,12 +92,37 @@
             prefsEditor: {
                 options: {
                     invokers: {
-                        save: {
-                            funcName: "gpii.chrome.prefs.extensionPanel.save"
+                        writeImpl: {
+                            funcName: "gpii.chrome.prefs.extensionPanel.writeImpl"
+                        }
+                    },
+                    model: {
+                        preferences: "{prefsEditorLoader}.model.preferences",
+                        panelIndex: "{prefsEditorLoader}.model.panelIndex",
+                        panelMaxIndex: "{prefsEditorLoader}.model.panelMaxIndex",
+                        local: {
+                            panelIndex: "{that}.model.panelIndex"
+                        }
+                    },
+                    listeners: {
+                        // auto fetch changes from the store
+                        "{fluid.prefs.store}.events.onIncomingMessage": {
+                            listener: "{that}.fetch",
+                            priority: "after:setLastIncomingMessage",
+                            namespace: "autoFetchFromStore"
+                        },
+                        "afterFetch.updateEnhancer": {
+                            listener: "{that}.applyChanges",
+                            priority: "after:unblock"
                         }
                     },
                     modelListeners: {
-                        "": {
+                        "preferences": {
+                            // can't use the autoSave option because we need to exclude init
+                            listener: "{that}.save",
+                            excludeSource: "init"
+                        },
+                        "panelIndex": {
                             // can't use the autoSave option because we need to exclude init
                             listener: "{that}.save",
                             excludeSource: "init"
@@ -102,20 +145,17 @@
 
     /**
      * Sends the prefsEditor.model to the store and fires onSave
-     * Overrides the default save functionality as all of the model, including the default values, must be sent
+     * Overrides the default writeImpl functionality as all of the model, including the default values, must be sent
      * to the store.
-     *
-     * @param that: A fluid.prefs.prefsEditor instance
-     * @return the saved model
      */
-    gpii.chrome.prefs.extensionPanel.save = function (that) {
-        if (!that.model || $.isEmptyObject(that.model)) {  // Don't save a reset model
-            return;
-        }
+    gpii.chrome.prefs.extensionPanel.writeImpl = function (that, modelToSave) {
+        var promise = fluid.promise();
 
-        that.events.onSave.fire(that.model);
-        that.setSettings(that.model);
-        return that.model;
+        that.events.onSave.fire(modelToSave);
+        var setPromise = that.setSettings(modelToSave);
+
+        fluid.promise.follow(setPromise, promise);
+        return promise;
     };
 
     /**********

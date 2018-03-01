@@ -19,17 +19,19 @@
     // The main component to handle settings that require DOM manipulations.
     // It contains various subcomponents for handling various settings.
     fluid.defaults("gpii.chrome.portBinding", {
-        gradeNames: ["fluid.modelComponent"],
+        gradeNames: ["fluid.component"],
         connectionName: "",
+        members: {
+            lastIncomingMessage: {}
+        },
         events: {
             onIncomingMessage: null
         },
         listeners: {
             "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents",
-            "onIncomingMessage.updateModel": {
-                changePath: "remote",
-                value: "{arguments}.0",
-                source: "onIncomingMessage"
+            "onIncomingMessage.setLastIncomingMessage": {
+                listener: "fluid.set",
+                args: ["{that}", ["lastIncomingMessage"], "{arguments}.0"]
             }
         },
         invokers: {
@@ -46,10 +48,14 @@
     };
 
     gpii.chrome.portBinding.postMessage = function (that, message) {
-        // TODO: handle case where the port hasn't been created yet
-        if (that.port) {
+        var promise = fluid.promise();
+        try {
             that.port.postMessage(message);
+            promise.resolve(message);
+        } catch (e) {
+            promise.reject(e);
         }
+        return promise;
     };
 
     /***************************
@@ -57,23 +63,29 @@
      ***************************/
 
     fluid.defaults("gpii.chrome.portBinding.store", {
-        gradeNames: ["fluid.prefs.tempStore", "gpii.chrome.portBinding"],
-        // The model relay between the "preferences" and "remote" model paths must be supplied by the integrator
-        // modelRelay: []
-        invokers: {
-            set: {
-                funcName: "gpii.chrome.portBinding.store.set",
-                args: ["{that}", "{arguments}.0"]
+        gradeNames: ["fluid.dataSource", "gpii.chrome.portBinding"],
+        components: {
+            encoding: {
+                type: "fluid.dataSource.encoding.model"
+            }
+        },
+        listeners: {
+            "onRead.impl": {
+                listener: "fluid.identity",
+                args: ["{that}.lastIncomingMessage"]
             }
         }
     });
 
-    gpii.chrome.portBinding.store.set = function (that, settings) {
-        var transaction = that.applier.initiate();
-        transaction.fireChangeRequest({path: "preferences", type: "DELETE"});
-        transaction.fireChangeRequest({path: "panelIndex", value: settings.panelIndex, type: "ADD"});
-        transaction.change("preferences", settings.preferences);
-        transaction.commit();
-        that.postMessage(that.model.remote);
-    };
+    fluid.defaults("gpii.chrome.portBinding.store.writable", {
+        gradeNames: ["fluid.prefs.tempStore.writable"],
+        listeners: {
+            "onWrite.impl": {
+                listener: "{that}.postMessage"
+            }
+        }
+    });
+
+    fluid.makeGradeLinkage("gpii.chrome.portBinding.store.linkage", ["fluid.dataSource.writable", "gpii.chrome.portBinding.store"], "gpii.chrome.portBinding.store.writable");
+
 })(jQuery, fluid);
