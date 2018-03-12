@@ -166,7 +166,7 @@
         gradeNames: ["fluid.prefs.panel.textSize"],
         preferenceMap: {
             "gpii.chrome.prefs.textSize": {
-                "model.textSize": "default",
+                "model.value": "default",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"
@@ -178,7 +178,7 @@
         gradeNames: ["fluid.prefs.panel.lineSpace"],
         preferenceMap: {
             "gpii.chrome.prefs.lineSpace": {
-                "model.lineSpace": "default",
+                "model.value": "default",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"

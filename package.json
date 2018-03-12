@@ -29,7 +29,7 @@
       "test": "node tests/node/all-tests.js"
   },
   "dependencies": {
-    "infusion": "3.0.0-dev.20180227T185528Z.08741e844",
+    "infusion": "3.0.0-dev.20180312T184056Z.e4d2974d2",
     "ws": "1.1.0"
   },
   "devDependencies": {

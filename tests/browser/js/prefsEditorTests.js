@@ -190,11 +190,11 @@
                         args: ["textSize", "{textSize}.model", 1]
                     }, {
                         func: "gpii.tests.changeInput",
-                        args: ["{textSize}.dom.textSize", "{that}.options.testOptions.newValue"]
+                        args: ["{textSize}.dom.textfieldStepperContainer", "{that}.options.testOptions.newValue"]
                     }, {
                         listener: "fluid.tests.panels.utils.checkModel",
-                        args: ["textSize", "{textSize}.model", "{that}.options.testOptions.newValue"],
-                        spec: {path: "textSize", priority: "last"},
+                        args: ["value", "{textSize}.model", "{that}.options.testOptions.newValue"],
+                        spec: {path: "value", priority: "last"},
                         changeEvent: "{textSize}.applier.modelChanged"
                     }]
                 }]
@@ -256,11 +256,11 @@
                             args: ["lineSpace", "{lineSpace}.model", 1]
                         }, {
                             func: "gpii.tests.changeInput",
-                            args: ["{lineSpace}.dom.lineSpace", "{that}.options.testOptions.newValue"]
+                            args: ["{lineSpace}.dom.textfieldStepperContainer", "{that}.options.testOptions.newValue"]
                         }, {
                             listener: "fluid.tests.panels.utils.checkModel",
-                            args: ["lineSpace", "{lineSpace}.model", "{that}.options.testOptions.newValue"],
-                            spec: {path: "lineSpace", priority: "last"},
+                            args: ["value", "{lineSpace}.model", "{that}.options.testOptions.newValue"],
+                            spec: {path: "value", priority: "last"},
                             changeEvent: "{lineSpace}.applier.modelChanged"
                         }
                     ]
@@ -837,7 +837,7 @@
                     }, {
                         // text size model change
                         func: "gpii.tests.changeInput",
-                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_textSize.dom.textSize", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_textSize"]
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_textSize.dom.textfieldStepperContainer", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_textSize"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
                         args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_textSize", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_textSize", "{that}.options.testOpts.modelChanges.fontSize"],
@@ -848,7 +848,7 @@
                     }, {
                         // line space model change
                         func: "gpii.tests.changeInput",
-                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_lineSpace.dom.lineSpace", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_lineSpace"]
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_lineSpace.dom.textfieldStepperContainer", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_lineSpace"]
                     }, {
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
                         args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_lineSpace", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_lineSpace", "{that}.options.testOpts.modelChanges.lineSpace"],
@@ -930,7 +930,7 @@
                         listener: "gpii.tests.prefsEditorTests.assertExternalPrefChange",
                         args: ["{prefsEditorStack}", "{that}.options.testOpts.newModel"],
                         priority: "last:testing",
-                        event: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.events.afterFetch"
+                        event: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.events.afterWrite"
                     }]
                 }]
             }]
