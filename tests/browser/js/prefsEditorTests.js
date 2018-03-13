@@ -145,12 +145,13 @@
         fluid.defaults("gpii.tests.chrome.prefs.panel.textSize", {
             gradeNames: ["gpii.chrome.prefs.panel.textSize", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             model: {
-                textSize: 1
+                value: 1
             },
             messageBase: {
-                "textSizeLabel": "Text Size",
-                "multiplier": "times",
-                "textSizeDescr": "Adjust text size"
+                "label": "Text Size",
+                "description": "Adjust text size",
+                "increaseLabel": "increase text size",
+                "decreaseLabel": "decrease text size"
             },
             resources: {
                 template: {
@@ -187,7 +188,7 @@
                         event: "{gpii.tests.textSizeAdjusterTests textSize}.events.afterRender",
                         priority: "last:testing",
                         listener: "fluid.tests.panels.utils.checkModel",
-                        args: ["textSize", "{textSize}.model", 1]
+                        args: ["value", "{textSize}.model", 1]
                     }, {
                         func: "gpii.tests.changeInput",
                         args: ["{textSize}.dom.textfieldStepperContainer", "{that}.options.testOptions.newValue"]
@@ -205,12 +206,13 @@
         fluid.defaults("gpii.tests.chrome.prefs.panel.lineSpace", {
             gradeNames: ["gpii.chrome.prefs.panel.lineSpace", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             model: {
-                lineSpace: 1
+                value: 1
             },
             messageBase: {
-                "lineSpaceLabel": "Line Spacing",
-                "multiplier": "times",
-                "lineSpaceDescr": "Adjust the spacing between lines of text"
+                "label": "Line Spacing",
+                "description": "Adjust the spacing between lines of text",
+                "increaseLabel": "increase line spacing",
+                "decreaseLabel": "decrease line spacing"
             },
             resources: {
                 template: {
@@ -253,7 +255,7 @@
                             event: "{gpii.tests.lineSpaceAdjusterTests lineSpace}.events.afterRender",
                             priority: "last:testing",
                             listener: "fluid.tests.panels.utils.checkModel",
-                            args: ["lineSpace", "{lineSpace}.model", 1]
+                            args: ["value", "{lineSpace}.model", 1]
                         }, {
                             func: "gpii.tests.changeInput",
                             args: ["{lineSpace}.dom.textfieldStepperContainer", "{that}.options.testOptions.newValue"]
@@ -262,6 +264,74 @@
                             args: ["value", "{lineSpace}.model", "{that}.options.testOptions.newValue"],
                             spec: {path: "value", priority: "last"},
                             changeEvent: "{lineSpace}.applier.modelChanged"
+                        }
+                    ]
+                }]
+            }]
+        });
+
+        // Character Space
+        fluid.defaults("gpii.tests.chrome.prefs.panel.charSpace", {
+            gradeNames: ["fluid.prefs.panel.letterSpace", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
+            model: {
+                value: 1
+            },
+            messageBase: {
+                "label": "Character Spacing",
+                "description": "Adjust the spacing between letters",
+                "increaseLabel": "increase character spacing",
+                "decreaseLabel": "decrease character spacing"
+            },
+            resources: {
+                template: {
+                    href: "../../../build/templates/PrefsEditorTemplate-letterSpace.html"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.charSpaceAdjusterTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                charSpace: {
+                    type: "gpii.tests.chrome.prefs.panel.charSpace",
+                    container: ".gpiic-charSpace",
+                    createOnEvent: "{charSpaceTester}.events.onTestCaseStart"
+                },
+                charSpaceTester: {
+                    type: "gpii.tests.charSpaceTester",
+                    options: {
+                        modules: [{
+                            name: "Test the character space settings panel"
+                        }]
+                    }
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.charSpaceTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            testOptions: {
+                newValue: 2.6
+            },
+            modules: [{
+                name: "Character Space Adjuster",
+                tests: [{
+                    expect: 2,
+                    name: "rendering",
+                    sequence: [
+                        {
+                            event: "{gpii.tests.charSpaceAdjusterTests charSpace}.events.afterRender",
+                            priority: "last:testing",
+                            listener: "fluid.tests.panels.utils.checkModel",
+                            args: ["value", "{charSpace}.model", 1]
+                        }, {
+                            func: "gpii.tests.changeInput",
+                            args: ["{charSpace}.dom.textfieldStepperContainer", "{that}.options.testOptions.newValue"]
+                        }, {
+                            listener: "fluid.tests.panels.utils.checkModel",
+                            args: ["value", "{charSpace}.model", "{that}.options.testOptions.newValue"],
+                            spec: {path: "value", priority: "last"},
+                            changeEvent: "{charSpace}.applier.modelChanged"
                         }
                     ]
                 }]
@@ -420,7 +490,7 @@
                 }]
             }]
         });
-        // Swith Adjuster Sequences
+        // Switch Adjuster Sequences
 
         fluid.defaults("gppi.tests.sequence.switchAdjusterRendering", {
             gradeNames: "fluid.test.sequenceElement",
@@ -733,6 +803,7 @@
                         clickToSelectEnabled: false,
                         dictionaryEnabled: false,
                         lineSpace: 1,
+                        characterSpace: 1,
                         simplifiedUiEnabled: false,
                         fontSize: 1
                     }
@@ -740,6 +811,7 @@
                 defaultModel:{
                     preferences: {
                         fluid_prefs_enhanceInputs: false,
+                        fluid_prefs_letterSpace: 1,
                         fluid_prefs_speak: false,
                         fluid_prefs_tableOfContents: false,
                         gpii_chrome_prefs_contrast: "default",
@@ -754,6 +826,7 @@
                 newModel: {
                     preferences: {
                         fluid_prefs_enhanceInputs: true,
+                        fluid_prefs_letterSpace: 1.2,
                         fluid_prefs_speak: true,
                         fluid_prefs_tableOfContents: true,
                         gpii_chrome_prefs_contrast: "yb",
@@ -775,6 +848,7 @@
                         clickToSelectEnabled: true,
                         dictionaryEnabled: true,
                         lineSpace: 2.7,
+                        characterSpace: 1.2,
                         simplifiedUiEnabled: true,
                         fontSize: 3.1
                     }
@@ -788,6 +862,7 @@
                 adjusters: [
                     "fluid_prefs_panel_enhanceInputs",
                     "fluid_prefs_panel_layoutControls",
+                    "fluid_prefs_panel_letterSpace",
                     "fluid_prefs_panel_speak",
                     "gpii_chrome_prefs_panel_clickToSelect",
                     "gpii_chrome_prefs_panel_contrast",
@@ -802,7 +877,7 @@
                 name: "Prefs Editor Tests",
                 tests: [{
                     name: "Instantiation",
-                    expect:21,
+                    expect:22,
                     sequence: [{
                         event: "{testEnvironment prefsEditorStack prefsEditorLoader}.events.onReady",
                         listener: "gpii.tests.prefsEditorTests.assertInit",
@@ -811,7 +886,7 @@
                     }]
                 }, {
                     name: "Model Change",
-                    expect:22,
+                    expect:24,
                     sequence: [{
                         // contrast model change
                         func: "gpii.tests.themePicker.changeChecked",
@@ -853,6 +928,17 @@
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
                         args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_lineSpace", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_lineSpace", "{that}.options.testOpts.modelChanges.lineSpace"],
                         spec: {path: "preferences.gpii_chrome_prefs_lineSpace", priority: "last:testing"},
+                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
+                    }, {
+                        // character space model change
+                        func: "gpii.tests.changeInput",
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_letterSpace.dom.textfieldStepperContainer", "{that}.options.testOpts.newModel.preferences.fluid_prefs_letterSpace"]
+                    }, {
+                        listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
+                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_letterSpace", "{that}.options.testOpts.newModel.preferences.fluid_prefs_letterSpace", "{that}.options.testOpts.modelChanges.characterSpace"],
+                        spec: {path: "preferences.fluid_prefs_letterSpace", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
@@ -940,6 +1026,7 @@
             "gpii.tests.chrome.prefs.extensionPanel.store.tests",
             "gpii.tests.textSizeAdjusterTests",
             "gpii.tests.lineSpaceAdjusterTests",
+            "gpii.tests.charSpaceAdjusterTests",
             "gpii.tests.contrastAdjusterTests",
             "gpii.tests.highlightAdjusterTests",
             "gpii.tests.simplifyAdjusterTests",

@@ -71,6 +71,14 @@
                     }
                 }
             },
+            charSpace: {
+                type: "gpii.chrome.enactor.charSpace",
+                options: {
+                    model: {
+                        value: "{domEnactor}.model.characterSpace"
+                    }
+                }
+            },
             inputsLarger: {
                 type: "gpii.chrome.enactor.inputsLarger",
                 options: {
@@ -134,6 +142,20 @@
     // Line space
     fluid.defaults("gpii.chrome.enactor.lineSpace", {
         gradeNames: ["fluid.prefs.enactor.lineSpace"],
+        fontSizeMap: {
+            "xx-small": "9px",
+            "x-small": "11px",
+            "small": "13px",
+            "medium": "15px",
+            "large": "18px",
+            "x-large": "23px",
+            "xx-large": "30px"
+        }
+    });
+
+    // Character space
+    fluid.defaults("gpii.chrome.enactor.charSpace", {
+        gradeNames: ["fluid.prefs.enactor.letterSpace"],
         fontSizeMap: {
             "xx-small": "9px",
             "x-small": "11px",

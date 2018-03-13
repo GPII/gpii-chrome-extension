@@ -57,7 +57,8 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
             "node_modules/infusion/src/framework/enhancement/js/ProgressiveEnhancement.js",
             "node_modules/infusion/src/components/tableOfContents/js/TableOfContents.js",
-            "node_modules/infusion/src/framework/preferences/js/Enactors.js"
+            "node_modules/infusion/src/framework/preferences/js/Enactors.js",
+            "node_modules/infusion/src/framework/preferences/js/letterSpaceEnactor.js"
         ],
         adjustersLib: [
             // jQuery
@@ -101,7 +102,9 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/PrefsEditor.js",
             "node_modules/infusion/src/framework/preferences/js/Panels.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingPanel.js",
+            "node_modules/infusion/src/framework/preferences/js/letterSpacePanel.js",
             "node_modules/infusion/src/framework/preferences/js/Enactors.js",
+            "node_modules/infusion/src/framework/preferences/js/letterSpaceEnactor.js",
             "node_modules/infusion/src/framework/preferences/js/StarterGrades.js",
             "node_modules/infusion/src/framework/preferences/js/ArrowScrolling.js",
             "node_modules/infusion/src/framework/preferences/js/SeparatedPanelPrefsEditor.js",
@@ -110,6 +113,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/AuxBuilder.js",
             "node_modules/infusion/src/framework/preferences/js/StarterSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingSchemas.js",
+            "node_modules/infusion/src/framework/preferences/js/letterSpaceSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/Builder.js",
 
             // from extension
@@ -121,6 +125,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-textSize.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-lineSpace.html",
+            "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-letterSpace.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-contrast.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-layout.html",
             "node_modules/infusion/src/framework/preferences/html/PrefsEditorTemplate-enhanceInputs.html",

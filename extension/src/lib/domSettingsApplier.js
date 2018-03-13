@@ -34,6 +34,7 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         // Accepted model values:
         // settings.contrastTheme: string,
         // settings.lineSpace: number,    // the multiplier to the current line space
+        // settings.characterSpace: number,
         // settings.inputsLarger: boolean,
         // settings.selectionTheme: string,
         // settings.simplifiedUiEnabled: boolean,
