@@ -6,6 +6,7 @@ The following adaptations are supported:
 
 * Text Size
 * Line Space
+* Character Space
 * Contrast
 * Right-Click to Select
 * Selection Highlight
