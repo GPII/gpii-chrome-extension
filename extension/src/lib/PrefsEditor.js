@@ -25,6 +25,7 @@
             "preferences.gpii_chrome_prefs_contrast": "settings.contrastTheme",
             "preferences.fluid_prefs_enhanceInputs": "settings.inputsLargerEnabled",
             "preferences.gpii_chrome_prefs_lineSpace": "settings.lineSpace",
+            "preferences.fluid_prefs_letterSpace": "settings.characterSpace",
             "preferences.fluid_prefs_tableOfContents": "settings.tableOfContentsEnabled",
             "preferences.gpii_chrome_prefs_textSize": "settings.fontSize",
             "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
@@ -166,7 +167,7 @@
         gradeNames: ["fluid.prefs.panel.textSize"],
         preferenceMap: {
             "gpii.chrome.prefs.textSize": {
-                "model.textSize": "default",
+                "model.value": "default",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"
@@ -178,7 +179,7 @@
         gradeNames: ["fluid.prefs.panel.lineSpace"],
         preferenceMap: {
             "gpii.chrome.prefs.lineSpace": {
-                "model.lineSpace": "default",
+                "model.value": "default",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"
@@ -274,6 +275,15 @@
                     "container": ".flc-prefsEditor-line-space",
                     "message": "%messagePrefix/lineSpace.json",
                     "template": "%templatePrefix/PrefsEditorTemplate-lineSpace.html"
+                }
+            },
+            "charSpace": {
+                "type": "fluid.prefs.letterSpace",
+                "panel": {
+                    "type": "fluid.prefs.panel.letterSpace",
+                    "container": ".flc-prefsEditor-char-space",
+                    "message": "%messagePrefix/charSpace.json",
+                    "template": "%templatePrefix/PrefsEditorTemplate-letterSpace.html"
                 }
             },
             "contrast": {

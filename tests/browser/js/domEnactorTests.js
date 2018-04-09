@@ -391,6 +391,76 @@
             }]
         });
 
+        /*************************
+         * Character Space Tests *
+         *************************/
+
+        fluid.defaults("gpii.tests.charSpaceTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                charSpace: {
+                    type: "fluid.prefs.enactor.letterSpace",
+                    container: ".gpii-test-charSpace",
+                    options: {
+                        model: {
+                            value: 1
+                        }
+                    }
+                },
+                charSpaceTester: {
+                    type: "fluid.tests.charSpaceTester"
+                }
+            }
+        });
+
+        gpii.tests.charSpaceTests.assertCharSpace = function (that, expectedValue, baseCharSpace) {
+            baseCharSpace = baseCharSpace || 0;
+            var expectedUnit = fluid.roundToDecimal(expectedValue - 1, 2);
+            var expectedLetterSpacing = fluid.roundToDecimal(baseCharSpace + expectedUnit, 2) + "em";
+            jqUnit.assertEquals("The model value should be set to " + expectedValue, expectedValue, that.model.value);
+            jqUnit.assertEquals("The model unit should be set to " + expectedUnit, expectedUnit, that.model.unit);
+            jqUnit.assertEquals("The letter-spacing should be set to " + expectedLetterSpacing, "letter-spacing: " + expectedLetterSpacing + ";", that.container.attr("style"));
+        };
+
+        fluid.defaults("fluid.tests.charSpaceTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            modules: [{
+                name: "Character Space Tests",
+                tests: [{
+                    name: "Model Changes",
+                    expect: 12,
+                    sequence: [{
+                        func: "gpii.tests.charSpaceTests.assertCharSpace",
+                        args: ["{charSpace}", 1, 0.2]
+                    }, {
+                        func: "{charSpace}.applier.change",
+                        args: ["value", 1.3]
+                    }, {
+                        changeEvent: "{charSpace}.applier.modelChanged",
+                        path: "value",
+                        listener: "gpii.tests.charSpaceTests.assertCharSpace",
+                        args: ["{charSpace}", 1.3, 0.2]
+                    }, {
+                        func: "{charSpace}.applier.change",
+                        args: ["value", 2]
+                    }, {
+                        changeEvent: "{charSpace}.applier.modelChanged",
+                        path: "value",
+                        listener: "gpii.tests.charSpaceTests.assertCharSpace",
+                        args: ["{charSpace}", 2, 0.2]
+                    }, {
+                        func: "{charSpace}.applier.change",
+                        args: ["value", 1]
+                    }, {
+                        changeEvent: "{charSpace}.applier.modelChanged",
+                        path: "value",
+                        listener: "gpii.tests.charSpaceTests.assertCharSpace",
+                        args: ["{charSpace}", 1, 0.2]
+                    }]
+                }]
+            }]
+        });
+
         /***********************
          * Inputs Larger Tests *
          ***********************/
@@ -652,6 +722,7 @@
             "gpii.tests.selectionHighlightTests",
             "gpii.tests.contrastTests",
             "gpii.tests.lineSpaceTests",
+            "gpii.tests.charSpaceTests",
             "gpii.tests.inputsLargerTests",
             "gpii.tests.tocTests",
             "gpii.tests.domEnactorTests",
