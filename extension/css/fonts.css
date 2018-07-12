@@ -1,0 +1,9 @@
+@font-face {
+    font-family:'Orator-Icons-extension';
+    src:url("chrome-extension://hcacmbafjnbpioigkkibbdgocfghiljh/fonts/Orator-Icons.ttf"),url("chrome-extension://hcacmbafjnbpioigkkibbdgocfghiljh/fonts/Orator-Icons.eot")
+}
+
+/* Ensure that icon is uses the correct font-family */
+.fl-icon-orator {
+    font-family: 'Orator-Icons-extension' !important;
+}

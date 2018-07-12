@@ -103,6 +103,14 @@
                         toc: "{domEnactor}.model.tableOfContentsEnabled"
                     }
                 }
+            },
+            selfVoicing: {
+                type: "gpii.chrome.enactor.selfVoicing",
+                options: {
+                    model: {
+                        enabled: "{domEnactor}.model.selfVoicingEnabled"
+                    }
+                }
             }
         }
     });
@@ -288,5 +296,36 @@
             contentRegion.prepend(that.options.markup.tocContainer);
         }
     };
+
+    // Self Voicing
+    fluid.defaults("gpii.chrome.enactor.selfVoicing", {
+        gradeNames: ["fluid.prefs.enactor.selfVoicing"],
+        selectors: {
+            article: "article, [role~='article'], .article, #article",
+            main: "main, [role~='main'], .main, #main",
+            genericContent: ".content, #content, .body:not('body'), #body:not('body')",
+            controllerParentContainer: ".flc-prefs-selfVoicingWidget",
+            domReaderContent: ".flc-orator-content"
+        },
+        distributeOptions: [{
+            record: {
+                expander: {
+                    funcName: "gpii.chrome.utils.findFirstSelector",
+                    args: ["{selfVoicing}", ["controllerParentContainer", "article", "main", "genericContent"], "{selfVoicing}.container"]
+                }
+            },
+            target: "{that orator > controller}.options.parentContainer",
+            namespace: "controllerParentContainer"
+        }, {
+            record: {
+                expander: {
+                    funcName: "gpii.chrome.utils.findFirstSelector",
+                    args: ["{selfVoicing}", ["domReaderContent", "article", "main", "genericContent"], "{selfVoicing}.container"]
+                }
+            },
+            target: "{that orator}.options.components.domReader.container",
+            namespace: "domReaderContainer"
+        }]
+    });
 
 })(jQuery, fluid);

@@ -29,7 +29,11 @@
     },
     "content_scripts": [{
         "matches": ["<all_urls>"],
-        "css": ["css/enactors.css"],
+        "css": [
+            "css/enactors.css",
+            "css/TableOfContents.css",
+            "css/Orator.css"
+        ],
         "js": ["dist/ui-options-chrome-contentScriptsLib.min.js"],
         "all_frames": true
     }, {
@@ -40,6 +44,7 @@
     }, {
         "matches": ["<all_urls>"],
         "js": [
+            "content_scripts/fontInjection.js",
             "content_scripts/utils.js",
             "content_scripts/simplification.js",
             "content_scripts/domEnactor.js",
@@ -60,6 +65,8 @@
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "web_accessible_resources": [
         "images/gpii.png",
-        "templates/TableOfContents.html"
+        "templates/TableOfContents.html",
+        "fonts/Orator-Icons.ttf",
+        "fonts/Orator-Icons.eot"
     ]
 }

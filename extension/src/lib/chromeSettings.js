@@ -44,19 +44,6 @@ fluid.defaults("gpii.chrome.settings", {
         syllabificationEnabled: false // from syllabificationEnabled
     },
     components: {
-        click2Speech: {
-            type: "gpii.chrome.extensionHolder",
-            createOnEvent: "onLoadExtensionHolders",
-            options: {
-                settingName: "text-to-speech",
-                extensionId: "djfpbemmcokhlllnafdmomgecdlicfhj",
-                name: "click2speech",
-                installationUrl: "https://chrome.google.com/webstore/detail/click2speech/djfpbemmcokhlllnafdmomgecdlicfhj",
-                model: {
-                    extensionEnabled: "{settings}.model.settings.selfVoicingEnabled"
-                }
-            }
-        },
         dictionary: {
             type: "gpii.chrome.extensionHolder",
             createOnEvent: "onLoadExtensionHolders",
