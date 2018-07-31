@@ -386,7 +386,7 @@
             "gpii.chrome.prefs.textSize": {
                 "type": "number",
                 "default": 1,
-                "minimum": 1,
+                "minimum": 0.5,
                 "maximum": 4,
                 "divisibleBy": 0.1
             }
