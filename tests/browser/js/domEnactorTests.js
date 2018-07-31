@@ -259,7 +259,7 @@
                 name: "Contrast Tests",
                 tests: [{
                     name: "Model Changes",
-                    expect: 26,
+                    expect: 65,
                     sequence: [{
                         func: "jqUnit.assertEquals",
                         args: ["The model.value should be set to \"default\"", "default", "{contrast}.model.value"]
@@ -307,6 +307,39 @@
                     }, {
                         func: "gpii.tests.assertClasses",
                         args: ["{contrast}", "bw"]
+                    }, {
+                        func: "{contrast}.applier.change",
+                        args: ["value", "lgdg"]
+                    }, {
+                        changeEvent: "{contrast}.applier.modelChanged",
+                        path: "value",
+                        listener: "jqUnit.assertEquals",
+                        args: ["The model.value should be set to \"lgdg\"", "lgdg", "{contrast}.model.value"]
+                    }, {
+                        func: "gpii.tests.assertClasses",
+                        args: ["{contrast}", "lgdg"]
+                    }, {
+                        func: "{contrast}.applier.change",
+                        args: ["value", "gw"]
+                    }, {
+                        changeEvent: "{contrast}.applier.modelChanged",
+                        path: "value",
+                        listener: "jqUnit.assertEquals",
+                        args: ["The model.value should be set to \"gw\"", "gw", "{contrast}.model.value"]
+                    }, {
+                        func: "gpii.tests.assertClasses",
+                        args: ["{contrast}", "gw"]
+                    }, {
+                        func: "{contrast}.applier.change",
+                        args: ["value", "bbr"]
+                    }, {
+                        changeEvent: "{contrast}.applier.modelChanged",
+                        path: "value",
+                        listener: "jqUnit.assertEquals",
+                        args: ["The model.value should be set to \"bbr\"", "bbr", "{contrast}.model.value"]
+                    }, {
+                        func: "gpii.tests.assertClasses",
+                        args: ["{contrast}", "bbr"]
                     }, {
                         func: "{contrast}.applier.change",
                         args: ["value", "default"]

@@ -293,7 +293,10 @@
                     "bw": "fl-theme-bw",
                     "wb": "fl-theme-wb",
                     "by": "fl-theme-by",
-                    "yb": "fl-theme-yb"
+                    "yb": "fl-theme-yb",
+                    "lgdg": "fl-theme-lgdg",
+                    "gw": "fl-theme-gw",
+                    "bbr": "fl-theme-bbr"
 
                 },
                 "panel": {
@@ -409,7 +412,7 @@
             "gpii.chrome.prefs.contrast": {
                 "type": "string",
                 "default": "default",
-                "enum": ["default", "bw", "wb", "by", "yb"]
+                "enum": ["default", "bw", "wb", "by", "yb", "lgdg", "gw", "bbr"]
             }
         }
     });
