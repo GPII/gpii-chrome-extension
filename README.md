@@ -4,7 +4,7 @@ User Interface Options Plus (UIO+) allows you to customize websites to match you
 
 The following adaptations are supported:
 
-* Text Size
+* Zoom
 * Line Space
 * Character Space
 * Contrast

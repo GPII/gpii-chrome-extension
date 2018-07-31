@@ -264,7 +264,7 @@
                 "panel": {
                     "type": "gpii.chrome.prefs.panel.textSize",
                     "container": ".flc-prefsEditor-text-size",
-                    "message": "%messagePrefix/textSize.json",
+                    "message": "%messagePrefix/zoom.json",
                     "template": "%templatePrefix/PrefsEditorTemplate-textSize.html"
                 }
             },
