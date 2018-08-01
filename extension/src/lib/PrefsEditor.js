@@ -30,7 +30,6 @@
             "preferences.gpii_chrome_prefs_textSize": "settings.fontSize",
             "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
             "preferences.gpii_chrome_prefs_simplify": "settings.simplifiedUiEnabled",
-            "preferences.gpii_chrome_prefs_dictionary": "settings.dictionaryEnabled",
             "preferences.gpii_chrome_prefs_highlight": "settings.selectionTheme",
             "preferences.gpii_chrome_prefs_clickToSelect": "settings.clickToSelectEnabled"
         },
@@ -206,15 +205,6 @@
         }
     });
 
-    fluid.defaults("gpii.chrome.prefs.panel.dictionary", {
-        gradeNames: ["fluid.prefs.panel.switchAdjuster"],
-        preferenceMap: {
-            "gpii.chrome.prefs.dictionary": {
-                "model.value": "default"
-            }
-        }
-    });
-
     fluid.defaults("gpii.chrome.prefs.panel.clickToSelect", {
         gradeNames: ["fluid.prefs.panel.switchAdjuster"],
         preferenceMap: {
@@ -322,15 +312,6 @@
                     "message": "%messagePrefix/simplify.json"
                 }
             },
-            "dictionary": {
-                "type": "gpii.chrome.prefs.dictionary",
-                "panel": {
-                    "type": "gpii.chrome.prefs.panel.dictionary",
-                    "container": ".flc-prefsEditor-dictionary",
-                    "template": "%templatePrefix/DictionaryPanelTemplate.html",
-                    "message": "%messagePrefix/dictionary.json"
-                }
-            },
             "selectionHighlight": {
                 "type": "gpii.chrome.prefs.highlight",
                 "classes": {
@@ -418,16 +399,6 @@
         gradeNames: ["fluid.prefs.schemas"],
         schema: {
             "gpii.chrome.prefs.simplify": {
-                "type": "boolean",
-                "default": false
-            }
-        }
-    });
-
-    fluid.defaults("gpii.chrome.prefs.schemas.dictionary", {
-        gradeNames: ["fluid.prefs.schemas"],
-        schema: {
-            "gpii.chrome.prefs.dictionary": {
                 "type": "boolean",
                 "default": false
             }

@@ -14,7 +14,6 @@ The following adaptations are supported:
 * Reading Mode
 * Table of Contents
 * Enhance Inputs
-* Dictionary (requires the Google dictionary extension)
 
 _**Note**: The ability to apply an adaptation will vary from page to page_
 
