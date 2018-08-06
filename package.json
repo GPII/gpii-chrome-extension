@@ -26,7 +26,13 @@
     },
     "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
     "scripts": {
-        "test": "node tests/node/all-tests.js"
+        "pretest": "node node_modules/rimraf/bin.js reports/* coverage/*",
+        "test": "npm run test:browser && npm run test:node",
+        "test:browser": "node node_modules/testem/testem.js ci --file tests/browser/testem.js",
+        "test:node": "node node_modules/nyc/bin/nyc.js node tests/node/all-tests.js",
+        "test:vagrant": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm test'",
+        "test:vagrantBrowser": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:browser'",
+        "test:vagrantNode": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:node'"
     },
     "dependencies": {
         "infusion": "3.0.0-dev.20180801T212157Z.09bf3d438",
@@ -44,6 +50,11 @@
         "grunt-shell": "2.1.0",
         "node-jqunit": "1.1.8",
         "sinon-chrome": "2.3.2",
-        "sinon": "6.1.4"
+        "sinon": "6.1.4",
+        "gpii-testem": "2.1.1-dev.20180320T102716Z.5caff1c",
+        "ncp": "2.0.0",
+        "nyc": "11.4.1",
+        "rimraf": "2.6.2",
+        "testem": "1.18.4"
     }
 }

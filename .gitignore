@@ -4,3 +4,7 @@
 *.crx
 package-lock.json
 /node_modules/
+/.vagrant/
+report.tap
+coverage
+reports
