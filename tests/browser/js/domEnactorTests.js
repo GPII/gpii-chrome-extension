@@ -40,6 +40,10 @@
             });
         };
 
+        gpii.tests.assertSubComponentNotCreated = function (that, subComponentName) {
+            jqUnit.assertUndefined("The " + subComponentName + " subcomponent should not have be created yet.", that[subComponentName]);
+        };
+
         /*****************************
          * Selection Highlight Tests *
          *****************************/
@@ -584,15 +588,11 @@
             }
         });
 
-        gpii.tests.tocTests.assertToCNotCreated = function (that) {
-            jqUnit.assert("The Table of Contents should not be created", that.tableOfContents);
-        };
-
         gpii.tests.tocTests.assertToc = function (that, applied) {
             var tocElm = that.locate("tocContainer");
             if (applied) {
                 jqUnit.isVisible("The Table of Contents should be visible", tocElm);
-                jqUnit.assertTrue("The Table of Contents should be populated", 0 < tocElm.children("ul").length);
+                jqUnit.assertTrue("The Table of Contents should be populated", tocElm.children("ul").length);
             } else {
                 jqUnit.notVisible("The Table of Contents should not be visible", tocElm);
             }
@@ -606,9 +606,9 @@
                     name: "Model Changes",
                     expect: 5,
                     sequence: [{
-                        // The table of conents subcomonent is not initialized until the enactor is enabled for the first time.
-                        func: "gpii.tests.tocTests.assertToCNotCreated",
-                        args: ["{toc}"]
+                        // The table of contents subcomponent is not initialized until the enactor is enabled for the first time.
+                        func: "gpii.tests.assertSubComponentNotCreated",
+                        args: ["{toc}", "tableOfContents"]
                     }, {
                         func: "{toc}.applier.change",
                         args: ["toc", true]
@@ -631,6 +631,69 @@
                 }]
             }]
         });
+
+        /**********************
+         * Self Voicing Tests *
+         **********************/
+
+        fluid.defaults("gpii.tests.selfVoicingTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                selfVoicing: {
+                    type: "gpii.chrome.enactor.selfVoicing",
+                    container: ".gpii-test-selfVoicing",
+                    options: {
+                        model: {
+                            enabled: false
+                        }
+                    }
+                },
+                selfVoicingTester: {
+                    type: "fluid.tests.selfVoicingTester"
+                }
+            }
+        });
+
+        fluid.defaults("fluid.tests.selfVoicingTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            modules: [{
+                name: "Self Voicing Tests",
+                tests: [{
+                    name: "Model Changes",
+                    expect: 5,
+                    sequence: [{
+                        // The orator subcomponent is not initialized until the enactor is enabled for the first time.
+                        func: "gpii.tests.assertSubComponentNotCreated",
+                        args: ["{selfVoicing}", "orator"]
+                    }, {
+                        func: "{selfVoicing}.applier.change",
+                        args: ["enabled", true]
+                    }, {
+                        event: "{selfVoicing}.events.onInitOrator",
+                        spec: {priority: "last:testing"},
+                        listener: "fluid.tests.selfVoicingTester.assertOratorInit",
+                        args: ["{selfVoicing}"]
+                    }, {
+                        func: "{selfVoicing}.applier.change",
+                        args: ["enabled", false]
+                    }, {
+                        changeEvent: "{selfVoicing}.applier.modelChanged",
+                        spec: {path: "enabled", priority: "last:testing"},
+                        listener: "jqUnit.notVisible",
+                        args: ["The orator controller should no longer be visible", "{selfVoicing}.orator.controller.container"]
+                    }]
+                }]
+            }]
+        });
+
+        fluid.tests.selfVoicingTester.assertOratorInit = function (that) {
+            var controller = that.orator.controller;
+            var domReader = that.orator.domReader;
+
+            jqUnit.assertTrue("The domReaders's container should be set properly", domReader.container.hasClass("flc-orator-content"));
+            jqUnit.assertTrue("The controller's parentContainer should be set properly", controller.options.parentContainer.hasClass("flc-prefs-selfVoicingWidget"));
+            jqUnit.isVisible("The orator controller should be visible", controller.container);
+        };
 
         /********************
          * domEnactor Tests *
@@ -758,6 +821,7 @@
             "gpii.tests.charSpaceTests",
             "gpii.tests.inputsLargerTests",
             "gpii.tests.tocTests",
+            "gpii.tests.selfVoicingTests",
             "gpii.tests.domEnactorTests",
             "gpii.tests.domEnactorWithoutSimplificationTests"
         ]);
