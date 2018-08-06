@@ -30,7 +30,6 @@
             "preferences.gpii_chrome_prefs_textSize": "settings.fontSize",
             "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
             "preferences.gpii_chrome_prefs_simplify": "settings.simplifiedUiEnabled",
-            "preferences.gpii_chrome_prefs_dictionary": "settings.dictionaryEnabled",
             "preferences.gpii_chrome_prefs_highlight": "settings.selectionTheme",
             "preferences.gpii_chrome_prefs_clickToSelect": "settings.clickToSelectEnabled"
         },
@@ -148,6 +147,11 @@
      * Sends the prefsEditor.model to the store and fires onSave
      * Overrides the default writeImpl functionality as all of the model, including the default values, must be sent
      * to the store.
+     *
+     * @param {Component} that - the component
+     * @param {Object} modelToSave - the model to be written
+     *
+     * @return {Promise} promise - a promise that is resolved when the model is saved.
      */
     gpii.chrome.prefs.extensionPanel.writeImpl = function (that, modelToSave) {
         var promise = fluid.promise();
@@ -201,15 +205,6 @@
         gradeNames: ["fluid.prefs.panel.switchAdjuster"],
         preferenceMap: {
             "gpii.chrome.prefs.simplify": {
-                "model.value": "default"
-            }
-        }
-    });
-
-    fluid.defaults("gpii.chrome.prefs.panel.dictionary", {
-        gradeNames: ["fluid.prefs.panel.switchAdjuster"],
-        preferenceMap: {
-            "gpii.chrome.prefs.dictionary": {
                 "model.value": "default"
             }
         }
@@ -325,15 +320,6 @@
                     "message": "%messagePrefix/simplify.json"
                 }
             },
-            "dictionary": {
-                "type": "gpii.chrome.prefs.dictionary",
-                "panel": {
-                    "type": "gpii.chrome.prefs.panel.dictionary",
-                    "container": ".flc-prefsEditor-dictionary",
-                    "template": "%templatePrefix/DictionaryPanelTemplate.html",
-                    "message": "%messagePrefix/dictionary.json"
-                }
-            },
             "selectionHighlight": {
                 "type": "gpii.chrome.prefs.highlight",
                 "classes": {
@@ -421,16 +407,6 @@
         gradeNames: ["fluid.prefs.schemas"],
         schema: {
             "gpii.chrome.prefs.simplify": {
-                "type": "boolean",
-                "default": false
-            }
-        }
-    });
-
-    fluid.defaults("gpii.chrome.prefs.schemas.dictionary", {
-        gradeNames: ["fluid.prefs.schemas"],
-        schema: {
-            "gpii.chrome.prefs.dictionary": {
                 "type": "boolean",
                 "default": false
             }

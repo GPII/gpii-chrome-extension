@@ -21,12 +21,12 @@
      * jQuery object with 1 or more elements. If no elements found, it returns
      * either an empty jQuery object or the default, if a default is provided.
      *
-     * @param that {Object} - a fluid.viewComponent
-     * @param selectors {String|Array} - one or more selector names to search through in the order to try.
+     * @param {Component} that - a fluid.viewComponent
+     * @param {String|Array} selectorNames - one or more selector names to search through in the order to try.
      *                    The selector names must correspond to selectors in the component's
      *                    selectors block.
-     * @param deflt {Any} - a default value to use if no elements found for any of the  selector names
-     * @returns {Any} - a jQuery object if found. If nothing found, either the deflt value or undefined is returned.
+     * @param {Any} deflt - a default value to use if no elements found for any of the  selector names
+     * @return {Any} - a jQuery object if found. If nothing found, either the `deflt` value or undefined is returned.
      */
     gpii.chrome.utils.findFirstSelector = function (that, selectorNames, deflt) {
         selectorNames = fluid.makeArray(selectorNames);
