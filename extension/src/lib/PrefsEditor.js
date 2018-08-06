@@ -254,7 +254,7 @@
                 "panel": {
                     "type": "gpii.chrome.prefs.panel.textSize",
                     "container": ".flc-prefsEditor-text-size",
-                    "message": "%messagePrefix/textSize.json",
+                    "message": "%messagePrefix/zoom.json",
                     "template": "%templatePrefix/PrefsEditorTemplate-textSize.html"
                 }
             },
@@ -283,7 +283,10 @@
                     "bw": "fl-theme-bw",
                     "wb": "fl-theme-wb",
                     "by": "fl-theme-by",
-                    "yb": "fl-theme-yb"
+                    "yb": "fl-theme-yb",
+                    "lgdg": "fl-theme-lgdg",
+                    "gw": "fl-theme-gw",
+                    "bbr": "fl-theme-bbr"
 
                 },
                 "panel": {
@@ -364,7 +367,7 @@
             "gpii.chrome.prefs.textSize": {
                 "type": "number",
                 "default": 1,
-                "minimum": 1,
+                "minimum": 0.5,
                 "maximum": 4,
                 "divisibleBy": 0.1
             }
@@ -390,7 +393,7 @@
             "gpii.chrome.prefs.contrast": {
                 "type": "string",
                 "default": "default",
-                "enum": ["default", "bw", "wb", "by", "yb"]
+                "enum": ["default", "bw", "wb", "by", "yb", "lgdg", "gw", "bbr"]
             }
         }
     });
