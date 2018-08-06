@@ -45,6 +45,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/core/js/DataBinding.js",
             "node_modules/infusion/src/framework/core/js/RemoteModel.js",
             "node_modules/infusion/src/framework/core/js/FluidView.js",
+            "node_modules/infusion/src/framework/core/js/NewViewSupport.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
             "node_modules/infusion/src/framework/core/js/FluidDOMUtilities.js",
@@ -58,6 +59,9 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/enhancement/js/ProgressiveEnhancement.js",
             "node_modules/infusion/src/components/tableOfContents/js/TableOfContents.js",
             "node_modules/infusion/src/framework/preferences/js/Enactors.js",
+            "node_modules/infusion/src/components/textToSpeech/js/TextToSpeech.js",
+            "node_modules/infusion/src/components/orator/js/Orator.js",
+            "node_modules/infusion/src/framework/preferences/js/SelfVoicingEnactor.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpaceEnactor.js"
         ],
         adjustersLib: [
@@ -136,6 +140,7 @@ module.exports = function (grunt) {
         ],
         fonts: [
             "node_modules/infusion/src/framework/preferences/fonts/*",
+            "node_modules/infusion/src/components/orator/fonts/*",
             "node_modules/infusion/src/lib/fonts/*.ttf"
         ],
         images: [
@@ -144,6 +149,8 @@ module.exports = function (grunt) {
         css: [
             "node_modules/infusion/src/lib/normalize/css/normalize.css",
             "node_modules/infusion/src/framework/core/css/fluid.css",
+            "node_modules/infusion/src/components/orator/css/Orator.css",
+            "node_modules/infusion/src/components/tableOfContents/css/TableOfContents.css",
             "node_modules/infusion/dist/assets/src/framework/preferences/css/PrefsEditor.css",
             "node_modules/infusion/dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditorFrame.css"
         ],

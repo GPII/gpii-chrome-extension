@@ -39,6 +39,7 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         // settings.selectionTheme: string,
         // settings.simplifiedUiEnabled: boolean,
         // settings.tableOfContentsEnabled: boolean
+        // settings.selfVoicingEnabled: boolean
     },
     dynamicComponents: {
         port: {

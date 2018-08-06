@@ -61,7 +61,7 @@
         invokers: {
             findContent: {
                 funcName: "gpii.chrome.utils.findFirstSelector",
-                // returns an empty jQuery elemment by default to ensure jQuery methods are present
+                // returns an empty jQuery element by default to ensure jQuery methods are present
                 args: ["{that}", ["article", "main", "genericContent"], $()]
             },
             findNav: {

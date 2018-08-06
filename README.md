@@ -10,7 +10,7 @@ The following adaptations are supported:
 * Contrast
 * Right-Click to Select
 * Selection Highlight
-* Text-to-Speech (requires the click2speech extension)
+* Text-to-Speech
 * Reading Mode
 * Table of Contents
 * Enhance Inputs
