@@ -147,6 +147,11 @@
      * Sends the prefsEditor.model to the store and fires onSave
      * Overrides the default writeImpl functionality as all of the model, including the default values, must be sent
      * to the store.
+     *
+     * @param {Component} that - the component
+     * @param {Object} modelToSave - the model to be written
+     *
+     * @return {Promise} promise - a promise that is resolved when the model is saved.
      */
     gpii.chrome.prefs.extensionPanel.writeImpl = function (that, modelToSave) {
         var promise = fluid.promise();
