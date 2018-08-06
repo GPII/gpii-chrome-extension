@@ -34,9 +34,8 @@
     },
     "devDependencies": {
         "eslint-config-fluid": "1.0.0",
-        "grunt-lintspaces": "0.8.3",
-        "gpii-grunt-lint-all": "1.0.1",
-        "grunt": "1.0.1",
+        "gpii-grunt-lint-all": "1.0.2",
+        "grunt": "1.0.3",
         "grunt-contrib-clean": "1.0.0",
         "grunt-contrib-copy": "1.0.0",
         "grunt-contrib-uglify": "3.0.1",
