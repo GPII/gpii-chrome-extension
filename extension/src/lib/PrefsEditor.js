@@ -31,7 +31,8 @@
             "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
             "preferences.gpii_chrome_prefs_simplify": "settings.simplifiedUiEnabled",
             "preferences.gpii_chrome_prefs_highlight": "settings.selectionTheme",
-            "preferences.gpii_chrome_prefs_clickToSelect": "settings.clickToSelectEnabled"
+            "preferences.gpii_chrome_prefs_clickToSelect": "settings.clickToSelectEnabled",
+            "preferences.fluid_prefs_captions": "settings.captionsEnabled"
         },
         listeners: {
             "onRead.transform": {
@@ -349,7 +350,7 @@
                 "type": "fluid.prefs.tableOfContents",
                 "panel": {
                     "type": "fluid.prefs.panel.layoutControls",
-                    "container": ".flc-prefsEditor-layout-controls",  // the css selector in the template where the panel is rendered
+                    "container": ".flc-prefsEditor-layout-controls",
                     "template": "%templatePrefix/PrefsEditorTemplate-layout.html",
                     "message": "%messagePrefix/tableOfContents.json"
                 }
@@ -358,9 +359,18 @@
                 "type": "fluid.prefs.enhanceInputs",
                 "panel": {
                     "type": "fluid.prefs.panel.enhanceInputs",
-                    "container": ".flc-prefsEditor-enhanceInputs",  // the css selector in the template where the panel is rendered
+                    "container": ".flc-prefsEditor-enhanceInputs",
                     "template": "%templatePrefix/PrefsEditorTemplate-enhanceInputs.html",
                     "message": "%messagePrefix/enhanceInputs.json"
+                }
+            },
+            "captions": {
+                "type": "fluid.prefs.captions",
+                "panel": {
+                    "type": "fluid.prefs.panel.captions",
+                    "container": ".flc-prefsEditor-captions",
+                    "template": "%templatePrefix/PrefsEditorTemplate-captions.html",
+                    "message": "%messagePrefix/ytCaptions.json"
                 }
             }
         }

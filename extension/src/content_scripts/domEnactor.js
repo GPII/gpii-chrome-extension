@@ -38,7 +38,8 @@
             "onIncomingSettings.updateModel": {
                 changePath: "",
                 value: "{arguments}.0"
-            }
+            },
+            "onIncomingSettings.postSettingsToWebPage": "{that}.postSettingsToWebPage"
         },
         contextAwareness: {
             simplify: {
@@ -48,6 +49,23 @@
                         gradeNames: "gpii.chrome.domEnactor.simplify"
                     }
                 }
+            }
+        },
+        webSettings: {
+            namespace: "UIO+_Settings",
+            filter: {
+                keys: ["captionsEnabled"],
+                exclude: false
+            }
+        },
+        invokers: {
+            postSettingsToWebPage: {
+                funcName: "gpii.chrome.domEnactor.postSettingsToWebPage",
+                args: [
+                    "{that}.options.webSettings.namespace",
+                    "{arguments}.0",
+                    {filter: "{that}.options.webSettings.filter"}
+                ]
             }
         },
         distributeOptions: {
@@ -115,6 +133,38 @@
         }
     });
 
+    gpii.chrome.domEnactor.bindPortEvents = function (that) {
+        that.port = chrome.runtime.connect({name: "domEnactor-" + that.id});
+        that.port.onMessage.addListener(function (data) {
+            that.events.onIncomingSettings.fire(data.settings);
+        });
+    };
+
+    /**
+     * Posts a message to the webpage allowing for communication from the content script to the
+     * web page context. This is typically used to pass the model values from the extension to
+     * related enactores running in the web page context.
+     *
+     * @param {String} namespace - the key to use to pass the message in the posts data object
+     * @param {Object} settings - the settings to post to the web page context
+     * @param {Object} options - optional directives for filtering the settings to be posted.
+     *                           this allows the removal of settings that are not handled by
+     *                           the web page context, allowing for the remainder to be kept
+     *                           private. Options take the following form:
+     *                           {filter: {keys: [array of keys], exclude: true/false}} The
+     *                           exclude option determines if the filter keys are removed (true)
+     *                           or included (false).
+     */
+    gpii.chrome.domEnactor.postSettingsToWebPage = function (namespace, settings, options) {
+        var data = {};
+        var keysToFilter = fluid.get(options, ["filter", "keys"]);
+        if (keysToFilter && keysToFilter.length) {
+            settings = fluid.filterKeys(settings, keysToFilter, options.filter.exclude);
+        }
+        data[namespace] = settings;
+        window.postMessage(data, "*");
+    };
+
     fluid.defaults("gpii.chrome.domEnactor.simplify", {
         components: {
             simplify: {
@@ -127,13 +177,6 @@
             }
         }
     });
-
-    gpii.chrome.domEnactor.bindPortEvents = function (that) {
-        that.port = chrome.runtime.connect({name: "domEnactor-" + that.id});
-        that.port.onMessage.addListener(function (data) {
-            that.events.onIncomingSettings.fire(data.settings);
-        });
-    };
 
     // High contrast
     fluid.defaults("gpii.chrome.enactor.contrast", {

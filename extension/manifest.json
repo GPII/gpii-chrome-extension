@@ -43,8 +43,9 @@
         "all_frames": true
     }, {
         "matches": ["<all_urls>"],
+        "exclude_globs": ["https://www.youtube.com/embed/*"],
         "js": [
-            "content_scripts/fontInjection.js",
+            "content_scripts/webInjection.js",
             "content_scripts/utils.js",
             "content_scripts/simplification.js",
             "content_scripts/domEnactor.js",
@@ -62,11 +63,12 @@
             "src/background.js"
         ]
     },
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "content_security_policy": "script-src 'self' https://youtube.com https://ytimg.com; object-src 'self'",
     "web_accessible_resources": [
         "images/gpii.png",
         "templates/TableOfContents.html",
         "fonts/Orator-Icons.ttf",
-        "fonts/Orator-Icons.eot"
+        "fonts/Orator-Icons.eot",
+        "src/captionsEnactor.js"
     ]
 }
