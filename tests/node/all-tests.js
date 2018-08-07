@@ -13,9 +13,7 @@
 /* global require */
 "use strict";
 
-require("./extensionHolderTests.js");
 require("./wsConnectorTests.js");
 require("./nodeZoomTests.js");
 require("./domSettingsApplierTests.js");
-require("./chromeNotificationTests.js");
 require("./chromeEventedTests.js");

@@ -34,7 +34,6 @@
                     fontSize: "test-fontSize",
                     selfVoicingEnabled: "test-selfVoicingEnabled",
                     simplifiedUiEnabled: "test-simplifiedUiEnabled",
-                    dictionaryEnabled: "test-dictionaryEnabled",
                     selectionTheme: "test-selectionTheme",
                     clickToSelectEnabled: "test-clickToSelectEnabled"
                 }
@@ -49,7 +48,6 @@
                     gpii_chrome_prefs_textSize: "test-fontSize",
                     fluid_prefs_speak: "test-selfVoicingEnabled",
                     gpii_chrome_prefs_simplify: "test-simplifiedUiEnabled",
-                    gpii_chrome_prefs_dictionary: "test-dictionaryEnabled",
                     gpii_chrome_prefs_highlight: "test-selectionTheme",
                     gpii_chrome_prefs_clickToSelect: "test-clickToSelectEnabled"
                 }
@@ -592,55 +590,6 @@
             }]
         });
 
-        // Dictionary
-        fluid.defaults("fluid.tests.prefs.panel.dictionary", {
-            gradeNames: ["gpii.chrome.prefs.panel.dictionary", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
-            model: {
-                value: false
-            },
-            messageBase: {
-                "label": "Dictionary",
-                "description": "Double click a word to show its definition",
-                "switchOn": "ON",
-                "switchOff": "OFF"
-            },
-            resources: {
-                template: {
-                    href: "../../../build/templates/DictionaryPanelTemplate.html"
-                }
-            }
-        });
-
-        fluid.defaults("gpii.tests.dictionaryAdjusterTests", {
-            gradeNames: ["fluid.test.testEnvironment"],
-            components: {
-                dictionary: {
-                    type: "fluid.tests.prefs.panel.dictionary",
-                    container: ".gpiic-dictionary",
-                    createOnEvent: "{dictionaryTester}.events.onTestCaseStart"
-                },
-                dictionaryTester: {
-                    type: "gpii.tests.dictionaryTester"
-                }
-            }
-        });
-
-        fluid.defaults("gpii.tests.dictionaryTester", {
-            gradeNames: ["fluid.test.testCaseHolder"],
-            testOptions: {
-                defaultInputStatus: false,
-                newValue: true
-            },
-            modules: [{
-                name: "Dictionary Adjuster",
-                tests: [{
-                    expect: 8,
-                    name: "rendering and input change",
-                    sequenceGrade: "fluid.tests.switchAdjusterSequences"
-                }]
-            }]
-        });
-
         // Click to Select
         fluid.defaults("fluid.tests.prefs.panel.clickToSelect", {
             gradeNames: ["gpii.chrome.prefs.panel.clickToSelect", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
@@ -655,7 +604,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/DictionaryPanelTemplate.html"
+                    href: "../../../build/templates/ClickToSelectPanelTemplate.html"
                 }
             }
         });
@@ -801,7 +750,6 @@
                         contrastTheme: "default",
                         selectionTheme: "default",
                         clickToSelectEnabled: false,
-                        dictionaryEnabled: false,
                         lineSpace: 1,
                         characterSpace: 1,
                         simplifiedUiEnabled: false,
@@ -817,7 +765,6 @@
                         gpii_chrome_prefs_contrast: "default",
                         gpii_chrome_prefs_highlight: "default",
                         gpii_chrome_prefs_clickToSelect: false,
-                        gpii_chrome_prefs_dictionary: false,
                         gpii_chrome_prefs_lineSpace: 1,
                         gpii_chrome_prefs_simplify: false,
                         gpii_chrome_prefs_textSize: 1
@@ -832,7 +779,6 @@
                         gpii_chrome_prefs_contrast: "yb",
                         gpii_chrome_prefs_highlight: "green",
                         gpii_chrome_prefs_clickToSelect: true,
-                        gpii_chrome_prefs_dictionary: true,
                         gpii_chrome_prefs_lineSpace: 2.7,
                         gpii_chrome_prefs_simplify: true,
                         gpii_chrome_prefs_textSize: 3.1
@@ -846,7 +792,6 @@
                         contrastTheme: "yb",
                         selectionTheme: "green",
                         clickToSelectEnabled: true,
-                        dictionaryEnabled: true,
                         lineSpace: 2.7,
                         characterSpace: 1.2,
                         simplifiedUiEnabled: true,
@@ -866,7 +811,6 @@
                     "fluid_prefs_panel_speak",
                     "gpii_chrome_prefs_panel_clickToSelect",
                     "gpii_chrome_prefs_panel_contrast",
-                    "gpii_chrome_prefs_panel_dictionary",
                     "gpii_chrome_prefs_panel_highlight",
                     "gpii_chrome_prefs_panel_lineSpace",
                     "gpii_chrome_prefs_panel_simplify",
@@ -877,7 +821,7 @@
                 name: "Prefs Editor Tests",
                 tests: [{
                     name: "Instantiation",
-                    expect:22,
+                    expect:21,
                     sequence: [{
                         event: "{testEnvironment prefsEditorStack prefsEditorLoader}.events.onReady",
                         listener: "gpii.tests.prefsEditorTests.assertInit",
@@ -886,7 +830,7 @@
                     }]
                 }, {
                     name: "Model Change",
-                    expect:24,
+                    expect:22,
                     sequence: [{
                         // contrast model change
                         func: "gpii.tests.themePicker.changeChecked",
@@ -987,17 +931,6 @@
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
-                        // dictionary model change
-                        jQueryTrigger: "click",
-                        element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_dictionary.switchUI.dom.control"
-                    }, {
-                        listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_dictionary", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_dictionary", "{that}.options.testOpts.modelChanges.dictionaryEnabled"],
-                        spec: {path: "preferences.gpii_chrome_prefs_dictionary", priority: "last:testing"},
-                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
-                    }, {
-                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
-                    }, {
                         // simplify model change
                         jQueryTrigger: "click",
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_simplify.switchUI.dom.control"
@@ -1030,7 +963,6 @@
             "gpii.tests.contrastAdjusterTests",
             "gpii.tests.highlightAdjusterTests",
             "gpii.tests.simplifyAdjusterTests",
-            "gpii.tests.dictionaryAdjusterTests",
             "gpii.tests.clickToSelectAdjusterTests",
             "gpii.tests.prefsEditorTests"
         ]);

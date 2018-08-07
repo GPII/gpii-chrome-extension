@@ -30,7 +30,6 @@
             "preferences.gpii_chrome_prefs_textSize": "settings.fontSize",
             "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
             "preferences.gpii_chrome_prefs_simplify": "settings.simplifiedUiEnabled",
-            "preferences.gpii_chrome_prefs_dictionary": "settings.dictionaryEnabled",
             "preferences.gpii_chrome_prefs_highlight": "settings.selectionTheme",
             "preferences.gpii_chrome_prefs_clickToSelect": "settings.clickToSelectEnabled"
         },
@@ -148,6 +147,11 @@
      * Sends the prefsEditor.model to the store and fires onSave
      * Overrides the default writeImpl functionality as all of the model, including the default values, must be sent
      * to the store.
+     *
+     * @param {Component} that - the component
+     * @param {Object} modelToSave - the model to be written
+     *
+     * @return {Promise} promise - a promise that is resolved when the model is saved.
      */
     gpii.chrome.prefs.extensionPanel.writeImpl = function (that, modelToSave) {
         var promise = fluid.promise();
@@ -206,15 +210,6 @@
         }
     });
 
-    fluid.defaults("gpii.chrome.prefs.panel.dictionary", {
-        gradeNames: ["fluid.prefs.panel.switchAdjuster"],
-        preferenceMap: {
-            "gpii.chrome.prefs.dictionary": {
-                "model.value": "default"
-            }
-        }
-    });
-
     fluid.defaults("gpii.chrome.prefs.panel.clickToSelect", {
         gradeNames: ["fluid.prefs.panel.switchAdjuster"],
         preferenceMap: {
@@ -264,7 +259,7 @@
                 "panel": {
                     "type": "gpii.chrome.prefs.panel.textSize",
                     "container": ".flc-prefsEditor-text-size",
-                    "message": "%messagePrefix/textSize.json",
+                    "message": "%messagePrefix/zoom.json",
                     "template": "%templatePrefix/PrefsEditorTemplate-textSize.html"
                 }
             },
@@ -293,7 +288,10 @@
                     "bw": "fl-theme-bw",
                     "wb": "fl-theme-wb",
                     "by": "fl-theme-by",
-                    "yb": "fl-theme-yb"
+                    "yb": "fl-theme-yb",
+                    "lgdg": "fl-theme-lgdg",
+                    "gw": "fl-theme-gw",
+                    "bbr": "fl-theme-bbr"
 
                 },
                 "panel": {
@@ -320,15 +318,6 @@
                     "container": ".flc-prefsEditor-simplify",
                     "template": "%templatePrefix/SimplifyPanelTemplate.html",
                     "message": "%messagePrefix/simplify.json"
-                }
-            },
-            "dictionary": {
-                "type": "gpii.chrome.prefs.dictionary",
-                "panel": {
-                    "type": "gpii.chrome.prefs.panel.dictionary",
-                    "container": ".flc-prefsEditor-dictionary",
-                    "template": "%templatePrefix/DictionaryPanelTemplate.html",
-                    "message": "%messagePrefix/dictionary.json"
                 }
             },
             "selectionHighlight": {
@@ -383,7 +372,7 @@
             "gpii.chrome.prefs.textSize": {
                 "type": "number",
                 "default": 1,
-                "minimum": 1,
+                "minimum": 0.5,
                 "maximum": 4,
                 "divisibleBy": 0.1
             }
@@ -409,7 +398,7 @@
             "gpii.chrome.prefs.contrast": {
                 "type": "string",
                 "default": "default",
-                "enum": ["default", "bw", "wb", "by", "yb"]
+                "enum": ["default", "bw", "wb", "by", "yb", "lgdg", "gw", "bbr"]
             }
         }
     });
@@ -418,16 +407,6 @@
         gradeNames: ["fluid.prefs.schemas"],
         schema: {
             "gpii.chrome.prefs.simplify": {
-                "type": "boolean",
-                "default": false
-            }
-        }
-    });
-
-    fluid.defaults("gpii.chrome.prefs.schemas.dictionary", {
-        gradeNames: ["fluid.prefs.schemas"],
-        schema: {
-            "gpii.chrome.prefs.dictionary": {
                 "type": "boolean",
                 "default": false
             }

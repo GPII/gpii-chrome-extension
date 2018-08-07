@@ -16,13 +16,6 @@
 "use strict";
 
 module.exports = function (grunt) {
-    grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("fluid-grunt-eslint");
-    grunt.loadNpmTasks("grunt-contrib-uglify");
-    grunt.loadNpmTasks("grunt-contrib-stylus");
-    grunt.loadNpmTasks("grunt-crx");
-    grunt.loadNpmTasks("grunt-jsonlint");
 
     var files = {
         extensionLib: [
@@ -160,9 +153,7 @@ module.exports = function (grunt) {
         ],
         extension: [
             "extension/src/lib/chromeEvented.js",
-            "extension/src/lib/chromeNotification.js",
             "extension/src/lib/domSettingsApplier.js",
-            "extension/src/lib/extensionHolder.js",
             "extension/src/lib/highContrast.js",
             "extension/src/lib/chromeSettings.js",
             "extension/src/lib/wsConnector.js",
@@ -173,19 +164,13 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         manifest: grunt.file.readJSON("extension/manifest.json"),
-        jsonlint: {
-            all: [
-                "*.json",
-                "extension/**/*.json",
-                "tests/**/*.json"
-            ]
-        },
-        eslint: {
-            all: [
-                "*.js",
-                "extension/**/*.js",
-                "tests/**/*.js"
-            ]
+        lintAll: {
+            sources: {
+                md: [ "./*.md"],
+                js: ["./tests/**/*.js", "./extension/**/*.js", "./*.js"],
+                json: ["./extension/**/*.json", "./*.json"],
+                other: ["./.*"]
+            }
         },
         uglify: {
             options: {
@@ -338,7 +323,14 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask("lint", "Lint the source code", ["jsonlint", "eslint"]);
+    grunt.loadNpmTasks("grunt-contrib-clean");
+    grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-contrib-stylus");
+    grunt.loadNpmTasks("grunt-crx");
+    grunt.loadNpmTasks("gpii-grunt-lint-all");
+
+    grunt.registerTask("lint", "Perform all standard lint checks.", ["lint-all"]);
     grunt.registerTask("bundle", "Bundle dependencies and source code into a single .min.js file", ["uglify"]);
     grunt.registerTask("build", "Build the extension so you can start using it unpacked", ["clean", "bundle", "stylus", "copy"]);
     grunt.registerTask("buildPkg", "Create a .crx package ready to be distributed", ["lint", "build", "crx"]);
