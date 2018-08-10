@@ -26,13 +26,18 @@
     },
     "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
     "scripts": {
-        "pretest": "node node_modules/rimraf/bin.js reports/* coverage/*",
+        "pretest": "npm run pretest:cleanup && npm run pretest:instrumentSource",
+        "pretest:cleanup": "node node_modules/rimraf/bin.js coverage/* instrumented/* reports/*",
+        "pretest:instrumentSource": "node node_modules/nyc/bin/nyc.js instrument ./extension",
         "test": "npm run test:browser && npm run test:node",
         "test:browser": "node node_modules/testem/testem.js ci --file tests/browser/testem.js",
         "test:node": "node node_modules/nyc/bin/nyc.js node tests/node/all-tests.js",
         "test:vagrant": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm test'",
         "test:vagrantBrowser": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:browser'",
-        "test:vagrantNode": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:node'"
+        "test:vagrantNode": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:node'",
+        "posttest": "npm run posttest:coverageReport && npm run posttest:cleanup",
+        "posttest:coverageReport": "node node_modules/nyc/bin/nyc.js report -r lcov -r text-summary",
+        "posttest:cleanup": "node node_modules/rimraf/bin.js coverage/* instrumented/*"
     },
     "dependencies": {
         "infusion": "3.0.0-dev.20180801T212157Z.09bf3d438",

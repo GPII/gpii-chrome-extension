@@ -6,10 +6,11 @@ require("../../index.js");
 require("gpii-testem");
 
 fluid.defaults("fluid.tests.testem", {
-    gradeNames: ["gpii.testem.instrumentation"],
+    gradeNames: ["gpii.testem.coverageDataOnly"],
     coverageDir: "coverage",
     reportsDir: "reports",
     testPages:  ["tests/browser/all-tests.html"],
+    instrumentSource: false,
     instrumentationOptions: {
         nonSources: [
             "./**/*.!(js)",

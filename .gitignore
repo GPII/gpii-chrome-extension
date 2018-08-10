@@ -8,4 +8,5 @@ package-lock.json
 report.tap
 coverage
 reports
+instrumented
 .nyc_output
