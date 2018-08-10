@@ -145,7 +145,7 @@
      * web page context. This is typically used to pass the model values from the extension to
      * related enactors running in the web page context.
      *
-     * @param {String} type - the key to use to pass the message in the posts data object
+     * @param {String} type - the value of the "type" field stored in the message's data
      * @param {Object} settings - the settings to post to the web page context
      * @param {Object} options - optional directives for filtering the settings to be posted.
      *                           this allows the removal of settings that are not handled by
