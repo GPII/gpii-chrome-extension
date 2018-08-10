@@ -160,7 +160,7 @@
             type: type
         };
         var keysToFilter = fluid.get(options, ["filter", "keys"]);
-        if (keysToFilter && keysToFilter.length) {
+        if (fluid.isArrayable(keysToFilter)) {
             settings = fluid.filterKeys(settings, keysToFilter, options.filter.exclude);
         }
         data.payload = settings;
