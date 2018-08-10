@@ -50,7 +50,7 @@ var gpii = gpii || {};
                     var tracklist = that.player.getOption("captions", "tracklist");
                     that.player.setOption("captions", "track", tracklist[0] || {});
                 } else {
-                    that.player.unloadModule("captions");
+                    that.player.setOption("captions", "track", {});
                 }
             }
         };
@@ -135,8 +135,8 @@ var gpii = gpii || {};
     };
 
     gpii.uioPlus.captions.updateFromMessage = function (model, event, callback) {
-        var settings = event.data["UIO+_Settings"];
-        if (event.source === window && settings && model.captionsEnabled !== settings.captionsEnabled) {
+        var settings = event.data.payload;
+        if (event.source === window && event.data.type === "gpii.chrome.domEnactor" && settings && model.captionsEnabled !== settings.captionsEnabled) {
             model.captionsEnabled = !!settings.captionsEnabled;
             callback(model.captionsEnabled);
         }

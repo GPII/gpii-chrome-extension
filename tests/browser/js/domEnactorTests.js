@@ -791,8 +791,8 @@
 
         gpii.tests.domEnactorTester.bindMessageEvent = function (that) {
             window.addEventListener("message", function () {
-                var settings = event.data["UIO+_Settings"];
-                if (event.source === window && settings && settings.captionsEnabled) {
+                var settings = event.data.payload;
+                if (event.source === window && event.data.type === "gpii.chrome.domEnactor" && settings.captionsEnabled) {
                     that.events.onMessageReceived.fire(settings);
                 }
             });

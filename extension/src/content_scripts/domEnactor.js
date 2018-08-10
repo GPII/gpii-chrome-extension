@@ -52,7 +52,7 @@
             }
         },
         webSettings: {
-            namespace: "UIO+_Settings",
+            type: "gpii.chrome.domEnactor",
             filter: {
                 keys: ["captionsEnabled"],
                 exclude: false
@@ -62,7 +62,7 @@
             postSettingsToWebPage: {
                 funcName: "gpii.chrome.domEnactor.postSettingsToWebPage",
                 args: [
-                    "{that}.options.webSettings.namespace",
+                    "{that}.options.webSettings.type",
                     "{arguments}.0",
                     {filter: "{that}.options.webSettings.filter"}
                 ]
@@ -143,9 +143,9 @@
     /**
      * Posts a message to the webpage allowing for communication from the content script to the
      * web page context. This is typically used to pass the model values from the extension to
-     * related enactores running in the web page context.
+     * related enactors running in the web page context.
      *
-     * @param {String} namespace - the key to use to pass the message in the posts data object
+     * @param {String} type - the key to use to pass the message in the posts data object
      * @param {Object} settings - the settings to post to the web page context
      * @param {Object} options - optional directives for filtering the settings to be posted.
      *                           this allows the removal of settings that are not handled by
@@ -155,13 +155,15 @@
      *                           exclude option determines if the filter keys are removed (true)
      *                           or included (false).
      */
-    gpii.chrome.domEnactor.postSettingsToWebPage = function (namespace, settings, options) {
-        var data = {};
+    gpii.chrome.domEnactor.postSettingsToWebPage = function (type, settings, options) {
+        var data = {
+            type: type
+        };
         var keysToFilter = fluid.get(options, ["filter", "keys"]);
         if (keysToFilter && keysToFilter.length) {
             settings = fluid.filterKeys(settings, keysToFilter, options.filter.exclude);
         }
-        data[namespace] = settings;
+        data.payload = settings;
         window.postMessage(data, "*");
     };
 

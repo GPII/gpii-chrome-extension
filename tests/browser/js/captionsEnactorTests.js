@@ -170,7 +170,6 @@
             jqUnit.assertTrue("Set model to same value: the YT Player's loadModule method should not have been called", player.player.loadModule.notCalled);
             jqUnit.assertTrue("Set model to same value: the YT Player's getOption method should not have been called", player.player.getOption.notCalled);
             jqUnit.assertTrue("Set model to same value: the YT Player's setOption method should not have been called", player.player.setOption.notCalled);
-            jqUnit.assertTrue("Set model to same value: the YT Player's unloadModule method should not have been called", player.player.unloadModule.notCalled);
             sinon.reset();
 
             var track = {languageCode: "en"};
@@ -180,7 +179,6 @@
             jqUnit.assertTrue("Enable Captions: the YT Player's loadModule method should have been called", player.player.loadModule.calledWith("captions"));
             jqUnit.assertTrue("Enable Captions: the YT Player's getOption method should have been called", player.player.getOption.calledWith("captions", "tracklist"));
             jqUnit.assertTrue("Enable Captions: the YT Player's setOption method should have been called", player.player.setOption.calledWith("captions", "track", track));
-            jqUnit.assertTrue("Enable Captions: the YT Player's unloadModule method should not have been called", player.player.unloadModule.notCalled);
             sinon.reset();
 
             player.player.getOption.returns([]);
@@ -189,15 +187,13 @@
             jqUnit.assertTrue("Set captions with an empty tracklist: the YT Player's loadModule method should have been called", player.player.loadModule.calledWith("captions"));
             jqUnit.assertTrue("Set captions with an empty tracklist: the YT Player's getOption method should have been called", player.player.getOption.calledWith("captions", "tracklist"));
             jqUnit.assertTrue("Set captions with an empty tracklist: the YT Player's setOption method should have been called", player.player.setOption.calledWith("captions", "track", {}));
-            jqUnit.assertTrue("Set captions with an empty tracklist: the YT Player's unloadModule method should not have been called", player.player.unloadModule.notCalled);
             sinon.reset();
 
             player.updateModel(false);
             jqUnit.assertFalse("Disable Captions: the captionsEnabled value should be false", player.model.captionsEnabled);
             jqUnit.assertTrue("Disable Captions: the YT Player's loadModule method should not have been called", player.player.loadModule.notCalled);
             jqUnit.assertTrue("Disable Captions: the YT Player's getOption method should not have been called", player.player.getOption.notCalled);
-            jqUnit.assertTrue("Disable Captions: the YT Player's setOption method should not have been called", player.player.setOption.notCalled);
-            jqUnit.assertTrue("Disable Captions: the YT Player's unloadModule method should have been called", player.player.unloadModule.calledWith("captions"));
+            jqUnit.assertTrue("Disable Captions: the YT Player's setOption method should have been called", player.player.setOption.calledWith("captions", "track", {}));
             sinon.reset();
 
             var player2 = gpii.uioPlus.player(videoElm[0], true);
@@ -209,7 +205,6 @@
             jqUnit.assertTrue("LoadModule function not available: the YT Player's loadModule method should not have been called", player.player.loadModule.notCalled);
             jqUnit.assertTrue("LoadModule function not available: the YT Player's getOption method should not have been called", player.player.getOption.notCalled);
             jqUnit.assertTrue("LoadModule function not available: the YT Player's setOption method should not have been called", player.player.setOption.notCalled);
-            jqUnit.assertTrue("LoadModule function not available: the YT Player's unloadModule method should not have been called", player.player.unloadModule.notCalled);
             sinon.reset();
 
             // cleanup
@@ -247,40 +242,91 @@
         gpii.tests.captions.updateFromMessageTestCases = [{
             name: "Source not window",
             model: {captionsEnabled: true},
-            event: {data: {}},
+            event: {
+                data: {
+                    type: "gpii.chrome.domEnactor",
+                    payload: {captionsEnabled: false}
+                }
+            },
             expectedModelValue: true
         }, {
-            name: "No UIO+_Settings settings",
+            name: "No type",
             model: {captionsEnabled: true},
-            event: {source: window, data: {}},
+            event: {
+                source: window,
+                data: {
+                    payload: {captionsEnabled: false}
+                }
+            },
             expectedModelValue: true
         }, {
-            name: "UIO+_Settings setting is the same as the model value",
+            name: "Type not gpii.chrome.domEnactor",
             model: {captionsEnabled: true},
-            event: {source: window, data: {"UIO+_Settings": {captionsEnabled: true}}},
+            event: {
+                source: window,
+                data: {
+                    type: "otherType",
+                    payload: {captionsEnabled: false}
+                }
+            },
+            expectedModelValue: true
+        }, {
+            name: "Setting is the same as the model value",
+            model: {captionsEnabled: true},
+            event: {
+                source: window,
+                data: {
+                    type: "gpii.chrome.domEnactor",
+                    payload: {captionsEnabled: true}
+                }
+            },
             expectedModelValue: true
         }, {
             name: "Update setting to false",
             model: {captionsEnabled: true},
-            event: {source: window, data: {"UIO+_Settings": {captionsEnabled: false}}},
+            event: {
+                source: window,
+                data: {
+                    type: "gpii.chrome.domEnactor",
+                    payload: {captionsEnabled: false}
+                }
+            },
             expectedCallbackValue: false,
             expectedModelValue: false
         }, {
             name: "Update setting to true",
             model: {captionsEnabled: false},
-            event: {source: window, data: {"UIO+_Settings": {captionsEnabled: true}}},
+            event: {
+                source: window,
+                data: {
+                    type: "gpii.chrome.domEnactor",
+                    payload: {captionsEnabled: true}
+                }
+            },
             expectedCallbackValue: true,
             expectedModelValue: true
         }, {
             name: "Update setting with falsy value",
             model: {captionsEnabled: true},
-            event: {source: window, data: {"UIO+_Settings": {}}},
+            event: {
+                source: window,
+                data: {
+                    type: "gpii.chrome.domEnactor",
+                    payload: {}
+                }
+            },
             expectedCallbackValue: false,
             expectedModelValue: false
         }, {
             name: "Update setting with truthy value",
             model: {captionsEnabled: false},
-            event: {source: window, data: {"UIO+_Settings": {captionsEnabled: "true"}}},
+            event: {
+                source: window,
+                data: {
+                    type: "gpii.chrome.domEnactor",
+                    payload: {captionsEnabled: "true"}
+                }
+            },
             expectedCallbackValue: true,
             expectedModelValue: true
         }];
@@ -293,7 +339,7 @@
                 };
 
                 gpii.uioPlus.captions.updateFromMessage(testCase.model, testCase.event, callback);
-                jqUnit.assertEquals(testCase.name + ": the model value should be", testCase.expectedModelValue, testCase.model.captionsEnabled);
+                jqUnit.assertEquals(testCase.name + ": the model value should be - " + testCase.expectedModelValue, testCase.expectedModelValue, testCase.model.captionsEnabled);
 
                 var expectedCallback = testCase.expectedCallbackValue;
                 if (expectedCallback === undefined) {
@@ -347,10 +393,13 @@
             jqUnit.assertTrue("The createPlayers function was called", createPlayers.calledWith(false));
             jqUnit.assertDeepEq("The players member was set", players, that.players);
 
-            window.postMessage({"UIO+_Settings": {captionsEnabled: true}, captionsTest: true}, "*");
+            window.postMessage({
+                type: "gpii.chrome.domEnactor",
+                payload: {captionsEnabled: true}
+            }, "*");
 
             window.addEventListener("message", function (event) {
-                if (event.source === window && event.data.captionsTest) {
+                if (event.data.type === "gpii.chrome.domEnactor") {
                     jqUnit.assertTrue("The model was updated", that.model.captionsEnabled);
                     jqUnit.assertTrue("The updatePlayers function was called", updatePlayers.called);
 
