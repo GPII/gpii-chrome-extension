@@ -6,11 +6,11 @@ require("../../index.js");
 require("gpii-testem");
 
 fluid.defaults("fluid.tests.testem", {
-    gradeNames: ["gpii.testem.coverageDataOnly"],
-    coverageDir: "coverage",
-    reportsDir: "reports",
+    gradeNames: ["gpii.testem.coverage"],
+    coverageDir: "%ui-options-chrome/coverage",
+    reportsDir: "%ui-options-chrome/reports",
     testPages:  ["tests/browser/all-tests.html"],
-    instrumentSource: false,
+    instrumentedSourceDir: "%ui-options-chrome/instrumented",
     instrumentationOptions: {
         nonSources: [
             "./**/*.!(js)",
