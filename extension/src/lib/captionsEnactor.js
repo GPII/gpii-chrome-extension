@@ -20,12 +20,14 @@ var gpii = gpii || {};
 (function (gpii) {
 
     gpii.uioPlus = {
-        guid: 0
+        guid: 0,
+        // generate a unique instance identifier to allow for unique IDs across iframes.
+        gpii_prefix: Math.random().toString().replace( /\D/g, "")
     };
 
     gpii.uioPlus.allocateSimpleId = function (element) {
         if (!element.id) {
-            var simpleId = "gpii-uioPlus-id-" + Date.now() + "-" + gpii.uioPlus.guid++;
+            var simpleId = "gpii-uioPlus-id-" + gpii.uioPlus.gpii_prefix + "-" + gpii.uioPlus.guid++;
             element.id = simpleId;
         }
         return element.id;

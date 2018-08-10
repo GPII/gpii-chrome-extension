@@ -50,11 +50,11 @@
         gpii.tests.allocateSimpleIdTests = [{
             name: "No ID",
             selector: ".no-id",
-            expected: "gpii-uioPlus-id-timestamp-0"
+            expected: "gpii-uioPlus-id-" + gpii.uioPlus.gpii_prefix + "-0"
         }, {
             name: "Second without ID",
             selector: ".no-id-2",
-            expected: "gpii-uioPlus-id-timestamp-1"
+            expected: "gpii-uioPlus-id-" + gpii.uioPlus.gpii_prefix + "-1"
         }, {
             name: "Existing ID",
             selector: ".existing-id",
@@ -63,9 +63,8 @@
 
         jqUnit.test("Test gpii.uioPlus.allocateSimpleId", function () {
             // setup
+            var originalGUID = gpii.uioPlus.guid;
             gpii.uioPlus.guid = 0;
-            var dateStub = sinon.stub(Date, "now");
-            dateStub.returns("timestamp");
 
             // test
             fluid.each(gpii.tests.allocateSimpleIdTests, function (testCase) {
@@ -76,8 +75,7 @@
             });
 
             // cleanup
-            dateStub.restore();
-            gpii.uioPlus.guid = 0;
+            gpii.uioPlus.guid = originalGUID;
         });
 
         /**************************************************************************************************************
@@ -119,9 +117,8 @@
 
         jqUnit.test("Test gpii.uioPlus.player.createYTPlayer", function () {
             // setup
+            var originalGUID = gpii.uioPlus.guid;
             gpii.uioPlus.guid = 0;
-            var dateStub = sinon.stub(Date, "now");
-            dateStub.returns("timestamp");
             gpii.tests.mock.YT.createGlobal();
 
             // test
@@ -129,15 +126,14 @@
             var options = {events: {onApiChange: "test"}};
             var player = gpii.uioPlus.player.createYTPlayer(videoElm[0], options);
             var params = new URL(videoElm.attr("src")).searchParams;
-            var expectedID = "gpii-uioPlus-id-timestamp-0";
+            var expectedID = "gpii-uioPlus-id-" + gpii.uioPlus.gpii_prefix + "-0";
             jqUnit.assertEquals("The enablejsapi query parameter should have been set correctly", "1", params.get("enablejsapi"));
             jqUnit.assertEquals("The ID should have been set", expectedID, videoElm.attr("id"));
             jqUnit.assertEquals("The player is created with the correct video ID", expectedID, player.id);
             jqUnit.assertDeepEq("The player is created with the correct options", options, player.options);
 
             // cleanup
-            dateStub.restore();
-            gpii.uioPlus.guid = 0;
+            gpii.uioPlus.guid = originalGUID;
             gpii.tests.mock.YT.removeGlobal();
         });
 
@@ -147,14 +143,13 @@
 
         jqUnit.test("Test gpii.uioPlus.player", function () {
             // setup
+            var originalGUID = gpii.uioPlus.guid;
             gpii.uioPlus.guid = 0;
-            var dateStub = sinon.stub(Date, "now");
-            dateStub.returns("timestamp");
             gpii.tests.mock.YT.createGlobal();
 
             // test
             var videoElm = $("<iframe src =\"https://localhost:8888/embed/SjnXy0Iplvs\">");
-            var expectedID = "gpii-uioPlus-id-timestamp-0";
+            var expectedID = "gpii-uioPlus-id-" + gpii.uioPlus.gpii_prefix + "-0";
             var player = gpii.uioPlus.player(videoElm[0]);
 
             var params = new URL(videoElm.attr("src")).searchParams;
@@ -208,8 +203,7 @@
             sinon.reset();
 
             // cleanup
-            dateStub.restore();
-            gpii.uioPlus.guid = 0;
+            gpii.uioPlus.guid = originalGUID;
             gpii.tests.mock.YT.removeGlobal();
         });
 
