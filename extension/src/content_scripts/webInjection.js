@@ -25,7 +25,7 @@
         ]
     }];
 
-    // Listed in the order the scripts will appear on the web page
+    // Listed in the order the scripts will be injected into the page
     gpii.chrome.webInjection.scripts = [
         "https://www.youtube.com/iframe_api",
         chrome.runtime.getURL("src/captionsEnactor.js")
@@ -50,7 +50,7 @@
     });
 
     // inject scripts
-    fluid.each(gpii.chrome.webInjection.scripts.reverse(), function (src) {
+    fluid.each(gpii.chrome.webInjection.scripts, function (src) {
         var existingScript = $("script[src=\"" + src + "\"]");
 
         // if the script doesn't already exist on the page, inject it.
