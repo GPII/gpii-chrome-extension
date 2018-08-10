@@ -726,14 +726,28 @@
             testOpts: {
                 messages: {
                     one: {settings: {testOne: 1}},
-                    two: {settings: {testTwo: 2}}
+                    two: {settings: {testTwo: 2}},
+                    captionsEnabled: {settings: {captionsEnabled: true, other: "test"}}
+                },
+                expectedMessage: {captionsEnabled: true}
+            },
+            events: {
+                onMessageReceived: null
+            },
+            listeners: {
+                "onCreate.bindMessageEvent": "{that}.bindMessageEvent"
+            },
+            invokers: {
+                bindMessageEvent: {
+                    funcName: "gpii.tests.domEnactorTester.bindMessageEvent",
+                    args: ["{that}"]
                 }
             },
             modules: [{
                 name: "domEnactor Tests",
                 tests: [{
                     name: "Port Connection",
-                    expect: 4,
+                    expect: 5,
                     sequence: [{
                         func: "gpii.tests.domEnactorTests.assertConnection",
                         args: ["{domEnactor}"]
@@ -743,6 +757,7 @@
                     }, {
                         event: "{domEnactor}.events.onIncomingSettings",
                         listener: "jqUnit.assertDeepEq",
+                        priority: "last:testing",
                         args: ["The onIncomingSettings event was fired", "{that}.options.testOpts.messages.one.settings", "{arguments}.0"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
@@ -752,6 +767,13 @@
                         path: "testTwo",
                         listener: "jqUnit.assertEquals",
                         args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.settings.testTwo", "{domEnactor}.model.testTwo"]
+                    }, {
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.captionsEnabled"]
+                    }, {
+                        event: "{that}.events.onMessageReceived",
+                        listener: "jqUnit.assertDeepEq",
+                        args: ["The message to the webpage should contain the expected settings", "{that}.options.testOpts.expectedMessage", "{arguments}.0"]
                     }]
                 }, {
                     name: "Simplification",
@@ -766,6 +788,15 @@
                 }]
             }]
         });
+
+        gpii.tests.domEnactorTester.bindMessageEvent = function (that) {
+            window.addEventListener("message", function () {
+                var settings = event.data["UIO+_Settings"];
+                if (event.source === window && settings && settings.captionsEnabled) {
+                    that.events.onMessageReceived.fire(settings);
+                }
+            });
+        };
 
         fluid.defaults("gpii.tests.domEnactorWithoutSimplificationTests", {
             gradeNames: ["fluid.test.testEnvironment"],

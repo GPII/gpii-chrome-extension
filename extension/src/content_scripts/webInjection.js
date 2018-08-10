@@ -28,7 +28,6 @@
     // Listed in the order the scripts will appear on the web page
     gpii.chrome.webInjection.scripts = [
         "https://www.youtube.com/iframe_api",
-        // chrome.runtime.getURL("dist/ui-options-chrome-webScriptsLib.min.js")
         chrome.runtime.getURL("src/captionsEnactor.js")
     ];
 

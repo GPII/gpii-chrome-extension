@@ -63,12 +63,10 @@ var gpii = gpii || {};
         };
 
         that.player = gpii.uioPlus.player.createYTPlayer(videoElm, {
-            // events: {
-            //     onApiChange: that.setCaptions
-            // }
+            events: {
+                onApiChange: that.setCaptions
+            }
         });
-
-        that.player.addEventListener("onApiChange", that.setCaptions);
 
         return that;
     };
@@ -139,7 +137,7 @@ var gpii = gpii || {};
     gpii.uioPlus.captions.updateFromMessage = function (model, event, callback) {
         var settings = event.data["UIO+_Settings"];
         if (event.source === window && settings && model.captionsEnabled !== settings.captionsEnabled) {
-            model.captionsEnabled = settings.captionsEnabled;
+            model.captionsEnabled = !!settings.captionsEnabled;
             callback(model.captionsEnabled);
         }
     };

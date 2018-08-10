@@ -7,14 +7,13 @@
         <link rel="stylesheet" media="screen" href="../../../node_modules/infusion/tests/lib/qunit/css/qunit.css" />
         <link rel="stylesheet" href="../../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.css">
 
-        <script src="../../../dist/ui-options-chrome-webScriptsLib.min.js"></script>
+        <script src="../../../node_modules/infusion/dist/infusion-all.js"></script>
         <script src="../../../extension/src/lib/captionsEnactor.js"></script>
 
         <script src="../../../node_modules/infusion/tests/lib/qunit/js/qunit.js"></script>
         <script src="../../../node_modules/infusion/tests/test-core/jqUnit/js/jqUnit.js"></script>
         <script src="../../../node_modules/infusion/tests/test-core/jqUnit/js/jqUnit-browser.js"></script>
         <script src="../../../node_modules/infusion/tests/test-core/utils/js/IoCTestUtils.js"></script>
-        <script src="../../../node_modules/sinon-chrome/bundle/sinon-chrome.min.js"></script>
         <script src="../../../node_modules/sinon/pkg/sinon.js"></script>
 
 
@@ -29,6 +28,26 @@
         <ol id="qunit-tests"></ol>
         <!-- Test Markup -->
 
-        <div class="gpii-test-captionsEnactor"></div>
+        <ul>
+            <li class="no-id">no id</li>
+            <li class="no-id-2" >no id</li>
+            <li id="existing-id" class="existing-id">existing id</li>
+        </ul>
+
+        <iframe id="existing-iframe-example"
+            width="560" height="315"
+            src="https://www.youtube.com/embed/SjnXy0Iplvs?enablejsapi=1"
+            frameborder="0"
+            style="border: solid 4px #37474F"
+            allow="autoplay; encrypted-media" allowfullscreen>
+        </iframe>
+
+        <iframe
+            width="560" height="315"
+            src="https://www.youtube.com/embed/SjnXy0Iplvs?enablejsapi=1"
+            frameborder="0"
+            style="border: solid 4px #37474F"
+            allow="autoplay; encrypted-media" allowfullscreen>
+        </iframe>
     </body>
 </html>
