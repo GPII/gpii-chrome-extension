@@ -26,7 +26,7 @@
     },
     "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
     "scripts": {
-        "pretest": "node node_modules/.bin/rimraf reports/* coverage/*",
+        "pretest": "node node_modules/.bin/rimraf reports/* coverage/* && grunt build",
         "test": "npm run test:node && npm run test:browser",
         "test:node": "node node_modules/.bin/nyc --temp-directory coverage --reporter none node tests/node/all-tests.js",
         "test:browser": "node node_modules/.bin/nyc --temp-directory coverage node_modules/testem/testem.js ci --file tests/browser/testem.js",
