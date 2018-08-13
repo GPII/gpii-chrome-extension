@@ -35,7 +35,8 @@
                     selfVoicingEnabled: "test-selfVoicingEnabled",
                     simplifiedUiEnabled: "test-simplifiedUiEnabled",
                     selectionTheme: "test-selectionTheme",
-                    clickToSelectEnabled: "test-clickToSelectEnabled"
+                    clickToSelectEnabled: "test-clickToSelectEnabled",
+                    captionsEnabled: "test-captionsEnabled"
                 }
             },
             testPrefs: {
@@ -49,7 +50,8 @@
                     fluid_prefs_speak: "test-selfVoicingEnabled",
                     gpii_chrome_prefs_simplify: "test-simplifiedUiEnabled",
                     gpii_chrome_prefs_highlight: "test-selectionTheme",
-                    gpii_chrome_prefs_clickToSelect: "test-clickToSelectEnabled"
+                    gpii_chrome_prefs_clickToSelect: "test-clickToSelectEnabled",
+                    fluid_prefs_captions: "test-captionsEnabled"
                 }
             }
         };
@@ -753,7 +755,8 @@
                         lineSpace: 1,
                         characterSpace: 1,
                         simplifiedUiEnabled: false,
-                        fontSize: 1
+                        fontSize: 1,
+                        captionsEnabled: false
                     }
                 },
                 defaultModel:{
@@ -767,7 +770,8 @@
                         gpii_chrome_prefs_clickToSelect: false,
                         gpii_chrome_prefs_lineSpace: 1,
                         gpii_chrome_prefs_simplify: false,
-                        gpii_chrome_prefs_textSize: 1
+                        gpii_chrome_prefs_textSize: 1,
+                        fluid_prefs_captions: false
                     }
                 },
                 newModel: {
@@ -781,7 +785,8 @@
                         gpii_chrome_prefs_clickToSelect: true,
                         gpii_chrome_prefs_lineSpace: 2.7,
                         gpii_chrome_prefs_simplify: true,
-                        gpii_chrome_prefs_textSize: 3.1
+                        gpii_chrome_prefs_textSize: 3.1,
+                        fluid_prefs_captions: true
                     }
                 },
                 newSettings: {
@@ -795,7 +800,8 @@
                         lineSpace: 2.7,
                         characterSpace: 1.2,
                         simplifiedUiEnabled: true,
-                        fontSize: 3.1
+                        fontSize: 3.1,
+                        captionsEnabled: true
                     }
                 },
                 modelChanges: {
@@ -814,14 +820,15 @@
                     "gpii_chrome_prefs_panel_highlight",
                     "gpii_chrome_prefs_panel_lineSpace",
                     "gpii_chrome_prefs_panel_simplify",
-                    "gpii_chrome_prefs_panel_textSize"
+                    "gpii_chrome_prefs_panel_textSize",
+                    "fluid_prefs_panel_captions"
                 ]
             },
             modules: [{
                 name: "Prefs Editor Tests",
                 tests: [{
                     name: "Instantiation",
-                    expect:21,
+                    expect:22,
                     sequence: [{
                         event: "{testEnvironment prefsEditorStack prefsEditorLoader}.events.onReady",
                         listener: "gpii.tests.prefsEditorTests.assertInit",
@@ -830,7 +837,7 @@
                     }]
                 }, {
                     name: "Model Change",
-                    expect:22,
+                    expect:24,
                     sequence: [{
                         // contrast model change
                         func: "gpii.tests.themePicker.changeChecked",
@@ -938,6 +945,17 @@
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
                         args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_simplify", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_simplify", "{that}.options.testOpts.modelChanges.simplifiedUiEnabled"],
                         spec: {path: "preferences.gpii_chrome_prefs_simplify", priority: "last:testing"},
+                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
+                    }, {
+                        // captions model change
+                        jQueryTrigger: "click",
+                        element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_captions.switchUI.dom.control"
+                    }, {
+                        listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
+                        args: ["{prefsEditorStack}", "preferences.fluid_prefs_captions", "{that}.options.testOpts.newModel.preferences.fluid_prefs_captions", "{that}.options.testOpts.modelChanges.captionsEnabled"],
+                        spec: {path: "preferences.fluid_prefs_captions", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"

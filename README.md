@@ -16,6 +16,7 @@ The following adaptations are supported:
 * Reading Mode
 * Table of Contents
 * Enhance Inputs
+* Captions (embedded YouTube videos)
 
 _**Note**: The ability to apply an adaptation will vary from page to page_
 

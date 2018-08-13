@@ -30,7 +30,8 @@ fluid.defaults("gpii.chrome.settings", {
         selfVoicingEnabled: false, // from selfVoicingEnabled
         tableOfContentsEnabled: false, // from tableOfContents
         simplifiedUiEnabled: false, // from simplifiedUiEnabled
-        syllabificationEnabled: false // from syllabificationEnabled
+        syllabificationEnabled: false, // from syllabificationEnabled
+        captionsEnabled: false // from captionsEnabled
     },
     components: {
         domSettingsApplier: {

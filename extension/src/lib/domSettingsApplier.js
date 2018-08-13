@@ -38,8 +38,10 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
         // settings.inputsLarger: boolean,
         // settings.selectionTheme: string,
         // settings.simplifiedUiEnabled: boolean,
-        // settings.tableOfContentsEnabled: boolean
-        // settings.selfVoicingEnabled: boolean
+        // settings.tableOfContentsEnabled: boolean,
+        // settings.selfVoicingEnabled: boolean,
+        // settings.syllabificationEnabled: boolean,
+        // settings.captionsEnabled: boolean
     },
     dynamicComponents: {
         port: {
