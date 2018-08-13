@@ -131,7 +131,7 @@
                     }
                 },
                 selectionHighlightTester: {
-                    type: "fluid.tests.selectionHighlightTester"
+                    type: "gpii.tests.selectionHighlightTester"
                 }
             }
         });
@@ -141,7 +141,7 @@
             jqUnit.assertTrue("The node with selector '" + expectedSelector + "' should be selected", $(selectedNode).is(expectedSelector));
         };
 
-        fluid.defaults("fluid.tests.selectionHighlightTester", {
+        fluid.defaults("gpii.tests.selectionHighlightTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "Selection Highlight Tests",
@@ -252,12 +252,12 @@
                     }
                 },
                 contrastTester: {
-                    type: "fluid.tests.contrastTester"
+                    type: "gpii.tests.contrastTester"
                 }
             }
         });
 
-        fluid.defaults("fluid.tests.contrastTester", {
+        fluid.defaults("gpii.tests.contrastTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "Contrast Tests",
@@ -377,7 +377,7 @@
                     }
                 },
                 lineSpaceTester: {
-                    type: "fluid.tests.lineSpaceTester"
+                    type: "gpii.tests.lineSpaceTester"
                 }
             }
         });
@@ -389,7 +389,7 @@
             jqUnit.assertEquals("The line height should be set to " + expectedLineHeight, "line-height: " + expectedLineHeight + ";", that.container.attr("style"));
         };
 
-        fluid.defaults("fluid.tests.lineSpaceTester", {
+        fluid.defaults("gpii.tests.lineSpaceTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "Line Space Tests",
@@ -445,7 +445,7 @@
                     }
                 },
                 charSpaceTester: {
-                    type: "fluid.tests.charSpaceTester"
+                    type: "gpii.tests.charSpaceTester"
                 }
             }
         });
@@ -459,7 +459,7 @@
             jqUnit.assertEquals("The letter-spacing should be set to " + expectedLetterSpacing, "letter-spacing: " + expectedLetterSpacing + ";", that.container.attr("style"));
         };
 
-        fluid.defaults("fluid.tests.charSpaceTester", {
+        fluid.defaults("gpii.tests.charSpaceTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "Character Space Tests",
@@ -515,7 +515,7 @@
                     }
                 },
                 inputsLargerTester: {
-                    type: "fluid.tests.inputsLargerTester"
+                    type: "gpii.tests.inputsLargerTester"
                 }
             }
         });
@@ -532,7 +532,7 @@
             }
         };
 
-        fluid.defaults("fluid.tests.inputsLargerTester", {
+        fluid.defaults("gpii.tests.inputsLargerTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "Inputs Larger Tests",
@@ -583,7 +583,7 @@
                     }
                 },
                 tocTester: {
-                    type: "fluid.tests.tocTester"
+                    type: "gpii.tests.tocTester"
                 }
             }
         });
@@ -598,7 +598,7 @@
             }
         };
 
-        fluid.defaults("fluid.tests.tocTester", {
+        fluid.defaults("gpii.tests.tocTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "Table of Contents Tests",
@@ -649,12 +649,12 @@
                     }
                 },
                 selfVoicingTester: {
-                    type: "fluid.tests.selfVoicingTester"
+                    type: "gpii.tests.selfVoicingTester"
                 }
             }
         });
 
-        fluid.defaults("fluid.tests.selfVoicingTester", {
+        fluid.defaults("gpii.tests.selfVoicingTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "Self Voicing Tests",
@@ -671,7 +671,7 @@
                     }, {
                         event: "{selfVoicing}.events.onInitOrator",
                         spec: {priority: "last:testing"},
-                        listener: "fluid.tests.selfVoicingTester.assertOratorInit",
+                        listener: "gpii.tests.selfVoicingTester.assertOratorInit",
                         args: ["{selfVoicing}"]
                     }, {
                         func: "{selfVoicing}.applier.change",
@@ -686,7 +686,7 @@
             }]
         });
 
-        fluid.tests.selfVoicingTester.assertOratorInit = function (that) {
+        gpii.tests.selfVoicingTester.assertOratorInit = function (that) {
             var controller = that.orator.controller;
             var domReader = that.orator.domReader;
 
@@ -707,7 +707,7 @@
                     container: ".gpii-test-domEnactor"
                 },
                 domEnactorTester: {
-                    type: "fluid.tests.domEnactorTester"
+                    type: "gpii.tests.domEnactorTester"
                 }
             }
         });
@@ -721,19 +721,33 @@
             jqUnit.assertEquals("The " + grade + " grade should " + (expected ? "" : "not ") + "be applied", expected, fluid.hasGrade(that.options, grade));
         };
 
-        fluid.defaults("fluid.tests.domEnactorTester", {
+        fluid.defaults("gpii.tests.domEnactorTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             testOpts: {
                 messages: {
                     one: {settings: {testOne: 1}},
-                    two: {settings: {testTwo: 2}}
+                    two: {settings: {testTwo: 2}},
+                    captionsEnabled: {settings: {captionsEnabled: true, other: "test"}}
+                },
+                expectedMessage: {captionsEnabled: true}
+            },
+            events: {
+                onMessageReceived: null
+            },
+            listeners: {
+                "onCreate.bindMessageEvent": "{that}.bindMessageEvent"
+            },
+            invokers: {
+                bindMessageEvent: {
+                    funcName: "gpii.tests.domEnactorTester.bindMessageEvent",
+                    args: ["{that}"]
                 }
             },
             modules: [{
                 name: "domEnactor Tests",
                 tests: [{
                     name: "Port Connection",
-                    expect: 4,
+                    expect: 5,
                     sequence: [{
                         func: "gpii.tests.domEnactorTests.assertConnection",
                         args: ["{domEnactor}"]
@@ -743,6 +757,7 @@
                     }, {
                         event: "{domEnactor}.events.onIncomingSettings",
                         listener: "jqUnit.assertDeepEq",
+                        priority: "last:testing",
                         args: ["The onIncomingSettings event was fired", "{that}.options.testOpts.messages.one.settings", "{arguments}.0"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
@@ -752,6 +767,13 @@
                         path: "testTwo",
                         listener: "jqUnit.assertEquals",
                         args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.settings.testTwo", "{domEnactor}.model.testTwo"]
+                    }, {
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.captionsEnabled"]
+                    }, {
+                        event: "{that}.events.onMessageReceived",
+                        listener: "jqUnit.assertDeepEq",
+                        args: ["The message to the webpage should contain the expected settings", "{that}.options.testOpts.expectedMessage", "{arguments}.0"]
                     }]
                 }, {
                     name: "Simplification",
@@ -767,6 +789,15 @@
             }]
         });
 
+        gpii.tests.domEnactorTester.bindMessageEvent = function (that) {
+            window.addEventListener("message", function () {
+                var settings = event.data.payload;
+                if (event.source === window && event.data.type === "gpii.chrome.domEnactor" && settings.captionsEnabled) {
+                    that.events.onMessageReceived.fire(settings);
+                }
+            });
+        };
+
         fluid.defaults("gpii.tests.domEnactorWithoutSimplificationTests", {
             gradeNames: ["fluid.test.testEnvironment"],
             events: {
@@ -779,7 +810,7 @@
                     createOnEvent: "afterSetup"
                 },
                 domEnactorTester: {
-                    type: "fluid.tests.domEnactorWithoutSimplificationTester",
+                    type: "gpii.tests.domEnactorWithoutSimplificationTester",
                     createOnEvent: "afterSetup"
                 }
             },
@@ -796,7 +827,7 @@
             that.events.afterSetup.fire();
         };
 
-        fluid.defaults("fluid.tests.domEnactorWithoutSimplificationTester", {
+        fluid.defaults("gpii.tests.domEnactorWithoutSimplificationTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             modules: [{
                 name: "domEnactor without Simplify Tests",
