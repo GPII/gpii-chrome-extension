@@ -26,7 +26,8 @@
     },
     "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
     "scripts": {
-        "test": "node tests/node/all-tests.js"
+        "test": "node tests/node/all-tests.js",
+        "postinstall": "grunt build"
     },
     "dependencies": {
         "infusion": "3.0.0-dev.20180801T212157Z.09bf3d438",
