@@ -361,4 +361,6 @@ module.exports = function (grunt) {
         grunt.config.set("uglify.options.sourceMap.includeSources", true);
         grunt.task.run("build");
     });
+
+    grunt.registerTask("default", ["build"]);
 };
