@@ -29,15 +29,7 @@
         }
     });
 
-    fluid.defaults("gpii.tests.chrome.portBinding", {
-        gradeNames: ["gpii.chrome.portBinding"],
-        listeners: {
-            "onCreate.resetPort": {
-                listener: "gpii.tests.mockPort.reset",
-                priority: "before:bindPortEvents"
-            }
-        }
-    });
+    fluid.registerNamespace("gpii.tests.chrome.portBinding");
 
     gpii.tests.chrome.portBinding.assertConnection = function (expectedPortName) {
         jqUnit.assertTrue("Connection called with the correct arguments", chrome.runtime.connect.withArgs({name: expectedPortName}).calledOnce);

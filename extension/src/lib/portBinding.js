@@ -13,45 +13,53 @@
 /* global fluid, chrome */
 "use strict";
 
-(function ($, fluid) {
+(function (fluid) {
     var gpii = fluid.registerNamespace("gpii");
 
-    // The main component to handle settings that require DOM manipulations.
-    // It contains various subcomponents for handling various settings.
     fluid.defaults("gpii.chrome.portBinding", {
         gradeNames: ["fluid.component"],
         connectionName: "",
+        messageType: "",
         members: {
-            lastIncomingMessage: {}
+            port: {
+                expander: {
+                    func: "{that}.setPort"
+                }
+            }
         },
         events: {
-            onIncomingMessage: null
+            onIncomingMessage: null,
+            onDisconnect: null
         },
         listeners: {
-            "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents",
-            "onIncomingMessage.setLastIncomingMessage": {
-                listener: "fluid.set",
-                args: ["{that}", ["lastIncomingMessage"], "{arguments}.0"]
-            }
+            "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents"
         },
         invokers: {
             postMessage: {
                 funcName: "gpii.chrome.portBinding.postMessage",
-                args: ["{that}", "{arguments}.0"]
+                args: ["{that}", "{that}.options.messageType", "{arguments}.0"]
+            },
+            setPort: {
+                funcName: "gpii.chrome.portBinding.setPort",
+                args: ["{that}.options.connectionName", "{that}.id"]
             }
         }
     });
 
+    gpii.chrome.portBinding.setPort = function (connectionName, id) {
+        return chrome.runtime.connect({name: connectionName + "-" + id});
+    };
+
     gpii.chrome.portBinding.bindPortEvents = function (that) {
-        that.port = chrome.runtime.connect({name: that.options.connectionName + "-" + that.id});
+        that.port.onDisconnect.addListener(that.events.onDisconnect.fire);
         that.port.onMessage.addListener(that.events.onIncomingMessage.fire);
     };
 
-    gpii.chrome.portBinding.postMessage = function (that, message) {
+    gpii.chrome.portBinding.postMessage = function (that, type, payload) {
         var promise = fluid.promise();
         try {
-            that.port.postMessage(message);
-            promise.resolve(message);
+            that.port.postMessage({type: type, payload: payload});
+            promise.resolve(payload);
         } catch (e) {
             promise.reject(e);
         }
@@ -69,13 +77,29 @@
                 type: "fluid.dataSource.encoding.model"
             }
         },
+        members: {
+            lastIncomingPayload: {}
+        },
         listeners: {
+            "onIncomingMessage.setLastIncomingPayload": "{that}.setLastIncomingPayload",
             "onRead.impl": {
                 listener: "fluid.identity",
-                args: ["{that}.lastIncomingMessage"]
+                args: ["{that}.lastIncomingPayload"]
+            }
+        },
+        invokers: {
+            setLastIncomingPayload: {
+                funcName: "gpii.chrome.portBinding.store.setLastIncomingPayload",
+                args: ["{that}", "gpii.chrome.domSettingsApplier", "{arguments}.0"]
             }
         }
     });
+
+    gpii.chrome.portBinding.store.setLastIncomingPayload = function (that, acceptedType, message) {
+        if (message.type === acceptedType) {
+            that.lastIncomingPayload = fluid.get(message, ["payload"]);
+        }
+    };
 
     fluid.defaults("gpii.chrome.portBinding.store.writable", {
         gradeNames: ["fluid.prefs.tempStore.writable"],
@@ -88,4 +112,4 @@
 
     fluid.makeGradeLinkage("gpii.chrome.portBinding.store.linkage", ["fluid.dataSource.writable", "gpii.chrome.portBinding.store"], "gpii.chrome.portBinding.store.writable");
 
-})(jQuery, fluid);
+})(fluid);

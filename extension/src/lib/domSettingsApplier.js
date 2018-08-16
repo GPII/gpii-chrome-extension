@@ -49,45 +49,42 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
             createOnEvent: "onConnect",
             options: {
                 model: "{domSettingsApplier}.model",
-                port: "{arguments}.0"
+                port: "{arguments}.0",
+                messageType: "gpii.chrome.domSettingsApplier"
             }
         }
     }
 });
 
 fluid.defaults("gpii.chrome.portConnection", {
-    gradeNames: ["fluid.modelComponent"],
+    gradeNames: ["gpii.chrome.portBinding", "fluid.modelComponent"],
     // TODO: When FLUID-5912 is fixed, move port to the members block.
     //       https://issues.fluidproject.org/browse/FLUID-5912
     port: null, // must be supplied by integrator
-    events: {
-        onDisconnect: null,
-        onIncomingMessage: null
+    invokers: {
+        setPort: {
+            funcName: "fluid.identity",
+            args: ["{that}.options.port"]
+        },
+        updateModel: {
+            funcName: "gpii.chrome.portConnection.updateModel",
+            args: ["{that}", "{arguments}.0"]
+        }
     },
     listeners: {
-        "onCreate.bindToPortEvents": {
-            funcName: "gpii.chrome.portConnection.bindToPortEvents",
-            args: ["{that}", "{that}.options.port"]
-        },
         "onDisconnect.destroy": "{that}.destroy",
         "onIncomingMessage.updateModel": "{that}.updateModel"
     },
     modelListeners: {
         "": {
-            "this": "{that}.options.port",
-            method: "postMessage",
+            func: "{that}.postMessage",
             args: ["{that}.model"]
-        }
-    },
-    invokers: {
-        updateModel: {
-            changePath: "",
-            value: "{arguments}.0"
         }
     }
 });
 
-gpii.chrome.portConnection.bindToPortEvents = function (that, port) {
-    port.onDisconnect.addListener(that.events.onDisconnect.fire);
-    port.onMessage.addListener(that.events.onIncomingMessage.fire);
+gpii.chrome.portConnection.updateModel = function (that, message) {
+    if (message.type === "gpii.chrome.prefsEditor") {
+        that.applier.change("", message.payload);
+    }
 };

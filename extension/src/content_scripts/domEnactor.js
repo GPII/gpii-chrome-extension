@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid, chrome */
+/* global fluid */
 "use strict";
 
 (function ($, fluid) {
@@ -23,18 +23,20 @@
         gradeNames: ["fluid.contextAware", "fluid.viewComponent"],
         model: {
             // Accepted model values:
-            // contrastTheme: string,
-            // lineSpace: number,    // the multiplier to the current line space
-            // inputsLarger: boolean,
-            // selectionTheme: string,
-            // simplifiedUiEnabled: boolean,
-            // tableOfContents: boolean
+            // contrastTheme: String,
+            // lineSpace: Number,    // the multiplier to the current line space
+            // characterSpace: Number,
+            // inputsLargerEnabled: Boolean,
+            // selectionTheme: String,
+            // simplifiedUiEnabled: Boolean,
+            // tableOfContentsEnabled: Boolean,
+            // selfVoicingEnabled: Boolean,
+            // captionsEnabled: Boolean
         },
         events: {
             onIncomingSettings: null
         },
         listeners: {
-            "onCreate.bindPortEvents": "gpii.chrome.domEnactor.bindPortEvents",
             "onIncomingSettings.updateModel": {
                 changePath: "",
                 value: "{arguments}.0"
@@ -73,6 +75,17 @@
             target: "{that > fluid.prefs.enactor}.container"
         },
         components: {
+            portBinding: {
+                type: "gpii.chrome.portBinding",
+                options: {
+                    listeners: {
+                        "onIncomingMessage": {
+                            funcName: "gpii.chrome.domEnactor.relaySettings",
+                            args: ["{arguments}.0", "{domEnactor}.events.onIncomingSettings.fire"]
+                        }
+                    }
+                }
+            },
             contrast: {
                 type: "gpii.chrome.enactor.contrast",
                 options: {
@@ -133,11 +146,10 @@
         }
     });
 
-    gpii.chrome.domEnactor.bindPortEvents = function (that) {
-        that.port = chrome.runtime.connect({name: "domEnactor-" + that.id});
-        that.port.onMessage.addListener(function (data) {
-            that.events.onIncomingSettings.fire(data.settings);
-        });
+    gpii.chrome.domEnactor.relaySettings = function (message, firer) {
+        if (message.type === "gpii.chrome.domSettingsApplier") {
+            firer(fluid.get(message, ["payload", "settings"]));
+        }
     };
 
     /**

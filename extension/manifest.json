@@ -48,6 +48,7 @@
             "content_scripts/webInjection.js",
             "content_scripts/utils.js",
             "content_scripts/simplification.js",
+            "src/portBinding.js",
             "content_scripts/domEnactor.js",
             "content_scripts/domSettingsHandler.js"
         ],

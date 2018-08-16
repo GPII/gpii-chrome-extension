@@ -725,9 +725,22 @@
             gradeNames: ["fluid.test.testCaseHolder"],
             testOpts: {
                 messages: {
-                    one: {settings: {testOne: 1}},
-                    two: {settings: {testTwo: 2}},
-                    captionsEnabled: {settings: {captionsEnabled: true, other: "test"}}
+                    one: {
+                        type: "gpii.chrome.domSettingsApplier",
+                        payload: {settings: {testOne: 1}}
+                    },
+                    two: {
+                        type: "gpii.chrome.domSettingsApplier",
+                        payload: {settings: {testTwo: 2}}
+                    },
+                    three: {
+                        type: "otherType",
+                        payload: {settings: {testThree: 3}}
+                    },
+                    captionsEnabled: {
+                        type: "gpii.chrome.domSettingsApplier",
+                        payload: {settings: {captionsEnabled: true, other: "test"}}
+                    }
                 },
                 expectedMessage: {captionsEnabled: true}
             },
@@ -747,29 +760,35 @@
                 name: "domEnactor Tests",
                 tests: [{
                     name: "Port Connection",
-                    expect: 5,
+                    expect: 6,
                     sequence: [{
                         func: "gpii.tests.domEnactorTests.assertConnection",
                         args: ["{domEnactor}"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.one"]
+                        args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.one"]
                     }, {
                         event: "{domEnactor}.events.onIncomingSettings",
                         listener: "jqUnit.assertDeepEq",
                         priority: "last:testing",
-                        args: ["The onIncomingSettings event was fired", "{that}.options.testOpts.messages.one.settings", "{arguments}.0"]
+                        args: ["The onIncomingSettings event was fired", "{that}.options.testOpts.messages.one.payload.settings", "{arguments}.0"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.two"]
+                        args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.two"]
                     }, {
                         changeEvent: "{domEnactor}.applier.modelChanged",
                         path: "testTwo",
                         listener: "jqUnit.assertEquals",
-                        args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.settings.testTwo", "{domEnactor}.model.testTwo"]
+                        args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.payload.settings.testTwo", "{domEnactor}.model.testTwo"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.captionsEnabled"]
+                        args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.three"]
+                    }, {
+                        funcName: "jqUnit.assertUndefined",
+                        args: ["The message with the wrong \"type\" should have been rejected and not updated the model.", "{domEnactor}.model.testThree"]
+                    }, {
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.captionsEnabled"]
                     }, {
                         event: "{that}.events.onMessageReceived",
                         listener: "jqUnit.assertDeepEq",

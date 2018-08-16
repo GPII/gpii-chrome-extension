@@ -27,9 +27,10 @@
             gradeNames: ["fluid.test.testEnvironment"],
             components: {
                 portBinding: {
-                    type: "gpii.tests.chrome.portBinding",
+                    type: "gpii.chrome.portBinding",
                     options: {
-                        connectionName: "portBindingTests"
+                        connectionName: "portBindingTests",
+                        messageType: "portBindingTests"
                     }
                 },
                 portBindingTester: {
@@ -42,9 +43,15 @@
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
                 messages: {
-                    one: {pref: "one"},
-                    two: {pref: "two"},
-                    posted: {pref: "posted"}
+                    one: {
+                        type: "incomingMessage",
+                        payload: {pref: "one"}
+                    },
+                    posted: {pref: "posted"},
+                    expectedPost: {
+                        type: "portBindingTests",
+                        payload: {pref: "posted"}
+                    }
                 }
             },
             modules: [{
@@ -53,29 +60,33 @@
                     name: "Port Connection",
                     expect: 5,
                     sequence: [{
+                        // connection
                         func: "gpii.tests.chrome.portBinding.assertConnection",
                         args: ["{that}.options.testOpts.expectedPortName"]
                     }, {
+                        // incoming message
                         func: "gpii.tests.mockPort.trigger.onMessage",
                         args: ["{portBinding}.port", "{that}.options.testOpts.messages.one"]
                     }, {
                         event: "{portBinding}.events.onIncomingMessage",
                         priority: "last:testing",
                         listener: "jqUnit.assertDeepEq",
-                        args: ["The lastIncomingMessage member should have been updated after receiving the message", "{that}.options.testOpts.messages.one", "{portBinding}.lastIncomingMessage"]
+                        args: ["The onIncomingMessage event should have passed along the message", "{that}.options.testOpts.messages.one", "{arguments}.0"]
                     }, {
-                        func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{portBinding}.port", "{that}.options.testOpts.messages.two"]
-                    }, {
-                        event: "{portBinding}.events.onIncomingMessage",
-                        priority: "last:testing",
-                        listener: "jqUnit.assertDeepEq",
-                        args: ["The lastIncomingMessage member should have been updated after receiving the message", "{that}.options.testOpts.messages.two", "{portBinding}.lastIncomingMessage"]
-                    }, {
+                        // post message
                         task: "{portBinding}.postMessage",
                         args: ["{that}.options.testOpts.messages.posted"],
                         resolve: "gpii.tests.chrome.portBinding.assertPostMessage",
-                        resolveArgs: ["{portBinding}.port", "{that}.options.testOpts.messages.posted"]
+                        resolveArgs: ["{portBinding}.port", "{that}.options.testOpts.messages.expectedPost"]
+                    }, {
+                        // disconnect
+                        func: "gpii.tests.mockPort.trigger.onDisconnect",
+                        args: ["{portBinding}.port"]
+                    }, {
+                        event: "{portBinding}.events.onDisconnect",
+                        priority: "last:testing",
+                        listener: "jqUnit.assert",
+                        args: ["The onDisconnect event should have fired"]
                     }, {
                         // remove port
                         func: "fluid.set",
@@ -101,9 +112,8 @@
                     type: "gpii.chrome.portBinding.store",
                     options: {
                         gradeNames: ["gpii.tests.chrome.portBinding", "fluid.dataSource.writable"],
-                        options: {
-                            connectionName: "portBindingStoreTests"
-                        }
+                        connectionName: "portBindingStoreTests",
+                        messageType: "portBindingStoreTests"
                     }
                 },
                 portBindingStoreTester: {
@@ -115,9 +125,19 @@
         fluid.defaults("gpii.tests.portBindingStoreTester", {
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
-                prefsToUpdate: {
+                prefs: {
                     preferences: {
                         setting: "set"
+                    }
+                },
+                message: {
+                    prefsToUpdate: {
+                        type: "gpii.chrome.domSettingsApplier",
+                        payload: "{that}.options.testOpts.prefs"
+                    },
+                    post: {
+                        type: "portBindingStoreTests",
+                        payload: "{that}.options.testOpts.prefs"
                     }
                 }
             },
@@ -131,28 +151,28 @@
                         args: ["{that}.options.testOpts.expectedPortName"]
                     }, {
                         func: "jqUnit.assertDeepEq",
-                        args: ["The original lastIncomingMessage should be empty", {}, "{portBindingStore}.lastIncomingMessage"]
+                        args: ["The original lastIncomingPayload should be empty", {}, "{portBindingStore}.lastIncomingPayload"]
                     }, {
                         task: "{portBindingStore}.get",
                         resolve: "jqUnit.assertDeepEq",
                         resolveArgs: ["The get method returns the initial model correctly", {}, "{arguments}.0"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{portBinding}.port", "{that}.options.testOpts.prefsToUpdate"]
+                        args: ["{portBinding}.port", "{that}.options.testOpts.message.prefsToUpdate"]
                     }, {
                         event: "{portBinding}.events.onIncomingMessage",
                         priority: "last:testing",
                         listener: "jqUnit.assertDeepEq",
-                        args: ["The lastIncomingMessage member should have been updated after receiving the message", "{that}.options.testOpts.prefsToUpdate", "{portBindingStore}.lastIncomingMessage"]
+                        args: ["The lastIncomingPayload member should have been updated after receiving the message", "{that}.options.testOpts.prefs", "{portBindingStore}.lastIncomingPayload"]
                     }, {
                         task: "{portBindingStore}.get",
                         resolve: "jqUnit.assertDeepEq",
-                        resolveArgs: ["The get method returns the updated model correctly", "{that}.options.testOpts.prefsToUpdate", "{arguments}.0"]
+                        resolveArgs: ["The get method returns the updated model correctly", "{that}.options.testOpts.prefs", "{arguments}.0"]
                     }, {
                         task: "{portBindingStore}.set",
-                        args: [null, "{that}.options.testOpts.prefsToUpdate"],
+                        args: [null, "{that}.options.testOpts.prefs"],
                         resolve: "gpii.tests.chrome.portBinding.assertPostMessage",
-                        resolveArgs: ["{portBindingStore}.port", "{that}.options.testOpts.prefsToUpdate"]
+                        resolveArgs: ["{portBindingStore}.port", "{that}.options.testOpts.message.post"]
                     }]
                 }]
             }]

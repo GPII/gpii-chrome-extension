@@ -22,6 +22,7 @@ var gpii = fluid.registerNamespace("gpii");
 
 require("./testUtils.js");
 require("../../extension/src/lib/chromeEvented.js");
+require("../../extension/src/lib/portBinding.js");
 require("../../extension/src/lib/domSettingsApplier.js");
 
 fluid.defaults("gpii.tests.domSettingsApplierTests", {
@@ -89,6 +90,10 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
     testOpts: {
         model: {
             test: "testValue"
+        },
+        message: {
+            type: "gpii.chrome.domSettingsApplier",
+            payload: "{that}.options.testOpts.model"
         }
     },
     modules: [{
@@ -113,7 +118,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
             }, {
                 event: "{domSettingsApplier}.events.messagePosted",
                 listener: "jqUnit.assertDeepEq",
-                args: ["The port's onMessage event was fired", "{that}.options.testOpts.model", "{arguments}.0"]
+                args: ["The port's onMessage event was fired", "{that}.options.testOpts.message", "{arguments}.0"]
             }, {
                 func: "{domSettingsApplier}.destroy"
             }, {
