@@ -127,7 +127,7 @@ var gpii = gpii || {};
 
     gpii.uioPlus.captions.createPlayers = function (model) {
         var players = [];
-        var selector = "iframe[src^=\"https://www.youtube.com/embed/\"]";
+        var selector = "iframe[src*=\"youtube-nocookie.com/embed/\"], iframe[src*=\"youtube.com/embed/\"]";
         var videos = document.querySelectorAll(selector);
 
         // add existing videos
