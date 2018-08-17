@@ -211,20 +211,39 @@
          * gpii.uioPlus.captions.createPlayers tests
          **************************************************************************************************************/
 
-        jqUnit.test("Test gpii.uioPlus.captions.createPlayers", function () {
+        jqUnit.asyncTest("Test gpii.uioPlus.captions.createPlayers", function () {
             // setup
             var playerStub = sinon.stub(gpii.uioPlus, "player");
             var expected = ["player1", "player2"];
+            var injected = expected.concat(["player3"]);
             playerStub.onCall(0).returns(expected[0]);
             playerStub.onCall(1).returns(expected[1]);
+            playerStub.onCall(2).returns(injected[2]);
 
-            // test
-            var players = gpii.uioPlus.captions.createPlayers(true);
+            // test existing
+            var model = {captionsEnabled: true};
+            var players = gpii.uioPlus.captions.createPlayers(model);
             jqUnit.assertTrue("The gpii.uioPlus.player should have been called for each video found", playerStub.calledTwice);
             jqUnit.assertDeepEq("Players for each video should have been created", expected, players);
 
-            // cleanup
-            playerStub.restore();
+            // test injected
+            var container = $(".injection");
+            var video = $("<iframe width=\"560\" height=\"315\""
+                + "src=\"https://www.youtube.com/embed/SjnXy0Iplvs\""
+                + "frameborder=\"0\" style=\"border: solid 4px #37474F\""
+                + "allow=\"autoplay; encrypted-media\" allowfullscreen> </iframe>");
+
+            video.ready(function () {
+                jqUnit.assertTrue("The gpii.uioPlus.player should have been called for the injected videos", playerStub.calledThrice);
+                jqUnit.assertDeepEq("The injected player should be added to the set of players.", injected, players);
+
+                // cleanup
+                container.html("");
+                playerStub.restore();
+
+                jqUnit.start();
+            });
+            container.append(video);
         });
 
         /**************************************************************************************************************
@@ -384,7 +403,7 @@
             var updatePlayers = sinon.stub(gpii.uioPlus.captions, "updatePlayers");
 
             var that = gpii.uioPlus.captions();
-            jqUnit.assertTrue("The createPlayers function was called", createPlayers.calledWith(false));
+            jqUnit.assertTrue("The createPlayers function was called", createPlayers.calledWith(that.model));
             jqUnit.assertDeepEq("The players member was set", players, that.players);
 
             window.postMessage({
@@ -410,10 +429,10 @@
             // setup
             var createPlayers = sinon.stub(gpii.uioPlus.captions, "createPlayers");
 
-            gpii.uioPlus.captions();
+            var that = gpii.uioPlus.captions();
             window.onYouTubeIframeAPIReady();
             jqUnit.assertTrue("The createPlayers function was called once", createPlayers.calledOnce);
-            jqUnit.assertTrue("The createPlayers function was called", createPlayers.calledWith(false));
+            jqUnit.assertTrue("The createPlayers function was called", createPlayers.calledWith(that.model));
 
             // cleanup
             createPlayers.restore();
@@ -424,10 +443,10 @@
             window.YT = {};
             var createPlayers = sinon.stub(gpii.uioPlus.captions, "createPlayers");
 
-            gpii.uioPlus.captions();
+            var that = gpii.uioPlus.captions();
             window.onYouTubeIframeAPIReady();
             jqUnit.assertTrue("The createPlayers function was called once", createPlayers.calledOnce);
-            jqUnit.assertTrue("The createPlayers function was called", createPlayers.calledWith(false));
+            jqUnit.assertTrue("The createPlayers function was called", createPlayers.calledWith(that.model));
 
             // cleanup
             gpii.tests.mock.YT.removeGlobal();
