@@ -183,7 +183,7 @@ module.exports = function (grunt) {
             sources: {
                 md: [ "./*.md"],
                 js: ["./tests/**/*.js", "./extension/**/*.js", "./*.js"],
-                json: ["./extension/**/*.json", "./*.json"],
+                json: ["./extension/**/*.json", "./*.json", "./.*.json"],
                 other: ["./.*"]
             }
         },
