@@ -26,14 +26,14 @@
     },
     "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
     "scripts": {
-        "pretest": "node node_modules/.bin/rimraf reports/* coverage/* && grunt build",
+        "pretest": "node node_modules/rimraf/rimraf.js reports/* coverage/* && grunt build",
         "test": "npm run test:node && npm run test:browser",
-        "test:node": "node node_modules/.bin/nyc --temp-directory coverage --reporter none node tests/node/all-tests.js",
+        "test:node": "node node_modules/nyc/bin/nyc.js --temp-directory coverage --reporter none node tests/node/all-tests.js",
         "test:browser": "node node_modules/testem/testem.js ci --file tests/browser/testem.js",
         "test:vagrant": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm test'",
         "test:vagrantBrowser": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:browser'",
         "test:vagrantNode": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:node'",
-        "posttest": "node node_modules/.bin/nyc report --temp-directory coverage --reporter text-summary --reporter html"
+        "posttest": "node node_modules/nyc/bin/nyc.js report --temp-directory coverage --reporter text-summary --reporter html"
     },
     "dependencies": {
         "infusion": "3.0.0-dev.20180801T212157Z.09bf3d438",
@@ -41,21 +41,21 @@
     },
     "devDependencies": {
         "eslint-config-fluid": "1.3.0",
-        "gpii-grunt-lint-all": "1.0.2",
+        "gpii-grunt-lint-all": "1.0.4",
         "grunt": "1.0.3",
         "grunt-contrib-clean": "1.1.0",
         "grunt-contrib-copy": "1.0.0",
-        "grunt-contrib-uglify": "3.4.0",
+        "grunt-contrib-uglify": "4.0.0",
         "grunt-contrib-stylus": "1.2.0",
         "grunt-crx": "1.0.5",
         "grunt-shell": "2.1.0",
         "node-jqunit": "1.1.8",
         "sinon-chrome": "2.3.2",
-        "sinon": "6.1.4",
-        "gpii-testem": "2.1.4-dev.20180814T095105Z.1b7cd5b",
+        "sinon": "6.2.0",
+        "gpii-testem": "2.1.5",
         "ncp": "2.0.0",
-        "nyc": "11.4.1",
+        "nyc": "13.0.1",
         "rimraf": "2.6.2",
-        "testem": "1.18.4"
+        "testem": "2.10.0"
     }
 }
