@@ -45,17 +45,17 @@
         "grunt": "1.0.3",
         "grunt-contrib-clean": "1.1.0",
         "grunt-contrib-copy": "1.0.0",
-        "grunt-contrib-uglify": "3.4.0",
+        "grunt-contrib-uglify": "4.0.0",
         "grunt-contrib-stylus": "1.2.0",
         "grunt-crx": "1.0.5",
         "grunt-shell": "2.1.0",
         "node-jqunit": "1.1.8",
         "sinon-chrome": "2.3.2",
-        "sinon": "6.1.5",
-        "gpii-testem": "2.1.4",
+        "sinon": "6.2.0",
+        "gpii-testem": "2.1.5",
         "ncp": "2.0.0",
-        "nyc": "12.0.2",
+        "nyc": "13.0.1",
         "rimraf": "2.6.2",
-        "testem": "2.9.3"
+        "testem": "2.10.0"
     }
 }
