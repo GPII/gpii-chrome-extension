@@ -79,7 +79,13 @@
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
                 posted: {
-                    type: "gpii.chrome.prefsEditor",
+                    type: "gpii.chrome.prefsEditor-message",
+                    id: "gpii.chrome.prefsEditor-",
+                    payload: gpii.tests.stored.testSettings
+                },
+                incomingReceipt: {
+                    type: "gpii.chrome.domSettingsApplier-receipt",
+                    // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                     payload: gpii.tests.stored.testSettings
                 }
             },
@@ -87,7 +93,7 @@
                 name: "Store Tests",
                 tests: [{
                     name: "getting/setting - transformation",
-                    expect: 4,
+                    expect: 6,
                     sequence: [{
                         func: "gpii.tests.chrome.portBinding.assertConnection",
                         args: ["{that}.options.testOpts.expectedPortName"]
@@ -96,12 +102,15 @@
                         resolve: "jqUnit.assertDeepEq",
                         resolveArgs: ["The get method returns the lastIncomingPayload correctly transformed", gpii.tests.stored.testPrefs, "{arguments}.0"]
                     }, {
+                        func: "gpii.tests.chrome.portBinding.returnReceipt",
+                        args: ["{store}", "{that}.options.testOpts.incomingReceipt"]
+                    }, {
                         task: "{store}.set",
                         args: [null, gpii.tests.stored.testPrefs],
                         resolve: "jqUnit.assertDeepEq",
                         resolveArgs: ["The write response is in the correct form", gpii.tests.stored.testPrefs, "{arguments}.0"]
                     }, {
-                        func: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        func: "gpii.tests.chrome.portBinding.assertPostMessageWithID",
                         args: ["{store}.port", "{that}.options.testOpts.posted"]
                     }]
                 }]
@@ -731,7 +740,7 @@
             var prefsEditorModel = prefsEditorStack.prefsEditorLoader.prefsEditor.model;
 
             fluid.tests.panels.utils.checkModel(prefsPath, prefsEditorModel, value);
-            jqUnit.assertTrue("postMessage called with the transformed settings", prefsEditorStack.store.settingsStore.port.postMessage.calledWith(expectedMessage));
+            gpii.tests.chrome.portBinding.assertPostMessageWithID(prefsEditorStack.store.settingsStore.port, expectedMessage);
         };
 
         gpii.tests.prefsEditorTests.assertExternalPrefChange = function (prefsEditorStack, newModel) {
@@ -748,7 +757,8 @@
                 var model = fluid.copy(defaults);
                 model.settings[setting] = value;
                 return {
-                    type: "gpii.chrome.prefsEditor",
+                    type: "gpii.chrome.prefsEditor-message",
+                    id: "gpii.chrome.prefsEditor-",
                     payload: model
                 };
             });
@@ -824,7 +834,8 @@
                     }
                 },
                 externalMessage: {
-                    type: "gpii.chrome.domSettingsApplier",
+                    type: "gpii.chrome.domSettingsApplier-message",
+                    id: "gpii.chrome.domSettingsApplier-1",
                     payload: "{that}.options.testOpts.newSettings"
                 },
                 adjusters: [
@@ -839,7 +850,12 @@
                     "gpii_chrome_prefs_panel_simplify",
                     "gpii_chrome_prefs_panel_textSize",
                     "fluid_prefs_panel_captions"
-                ]
+                ],
+                receipt: {
+                    type: "gpii.chrome.domSettingsApplier-receipt",
+                    // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
+                    payload: {accepted: true}
+                }
             },
             modules: [{
                 name: "Prefs Editor Tests",
@@ -854,8 +870,12 @@
                     }]
                 }, {
                     name: "Model Change",
-                    expect:24,
+                    expect:46,
                     sequence: [{
+                        // setup receipt
+                        func: "gpii.tests.chrome.portBinding.returnReceipt",
+                        args: ["{prefsEditorStack}.store.settingsStore", "{that}.options.testOpts.receipt"]
+                    }, {
                         // contrast model change
                         func: "gpii.tests.themePicker.changeChecked",
                         args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_contrast.dom.themeInput", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_contrast"]
@@ -864,6 +884,9 @@
                         args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_contrast", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_contrast", "{that}.options.testOpts.postedChanges.contrastTheme"],
                         spec: {path: "preferences.gpii_chrome_prefs_contrast", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
@@ -876,6 +899,9 @@
                         spec: {path: "preferences.gpii_chrome_prefs_highlight", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
+                    }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // text size model change
@@ -886,6 +912,9 @@
                         args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_textSize", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_textSize", "{that}.options.testOpts.postedChanges.fontSize"],
                         spec: {path: "preferences.gpii_chrome_prefs_textSize", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
@@ -898,6 +927,9 @@
                         spec: {path: "preferences.gpii_chrome_prefs_lineSpace", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
+                    }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // character space model change
@@ -908,6 +940,9 @@
                         args: ["{prefsEditorStack}", "preferences.fluid_prefs_letterSpace", "{that}.options.testOpts.newModel.preferences.fluid_prefs_letterSpace", "{that}.options.testOpts.postedChanges.characterSpace"],
                         spec: {path: "preferences.fluid_prefs_letterSpace", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
@@ -920,6 +955,9 @@
                         spec: {path: "preferences.fluid_prefs_enhanceInputs", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
+                    }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // speak model change
@@ -930,6 +968,9 @@
                         args: ["{prefsEditorStack}", "preferences.fluid_prefs_speak", "{that}.options.testOpts.newModel.preferences.fluid_prefs_speak", "{that}.options.testOpts.postedChanges.selfVoicingEnabled"],
                         spec: {path: "preferences.fluid_prefs_speak", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
@@ -942,6 +983,9 @@
                         spec: {path: "preferences.fluid_prefs_tableOfContents", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
+                    }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // click to select model change
@@ -952,6 +996,9 @@
                         args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_clickToSelect", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_clickToSelect", "{that}.options.testOpts.postedChanges.clickToSelectEnabled"],
                         spec: {path: "preferences.gpii_chrome_prefs_clickToSelect", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
@@ -964,6 +1011,9 @@
                         spec: {path: "preferences.gpii_chrome_prefs_simplify", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port", "resetHistory"]
+                    }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {
                         // captions model change
@@ -974,6 +1024,9 @@
                         args: ["{prefsEditorStack}", "preferences.fluid_prefs_captions", "{that}.options.testOpts.newModel.preferences.fluid_prefs_captions", "{that}.options.testOpts.postedChanges.captionsEnabled"],
                         spec: {path: "preferences.fluid_prefs_captions", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{prefsEditorStack}.store.settingsStore.port"]
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
                     }, {

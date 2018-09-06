@@ -33,7 +33,7 @@
                     },
                     listeners: []
                 },
-                postMessage: sinon.spy()
+                postMessage: sinon.stub()
             };
             return port;
         };

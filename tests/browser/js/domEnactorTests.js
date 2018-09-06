@@ -726,19 +726,23 @@
             testOpts: {
                 messages: {
                     one: {
-                        type: "gpii.chrome.domSettingsApplier",
+                        type: "gpii.chrome.domSettingsApplier-message",
+                        id: "test-1",
                         payload: {settings: {testOne: 1}}
                     },
                     two: {
-                        type: "gpii.chrome.domSettingsApplier",
+                        type: "gpii.chrome.domSettingsApplier-message",
+                        id: "test-2",
                         payload: {settings: {testTwo: 2}}
                     },
                     three: {
                         type: "otherType",
+                        id: "test-3",
                         payload: {settings: {testThree: 3}}
                     },
                     captionsEnabled: {
-                        type: "gpii.chrome.domSettingsApplier",
+                        type: "gpii.chrome.domSettingsApplier-message",
+                        id: "test-4",
                         payload: {settings: {captionsEnabled: true, other: "test"}}
                     }
                 },

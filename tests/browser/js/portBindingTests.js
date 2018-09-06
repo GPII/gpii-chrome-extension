@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid */
+/* global fluid, gpii, jqUnit, sinon */
 "use strict";
 
 (function ($) {
@@ -23,15 +23,38 @@
          * portBinding tests *
          *********************/
 
+        fluid.defaults("gpii.tests.chrome.portBinding", {
+            gradeNames: ["gpii.chrome.portBinding"],
+            connectionName: "portBindingTests",
+            messageType: "portBindingTests",
+            filters: {
+                messages: ["incoming-message"],
+                receipts: ["incoming-receipt"]
+            },
+            members: {
+                handleSpy: {
+                    expander: {
+                        "this": sinon,
+                        method: "spy"
+                    }
+                }
+            },
+            invokers: {
+                handleMessageImpl: {
+                    func: function (that, data) {
+                        that.handleSpy(data);
+                        return data.payload;
+                    },
+                    args: ["{that}", "{arguments}.0"]
+                }
+            }
+        });
+
         fluid.defaults("gpii.tests.portBindingTests", {
             gradeNames: ["fluid.test.testEnvironment"],
             components: {
                 portBinding: {
-                    type: "gpii.chrome.portBinding",
-                    options: {
-                        connectionName: "portBindingTests",
-                        messageType: "portBindingTests"
-                    }
+                    type: "gpii.tests.chrome.portBinding"
                 },
                 portBindingTester: {
                     type: "gpii.tests.portBindingTester"
@@ -43,14 +66,37 @@
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
                 messages: {
+                    anonymous: {
+                        type: "anonymous-message",
+                        id: "test-0",
+                        payload: {prefs: "someprefs"}
+                    },
                     one: {
-                        type: "incomingMessage",
+                        type: "incoming-message",
+                        id: "test-1",
                         payload: {pref: "one"}
                     },
                     posted: {pref: "posted"},
                     expectedPost: {
-                        type: "portBindingTests",
+                        type: "portBindingTests-message",
+                        id: "portBindingTests-",
                         payload: {pref: "posted"}
+                    },
+                    sentReceipt: {
+                        type: "portBindingTests-receipt",
+                        id: "test-1",
+                        payload: {pref: "one"}
+                    },
+                    incomingReceipt: {
+                        type: "incoming-receipt",
+                        // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
+                        payload: {pref: "one"}
+                    },
+                    rejectedReceipt: {
+                        type: "incoming-receipt",
+                        // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
+                        payload: {pref: "one"},
+                        error: {message: "rejected"}
                     }
                 }
             },
@@ -58,26 +104,62 @@
                 name: "portBinding Tests",
                 tests: [{
                     name: "Port Connection",
-                    expect: 5,
+                    expect: 14,
                     sequence: [{
                         // connection
                         func: "gpii.tests.chrome.portBinding.assertConnection",
                         args: ["{that}.options.testOpts.expectedPortName"]
                     }, {
-                        // incoming message
+                        // unaccepted incoming message
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{portBinding}.port", "{that}.options.testOpts.messages.anonymous"]
+                    }, {
+                        event: "{portBinding}.events.onIncoming",
+                        priority: "last:testing",
+                        listener: "jqUnit.assertDeepEq",
+                        args: ["Blocked Message: The onIncoming event should have passed along the message", "{that}.options.testOpts.messages.anonymous", "{arguments}.0"]
+                    }, {
+                        func: "jqUnit.assertFalse",
+                        args: ["Blocked Message: The message should have been blocked by the filtering and not triggered the handling of the message", "{portBinding}.handleSpy.called"]
+                    }, {
+                        // accepted incoming message
                         func: "gpii.tests.mockPort.trigger.onMessage",
                         args: ["{portBinding}.port", "{that}.options.testOpts.messages.one"]
                     }, {
                         event: "{portBinding}.events.onIncomingMessage",
                         priority: "last:testing",
                         listener: "jqUnit.assertDeepEq",
-                        args: ["The onIncomingMessage event should have passed along the message", "{that}.options.testOpts.messages.one", "{arguments}.0"]
+                        args: ["Accepted Message: The onIncomingMessage event should have passed along the message", "{that}.options.testOpts.messages.one", "{arguments}.0"]
+                    }, {
+                        func: "gpii.tests.portBindingTester.verifyHandleMessageImpl",
+                        args: ["{portBinding}", "Accepted Message: The handleMessageImpl method was called correctly", "{that}.options.testOpts.messages.one"]
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        args: ["{portBinding}.port", "{that}.options.testOpts.messages.sentReceipt"]
                     }, {
                         // post message
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{portBinding}.port"]
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.returnReceipt",
+                        args: ["{portBinding}", "{that}.options.testOpts.messages.incomingReceipt"]
+                    }, {
                         task: "{portBinding}.postMessage",
                         args: ["{that}.options.testOpts.messages.posted"],
-                        resolve: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        resolve: "gpii.tests.chrome.portBinding.assertPostMessageWithID",
                         resolveArgs: ["{portBinding}.port", "{that}.options.testOpts.messages.expectedPost"]
+                    }, {
+                        // reject post
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{portBinding}.port"]
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.returnReceipt",
+                        args: ["{portBinding}", "{that}.options.testOpts.messages.rejectedReceipt"]
+                    }, {
+                        task: "{portBinding}.postMessage",
+                        args: ["{that}.options.testOpts.messages.posted"],
+                        reject: "gpii.tests.chrome.portBinding.assertPostMessageWithID",
+                        rejectArgs: ["{portBinding}.port", "{that}.options.testOpts.messages.expectedPost"]
                     }, {
                         // disconnect
                         func: "gpii.tests.mockPort.trigger.onDisconnect",
@@ -100,6 +182,10 @@
                 }]
             }]
         });
+
+        gpii.tests.portBindingTester.verifyHandleMessageImpl = function (that, msg, expectedData) {
+            jqUnit.assertTrue(msg, that.handleSpy.calledWithExactly(expectedData));
+        };
 
         /***************
          * store tests *
@@ -132,12 +218,19 @@
                 },
                 message: {
                     prefsToUpdate: {
-                        type: "gpii.chrome.domSettingsApplier",
+                        type: "incoming-message",
+                        id: "incoming-1",
                         payload: "{that}.options.testOpts.prefs"
                     },
                     post: {
-                        type: "portBindingStoreTests",
+                        type: "portBindingStoreTests-message",
+                        id: "portBindingStoreTests-",
                         payload: "{that}.options.testOpts.prefs"
+                    },
+                    receipt: {
+                        type: "incoming-receipt",
+                        // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
+                        payload: {accepted: true}
                     }
                 }
             },
@@ -145,7 +238,7 @@
                 name: "portBinding store Tests",
                 tests: [{
                     name: "getting/setting",
-                    expect: 6,
+                    expect: 8,
                     sequence: [{
                         func: "gpii.tests.chrome.portBinding.assertConnection",
                         args: ["{that}.options.testOpts.expectedPortName"]
@@ -169,9 +262,16 @@
                         resolve: "jqUnit.assertDeepEq",
                         resolveArgs: ["The get method returns the updated model correctly", "{that}.options.testOpts.prefs", "{arguments}.0"]
                     }, {
+                        // return receipt
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{portBinding}.port"]
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.returnReceipt",
+                        args: ["{portBinding}", "{that}.options.testOpts.message.receipt"]
+                    }, {
                         task: "{portBindingStore}.set",
                         args: [null, "{that}.options.testOpts.prefs"],
-                        resolve: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        resolve: "gpii.tests.chrome.portBinding.assertPostMessageWithID",
                         resolveArgs: ["{portBindingStore}.port", "{that}.options.testOpts.message.post"]
                     }]
                 }]

@@ -78,10 +78,14 @@
             portBinding: {
                 type: "gpii.chrome.portBinding",
                 options: {
-                    listeners: {
-                        "onIncomingMessage": {
-                            funcName: "gpii.chrome.domEnactor.relaySettings",
-                            args: ["{arguments}.0", "{domEnactor}.events.onIncomingSettings.fire"]
+                    filters: {
+                        messages: ["gpii.chrome.domSettingsApplier-message"]
+                    },
+                    messageType: "gpii.chrome.domEnactor",
+                    invokers: {
+                        handleMessageImpl: {
+                            func: "{domEnactor}.events.onIncomingSettings.fire",
+                            args: ["{arguments}.0.payload.settings"]
                         }
                     }
                 }
@@ -147,9 +151,7 @@
     });
 
     gpii.chrome.domEnactor.relaySettings = function (message, firer) {
-        if (message.type === "gpii.chrome.domSettingsApplier") {
-            firer(fluid.get(message, ["payload", "settings"]));
-        }
+        firer(fluid.get(message, ["payload", "settings"]));
     };
 
     /**

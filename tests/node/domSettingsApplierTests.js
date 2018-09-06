@@ -92,7 +92,8 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
             test: "testValue"
         },
         message: {
-            type: "gpii.chrome.domSettingsApplier",
+            type: "gpii.chrome.domSettingsApplier-message",
+            id: "gpii.chrome.domSettingsApplier-",
             payload: "{that}.options.testOpts.model"
         }
     },
@@ -100,7 +101,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
         name: "GPII Chrome Extension domSettingsApplier unit tests",
         tests: [{
             name: "Port Connection",
-            expect: 4,
+            expect: 6,
             sequence: [{
                 func: "gpii.tests.utils.assertEventRelayBound",
                 args: ["{domSettingsApplier}", "{domSettingsApplier}.options.eventRelayMap"]
@@ -117,8 +118,8 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
                 args: ["test", "{that}.options.testOpts.model.test"]
             }, {
                 event: "{domSettingsApplier}.events.messagePosted",
-                listener: "jqUnit.assertDeepEq",
-                args: ["The port's onMessage event was fired", "{that}.options.testOpts.message", "{arguments}.0"]
+                listener: "gpii.tests.domSettingsApplierTester.verifyPostedMessage",
+                args: ["{that}.options.testOpts.message", "{arguments}.0"]
             }, {
                 func: "{domSettingsApplier}.destroy"
             }, {
@@ -130,6 +131,12 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
         }]
     }]
 });
+
+gpii.tests.domSettingsApplierTester.verifyPostedMessage = function (expectedPost, message) {
+    jqUnit.assertEquals("The posted message type is correct", expectedPost.type, message.type);
+    jqUnit.assertDeepEq("The posted message payload is correct", expectedPost.payload, message.payload);
+    jqUnit.assertTrue("The posted message id has the correct prefix",  message.id.startsWith(expectedPost.id));
+};
 
 fluid.test.runTests([
     "gpii.tests.domSettingsApplierTests"

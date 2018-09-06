@@ -15,7 +15,7 @@
 
 "use strict";
 
-var gpii = fluid.registerNamespace("gpii");
+fluid.registerNamespace("gpii");
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 // This component makes use of css/Enactor.css to perform the adaptations
@@ -50,7 +50,11 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
             options: {
                 model: "{domSettingsApplier}.model",
                 port: "{arguments}.0",
-                messageType: "gpii.chrome.domSettingsApplier"
+                messageType: "gpii.chrome.domSettingsApplier",
+                filters: {
+                    messages: ["gpii.chrome.prefsEditor-message"],
+                    receipts: ["gpii.chrome.prefsEditor-receipt"]
+                }
             }
         }
     }
@@ -66,14 +70,14 @@ fluid.defaults("gpii.chrome.portConnection", {
             funcName: "fluid.identity",
             args: ["{that}.options.port"]
         },
-        updateModel: {
-            funcName: "gpii.chrome.portConnection.updateModel",
-            args: ["{that}", "{arguments}.0"]
+        handleMessageImpl: {
+            changePath: "",
+            value: "{arguments}.0.payload",
+            source: "incomingMessage"
         }
     },
     listeners: {
-        "onDisconnect.destroy": "{that}.destroy",
-        "onIncomingMessage.updateModel": "{that}.updateModel"
+        "onDisconnect.destroy": "{that}.destroy"
     },
     modelListeners: {
         "": {
@@ -82,9 +86,3 @@ fluid.defaults("gpii.chrome.portConnection", {
         }
     }
 });
-
-gpii.chrome.portConnection.updateModel = function (that, message) {
-    if (message.type === "gpii.chrome.prefsEditor") {
-        that.applier.change("", message.payload);
-    }
-};

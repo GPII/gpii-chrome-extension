@@ -21,6 +21,10 @@
         gradeNames: ["gpii.chrome.portBinding.store"],
         connectionName: "extensionPanel",
         messageType: "gpii.chrome.prefsEditor",
+        filters: {
+            messages: ["gpii.chrome.domSettingsApplier-message"],
+            receipts: ["gpii.chrome.domSettingsApplier-receipt"]
+        },
         rules: {
             "panelIndex": "panelIndex",
             "preferences.gpii_chrome_prefs_contrast": "settings.contrastTheme",

@@ -39,4 +39,39 @@
         jqUnit.assertTrue("postMessage called with the correct arguments", port.postMessage.calledWith(postedMessage));
     };
 
+    /**
+     * Sends a reset method to the postMessage stub.
+     *
+     * @param {Port} port - the mocked port
+     * @param {String} resetMethod - defaults to "reset" but can be the following:
+     *                               "reset": resets behavior and history
+     *                               "resetBehavior": just resets the behavior
+     *                               "resetHistory": just resets the history
+     */
+    gpii.tests.chrome.portBinding.resetPostMessage = function (port, resetMethod) {
+        var method = resetMethod || "reset";
+        port.postMessage[method]();
+    };
+
+    gpii.tests.chrome.portBinding.assertPostMessageWithID = function (port, expectedPost, callIndex) {
+        callIndex = callIndex || 0;
+        var actualPost = port.postMessage.args[callIndex][0];
+        jqUnit.assertEquals("The posted message type is correct", expectedPost.type, actualPost.type);
+        jqUnit.assertDeepEq("The posted message payload is correct", expectedPost.payload, actualPost.payload);
+        jqUnit.assertTrue("The posted message id has the correct prefix",  actualPost.id.startsWith(expectedPost.id));
+    };
+
+    gpii.tests.chrome.portBinding.returnReceipt = function (that, receipt) {
+        that.port.postMessage.callsFake(function () {
+            // Needs to get the actual id used in the post request.
+            // Best to make sure that there is only one open request to ensure that
+            // the correct id is retrieved.
+            var ids = fluid.keys(that.openRequests);
+            if (ids.length) {
+                receipt.id = ids[0];
+                gpii.tests.mockPort.trigger.onMessage(that.port, receipt);
+            }
+        });
+    };
+
 })();
