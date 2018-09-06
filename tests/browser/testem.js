@@ -24,7 +24,7 @@ fluid.defaults("fluid.tests.testem", {
         tests:   "%ui-options-chrome/tests"
     },
     testemOptions: {
-        skip: "PhantomJS,Opera,Safari,Firefox",
+        skip: "PhantomJS,Opera,Safari,Firefox,IE",
         disable_watching: true,
         tap_quiet_logs: true
     }
