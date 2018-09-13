@@ -1037,7 +1037,7 @@
                         listener: "gpii.tests.prefsEditorTests.assertExternalPrefChange",
                         args: ["{prefsEditorStack}", "{that}.options.testOpts.newModel"],
                         priority: "last:testing",
-                        event: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.events.afterWrite"
+                        event: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.events.onUpdateEnhancerModel"
                     }]
                 }]
             }]
