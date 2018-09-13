@@ -25,7 +25,7 @@ require("../../extension/src/lib/wsConnector.js");
 
 fluid.defaults("gpii.chrome.tests.wsConnector.server", {
     gradeNames: "fluid.modelComponent",
-    port: 8081,
+    port: 8083,
     allowedClients: ["gpii.chrome.tests"],
     settings: undefined,
     members: {
@@ -172,7 +172,7 @@ fluid.defaults("gpii.chrome.tests.wsConnector.tester", {
             type: "gpii.wsConnector",
             options: {
                 solutionId: "gpii.chrome.tests",
-                flowManager: "ws://localhost:8081",
+                flowManager: "ws://localhost:8083",
                 retryTime: 1
             }
         },
