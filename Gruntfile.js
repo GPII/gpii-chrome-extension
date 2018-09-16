@@ -183,7 +183,7 @@ module.exports = function (grunt) {
             sources: {
                 md: [ "./*.md"],
                 js: ["./tests/**/*.js", "./extension/**/*.js", "./*.js"],
-                json: ["./extension/**/*.json", "./*.json"],
+                json: ["./extension/**/*.json", "./*.json", "./.*.json"],
                 other: ["./.*"]
             }
         },
@@ -361,4 +361,6 @@ module.exports = function (grunt) {
         grunt.config.set("uglify.options.sourceMap.includeSources", true);
         grunt.task.run("build");
     });
+
+    grunt.registerTask("default", ["build"]);
 };

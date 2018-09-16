@@ -8,23 +8,32 @@
         <link rel="stylesheet" media="screen" href="../../node_modules/infusion/tests/lib/qunit/css/qunit.css" />
         <link rel="stylesheet" href="../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.css">
 
-        <script src="../../dist/ui-options-chrome-all.min.js"></script>
+        <script src="../../node_modules/infusion/dist/infusion-all.js"></script>
         <script src="../../node_modules/infusion/tests/lib/qunit/js/qunit.js"></script>
+
+        <script src="/testem.js"></script>
+
         <script src="../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.js"></script>
+
+         The static "safe rollup" function provided by gpii-testem
+         <script src="../../node_modules/gpii-testem/src/js/client/safeRollup.js"></script>
 
         <script>
             // command line search:
             // find . -name "*Tests.html" | awk '{print "\""$1"\","}'
 
-            QUnit.testSuites("Adaptation/Enactor Tests", [
-                "html/portBindingTests.html",
-                "html/prefsEditorTests.html",
-                "html/utilsTests.html",
-                "html/simplificationTests.html",
-                "html/domEnactorTests.html",
-                "html/zoomTests.html",
-                "html/captionsEnactorTests.html"
-            ]);
+            gpii.testem.safeRollup(
+                [
+                    "/tests/browser/html/captionsEnactorTests.html",
+                    "/tests/browser/html/portBindingTests.html",
+                    "/tests/browser/html/prefsEditorTests.html",
+                    "/tests/browser/html/utilsTests.html",
+                    "/tests/browser/html/simplificationTests.html",
+                    "/tests/browser/html/domEnactorTests.html",
+                    "/tests/browser/html/zoomTests.html"
+                ],
+                "../.."
+             );
         </script>
     </head>
     <body>
