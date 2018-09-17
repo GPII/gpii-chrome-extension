@@ -39,7 +39,9 @@ var gpii = gpii || {};
 
     gpii.uioPlus.player = function (videoElm, captionsEnabled) {
 
-        var that = {};
+        var that = {
+            videoElm: videoElm
+        };
 
         that.model = {
             captionsEnabled: captionsEnabled || false
@@ -64,7 +66,7 @@ var gpii = gpii || {};
             }
         };
 
-        that.player = gpii.uioPlus.player.createYTPlayer(videoElm, {
+        that.player = gpii.uioPlus.player.createYTPlayer(that.videoElm, {
             events: {
                 onApiChange: that.setCaptions
             }
@@ -114,11 +116,15 @@ var gpii = gpii || {};
 
         // wait for the YouTube iframe API and create players
         if (window.YT && window.YT.Player) {
-            that.players = gpii.uioPlus.captions.createPlayers(that.model);
+            var createdPlayers = gpii.uioPlus.captions.createPlayers(that.model);
+            that.players = createdPlayers.players;
+            that.observer = createdPlayers.observer;
         } else {
             // the YouTube iframe api will call onYouTubeIframeAPIReady after the api has loaded
             window.onYouTubeIframeAPIReady = function () {
-                that.players = gpii.uioPlus.captions.createPlayers(that.model);
+                var createdPlayers = gpii.uioPlus.captions.createPlayers(that.model);
+                that.players = createdPlayers.players;
+                that.observer = createdPlayers.observer;
             };
         }
 
@@ -143,11 +149,22 @@ var gpii = gpii || {};
                         players.push(gpii.uioPlus.player(node, model.captionsEnabled));
                     }
                 });
+                mutationRecord.removedNodes.forEach(function (node) {
+                    if (node.matches && node.matches(selector)) {
+                        var indexToRemove = players.findIndex(function (player) {
+                            return player.videoElm.isEqualNode(node);
+                        });
+
+                        if (indexToRemove >= 0) {
+                            players.splice(indexToRemove, 1);
+                        }
+                    }
+                });
             });
         });
         observer.observe(document.getElementsByTagName("body")[0], {childList: true, subtree: true });
 
-        return players;
+        return {players: players, observer: observer};
     };
 
     gpii.uioPlus.captions.updateFromMessage = function (model, event, callback) {

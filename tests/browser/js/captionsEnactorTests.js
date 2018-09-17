@@ -222,9 +222,9 @@
 
             // test existing
             var model = {captionsEnabled: true};
-            var players = gpii.uioPlus.captions.createPlayers(model);
+            var createdPlayers = gpii.uioPlus.captions.createPlayers(model);
             jqUnit.assertTrue("The gpii.uioPlus.player should have been called for each video found", playerStub.calledTwice);
-            jqUnit.assertDeepEq("Players for each video should have been created", expected, players);
+            jqUnit.assertDeepEq("Players for each video should have been created", expected, createdPlayers.players);
 
             // test injected
             var container = $(".injection");
@@ -235,15 +235,62 @@
 
             video.ready(function () {
                 jqUnit.assertTrue("The gpii.uioPlus.player should have been called for the injected videos", playerStub.calledThrice);
-                jqUnit.assertDeepEq("The injected player should be added to the set of players.", injected, players);
+                jqUnit.assertDeepEq("The injected player should be added to the set of players.", injected, createdPlayers.players);
 
                 // cleanup
                 container.html("");
                 playerStub.restore();
+                createdPlayers.observer.disconnect();
 
                 jqUnit.start();
             });
             container.append(video);
+        });
+
+        jqUnit.asyncTest("Test gpii.uioPlus.captions.createPlayers - removal", function () {
+            // setup
+            var container = $(".removal");
+            var video = $("<iframe id=\"toRemove\" width=\"560\" height=\"315\""
+                + "src=\"https://www.youtube.com/embed/SjnXy0Iplvs\""
+                + "frameborder=\"0\" style=\"border: solid 4px #37474F\""
+                + "allow=\"autoplay; encrypted-media\" allowfullscreen> </iframe>");
+            container.append(video);
+            var videos = $("iframe");
+
+            var playerStub = sinon.stub(gpii.uioPlus, "player");
+            var expected = [];
+
+            videos.each(function (idx, elm) {
+                var mock = {videoElm: elm};
+                expected.push(mock);
+                playerStub.onCall(idx).returns(mock);
+            });
+
+            // test existing
+            var model = {captionsEnabled: true};
+            var createdPlayers = gpii.uioPlus.captions.createPlayers(model);
+            jqUnit.assertTrue("The gpii.uioPlus.player should have been called for each video found", playerStub.calledThrice);
+            jqUnit.assertDeepEq("Players for each video should have been created", expected, createdPlayers.players);
+
+            // test removal
+            var postRemovalExpected = expected.slice(0, 2);
+            var observer = new MutationObserver(function (mutationRecords) {
+                mutationRecords.forEach(function (mutationRecord) {
+                    if (mutationRecord.removedNodes.length) {
+                        jqUnit.assertDeepEq("Players should have updated to omit the removed video", postRemovalExpected, createdPlayers.players);
+
+                        // cleanup
+                        container.html("");
+                        playerStub.restore();
+                        createdPlayers.observer.disconnect();
+
+                        jqUnit.start();
+                    }
+                });
+            });
+
+            observer.observe(container[0], {childList: true, subtree: true });
+            $("#toRemove").remove();
         });
 
         /**************************************************************************************************************
@@ -399,7 +446,7 @@
             gpii.tests.mock.YT.createGlobal();
             var createPlayers = sinon.stub(gpii.uioPlus.captions, "createPlayers");
             var players = ["player1", "player2"];
-            createPlayers.returns(players);
+            createPlayers.returns({players: players, observer: "observer"});
             var updatePlayers = sinon.stub(gpii.uioPlus.captions, "updatePlayers");
 
             var that = gpii.uioPlus.captions();
@@ -428,6 +475,7 @@
         jqUnit.test("Test gpii.uioPlus.captions - wait for YT object", function () {
             // setup
             var createPlayers = sinon.stub(gpii.uioPlus.captions, "createPlayers");
+            createPlayers.returns({players: ["player1", "player2"], observer: "observer"});
 
             var that = gpii.uioPlus.captions();
             window.onYouTubeIframeAPIReady();
@@ -442,6 +490,7 @@
             // setup
             window.YT = {};
             var createPlayers = sinon.stub(gpii.uioPlus.captions, "createPlayers");
+            createPlayers.returns({players: ["player1", "player2"], observer: "observer"});
 
             var that = gpii.uioPlus.captions();
             window.onYouTubeIframeAPIReady();
