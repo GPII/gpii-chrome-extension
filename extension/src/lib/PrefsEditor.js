@@ -417,7 +417,7 @@
             "gpii.chrome.prefs.lineSpace": {
                 "type": "number",
                 "default": 1,
-                "minimum": 1,
+                "minimum": 0.7,
                 "maximum": 3,
                 "divisibleBy": 0.1
             }
