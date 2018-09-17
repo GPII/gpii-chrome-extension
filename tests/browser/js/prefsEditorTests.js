@@ -27,31 +27,35 @@
             testSettings: {
                 panelIndex: 2,
                 settings: {
+                    captionsEnabled: "test-captionsEnabled",
+                    characterSpace: "test-characterSpace",
+                    clickToSelectEnabled: "test-clickToSelectEnabled",
                     contrastTheme: "test-contrastTheme",
+                    fontSize: "test-fontSize",
                     inputsLargerEnabled: "test-inputsLargerEnabled",
                     lineSpace: "test-lineSpace",
-                    tableOfContentsEnabled: "test-tableOfContents",
-                    fontSize: "test-fontSize",
+                    selectionTheme: "test-selectionTheme",
                     selfVoicingEnabled: "test-selfVoicingEnabled",
                     simplifiedUiEnabled: "test-simplifiedUiEnabled",
-                    selectionTheme: "test-selectionTheme",
-                    clickToSelectEnabled: "test-clickToSelectEnabled",
-                    captionsEnabled: "test-captionsEnabled"
+                    tableOfContentsEnabled: "test-tableOfContents",
+                    wordSpace: "test-wordSpace"
                 }
             },
             testPrefs: {
                 panelIndex: 2,
                 preferences: {
-                    gpii_chrome_prefs_contrast: "test-contrastTheme",
+                    fluid_prefs_captions: "test-captionsEnabled",
                     fluid_prefs_enhanceInputs: "test-inputsLargerEnabled",
-                    gpii_chrome_prefs_lineSpace: "test-lineSpace",
-                    fluid_prefs_tableOfContents: "test-tableOfContents",
-                    gpii_chrome_prefs_textSize: "test-fontSize",
+                    fluid_prefs_letterSpace: "test-characterSpace",
                     fluid_prefs_speak: "test-selfVoicingEnabled",
-                    gpii_chrome_prefs_simplify: "test-simplifiedUiEnabled",
-                    gpii_chrome_prefs_highlight: "test-selectionTheme",
+                    fluid_prefs_tableOfContents: "test-tableOfContents",
                     gpii_chrome_prefs_clickToSelect: "test-clickToSelectEnabled",
-                    fluid_prefs_captions: "test-captionsEnabled"
+                    gpii_chrome_prefs_contrast: "test-contrastTheme",
+                    gpii_chrome_prefs_highlight: "test-selectionTheme",
+                    gpii_chrome_prefs_lineSpace: "test-lineSpace",
+                    gpii_chrome_prefs_simplify: "test-simplifiedUiEnabled",
+                    gpii_chrome_prefs_textSize: "test-fontSize",
+                    gpii_chrome_prefs_wordSpace: "test-wordSpace"
                 }
             }
         };
@@ -746,62 +750,66 @@
             testOpts: {
                 defaultSettings: {
                     settings: {
-                        inputsLargerEnabled: false,
-                        selfVoicingEnabled: false,
-                        tableOfContentsEnabled: false,
-                        contrastTheme: "default",
-                        selectionTheme: "default",
-                        clickToSelectEnabled: false,
-                        lineSpace: 1,
+                        captionsEnabled: false,
                         characterSpace: 1,
-                        simplifiedUiEnabled: false,
+                        clickToSelectEnabled: false,
+                        contrastTheme: "default",
                         fontSize: 1,
-                        captionsEnabled: false
+                        inputsLargerEnabled: false,
+                        lineSpace: 1,
+                        selectionTheme: "default",
+                        selfVoicingEnabled: false,
+                        simplifiedUiEnabled: false,
+                        tableOfContentsEnabled: false,
+                        wordSpace: 1
                     }
                 },
                 defaultModel:{
                     preferences: {
+                        fluid_prefs_captions: false,
                         fluid_prefs_enhanceInputs: false,
                         fluid_prefs_letterSpace: 1,
                         fluid_prefs_speak: false,
                         fluid_prefs_tableOfContents: false,
+                        gpii_chrome_prefs_clickToSelect: false,
                         gpii_chrome_prefs_contrast: "default",
                         gpii_chrome_prefs_highlight: "default",
-                        gpii_chrome_prefs_clickToSelect: false,
                         gpii_chrome_prefs_lineSpace: 1,
                         gpii_chrome_prefs_simplify: false,
                         gpii_chrome_prefs_textSize: 1,
-                        fluid_prefs_captions: false
+                        gpii_chrome_prefs_wordSpace: 1
                     }
                 },
                 newModel: {
                     preferences: {
+                        fluid_prefs_captions: true,
                         fluid_prefs_enhanceInputs: true,
                         fluid_prefs_letterSpace: 1.2,
                         fluid_prefs_speak: true,
                         fluid_prefs_tableOfContents: true,
+                        gpii_chrome_prefs_clickToSelect: true,
                         gpii_chrome_prefs_contrast: "yb",
                         gpii_chrome_prefs_highlight: "green",
-                        gpii_chrome_prefs_clickToSelect: true,
                         gpii_chrome_prefs_lineSpace: 2.7,
                         gpii_chrome_prefs_simplify: true,
                         gpii_chrome_prefs_textSize: 3.1,
-                        fluid_prefs_captions: true
+                        gpii_chrome_prefs_wordSpace: 0.9
                     }
                 },
                 newSettings: {
                     settings: {
-                        inputsLargerEnabled: true,
-                        selfVoicingEnabled: true,
-                        tableOfContentsEnabled: true,
-                        contrastTheme: "yb",
-                        selectionTheme: "green",
-                        clickToSelectEnabled: true,
-                        lineSpace: 2.7,
+                        captionsEnabled: true,
                         characterSpace: 1.2,
-                        simplifiedUiEnabled: true,
+                        clickToSelectEnabled: true,
+                        contrastTheme: "yb",
                         fontSize: 3.1,
-                        captionsEnabled: true
+                        inputsLargerEnabled: true,
+                        lineSpace: 2.7,
+                        selectionTheme: "green",
+                        selfVoicingEnabled: true,
+                        simplifiedUiEnabled: true,
+                        tableOfContentsEnabled: true,
+                        wordSpace: 0.9
                     }
                 },
                 modelChanges: {
@@ -811,6 +819,7 @@
                     }
                 },
                 adjusters: [
+                    "fluid_prefs_panel_captions",
                     "fluid_prefs_panel_enhanceInputs",
                     "fluid_prefs_panel_layoutControls",
                     "fluid_prefs_panel_letterSpace",
@@ -821,14 +830,14 @@
                     "gpii_chrome_prefs_panel_lineSpace",
                     "gpii_chrome_prefs_panel_simplify",
                     "gpii_chrome_prefs_panel_textSize",
-                    "fluid_prefs_panel_captions"
+                    "gpii_chrome_prefs_panel_wordSpace"
                 ]
             },
             modules: [{
                 name: "Prefs Editor Tests",
                 tests: [{
                     name: "Instantiation",
-                    expect:22,
+                    expect:23,
                     sequence: [{
                         event: "{testEnvironment prefsEditorStack prefsEditorLoader}.events.onReady",
                         listener: "gpii.tests.prefsEditorTests.assertInit",
@@ -837,7 +846,7 @@
                     }]
                 }, {
                     name: "Model Change",
-                    expect:24,
+                    expect:26,
                     sequence: [{
                         // contrast model change
                         func: "gpii.tests.themePicker.changeChecked",
@@ -890,6 +899,17 @@
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
                         args: ["{prefsEditorStack}", "preferences.fluid_prefs_letterSpace", "{that}.options.testOpts.newModel.preferences.fluid_prefs_letterSpace", "{that}.options.testOpts.modelChanges.characterSpace"],
                         spec: {path: "preferences.fluid_prefs_letterSpace", priority: "last:testing"},
+                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"
+                    }, {
+                        // word space model change
+                        func: "gpii.tests.changeInput",
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_wordSpace.dom.textfieldStepperContainer", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_wordSpace"]
+                    }, {
+                        listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
+                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_wordSpace", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_wordSpace", "{that}.options.testOpts.modelChanges.wordSpace"],
+                        spec: {path: "preferences.gpii_chrome_prefs_wordSpace", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
                         func: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.cancel"

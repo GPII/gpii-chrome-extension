@@ -21,17 +21,18 @@ fluid.defaults("gpii.chrome.settings", {
     defaultSettings: {
         // not all of the following settings are in the common terms yet.
         // and may need to be updated once they are added there.
+        captionsEnabled: false, // from captionsEnabled
+        characterSpace: 1, // from characterSpace
+        contrastTheme: "default", // from highContrastEnabled and highContrastTheme
         fontSize: 1, // from fontSize
+        inputsLargerEnabled: false, // from inputsLargerEnabled
         lineSpace: 1, // from lineSpace
         selectionTheme: "default", // from highlightColor
-        contrastTheme: "default", // from highContrastEnabled and highContrastTheme
-        characterSpace: 1, // from characterSpace
-        inputsLargerEnabled: false, // from inputsLargerEnabled
         selfVoicingEnabled: false, // from selfVoicingEnabled
-        tableOfContentsEnabled: false, // from tableOfContents
         simplifiedUiEnabled: false, // from simplifiedUiEnabled
         syllabificationEnabled: false, // from syllabificationEnabled
-        captionsEnabled: false // from captionsEnabled
+        tableOfContentsEnabled: false, // from tableOfContents,
+        wordSpace: 1 // from wordSpace
     },
     components: {
         domSettingsApplier: {

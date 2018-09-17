@@ -27,24 +27,6 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js"
         ],
-        webScriptsLib: [
-            "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
-            "node_modules/infusion/src/framework/core/js/Fluid.js",
-            "node_modules/infusion/src/framework/core/js/FluidPromises.js",
-            "node_modules/infusion/src/framework/core/js/FluidDocument.js",
-            "node_modules/infusion/src/framework/core/js/FluidDOMUtilities.js",
-            "node_modules/infusion/src/framework/core/js/FluidIoC.js",
-            "node_modules/infusion/src/framework/core/js/DataBinding.js",
-            "node_modules/infusion/src/framework/core/js/FluidView.js",
-            "node_modules/infusion/src/framework/core/js/FluidRequests.js",
-            "node_modules/infusion/src/lib/fastXmlPull/js/fastXmlPull.js",
-            "node_modules/infusion/src/framework/renderer/js/fluidParser.js",
-            "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
-            "node_modules/infusion/src/framework/enhancement/js/ProgressiveEnhancement.js",
-            "node_modules/infusion/src/framework/preferences/js/Enactors.js",
-            "node_modules/infusion/src/framework/preferences/js/CaptionsEnactor.js",
-            "extension/src/lib/captionsEnactor.js"
-        ],
         contentScriptsLib: [
             "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
             "node_modules/infusion/src/framework/core/js/Fluid.js",
@@ -73,7 +55,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/components/orator/js/Orator.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingEnactor.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpaceEnactor.js",
-            "node_modules/infusion/src/framework/preferences/js/CaptionsEnactor.js"
+            "node_modules/infusion/src/framework/preferences/js/WordSpaceEnactor.js"
         ],
         adjustersLib: [
             // jQuery
@@ -118,9 +100,11 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/Panels.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingPanel.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpacePanel.js",
+            "node_modules/infusion/src/framework/preferences/js/WordSpacePanel.js",
             "node_modules/infusion/src/framework/preferences/js/CaptionsPanel.js",
             "node_modules/infusion/src/framework/preferences/js/Enactors.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpaceEnactor.js",
+            "node_modules/infusion/src/framework/preferences/js/WordSpaceEnactor.js",
             "node_modules/infusion/src/framework/preferences/js/CaptionsEnactor.js",
             "node_modules/infusion/src/framework/preferences/js/StarterGrades.js",
             "node_modules/infusion/src/framework/preferences/js/ArrowScrolling.js",
@@ -131,6 +115,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/StarterSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpaceSchemas.js",
+            "node_modules/infusion/src/framework/preferences/js/WordSpaceSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/CaptionsSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/Builder.js",
 
@@ -199,9 +184,6 @@ module.exports = function (grunt) {
                     "dist/<%= pkg.name %>-all.min.js" : [].concat(
                         files.extensionLib,
                         files.extension
-                    ),
-                    "dist/<%= pkg.name %>-webScriptsLib.min.js" : [].concat(
-                        files.webScriptsLib
                     ),
                     "dist/<%= pkg.name %>-contentScriptsLib.min.js" : [].concat(
                         files.contentScriptsLib

@@ -6,17 +6,18 @@ Infrastructure) enable machine, from a keyed in preference set.
 
 The following adaptations are supported:
 
-* Zoom
-* Line Space
+* Captions (embedded YouTube videos)
 * Character Space
 * Contrast
+* Enhance Inputs
+* Line Space
+* Reading Mode
 * Right-Click to Select
 * Selection Highlight
-* Text-to-Speech
-* Reading Mode
 * Table of Contents
-* Enhance Inputs
-* Captions (embedded YouTube videos)
+* Text-to-Speech
+* Word Space
+* Zoom
 
 _**Note**: The ability to apply an adaptation will vary from page to page_
 
