@@ -12,7 +12,7 @@ The following adaptations are supported:
 * Contrast
 * Right-Click to Select
 * Selection Highlight
-* Text-to-Speech
+* Text-to-Speech (only for selected text)
 * Reading Mode
 * Table of Contents
 * Enhance Inputs
