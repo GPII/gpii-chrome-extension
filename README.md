@@ -14,6 +14,8 @@ The following adaptations are supported:
 * Reading Mode
 * Right-Click to Select
 * Selection Highlight
+* Text-to-Speech (only for selected text)
+* Reading Mode
 * Table of Contents
 * Text-to-Speech
 * Word Space
