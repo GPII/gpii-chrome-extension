@@ -127,6 +127,21 @@
                 options: {
                     model: {
                         enabled: "{domEnactor}.model.selfVoicingEnabled"
+                    },
+                    // GPII-3373: temporarily remove the page level TTS until GPII-3286 is fixed
+                    components: {
+                        orator: {
+                            options: {
+                                components: {
+                                    controller: {
+                                        type: "fluid.emptySubcomponent"
+                                    },
+                                    domReader: {
+                                        type: "fluid.emptySubcomponent"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
