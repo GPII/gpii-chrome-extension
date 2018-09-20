@@ -65,27 +65,35 @@ fluid.defaults("gpii.chrome.zoom", {
             args: "{arguments}.2"
         },
         "onWindowFocusChanged.applyZoomSettings": "{that}.applyZoomSettings"
+    },
+    members: {
+        magnifierChanged: false
     }
 });
 
 gpii.chrome.zoom.applyZoomInTab = function (that, tab, value) {
-    // set the zoom value if it hasn't already been set.
-    chrome.tabs.getZoom(tab.id, function (currentZoom) {
-        if (currentZoom !== value) {
-            chrome.tabs.setZoom(tab.id, value, function () {
-                if (chrome.runtime.lastError) {
-                    fluid.log("Could not apply zoom in tab'",
-                              tab.url, "', error was: ",
-                              chrome.runtime.lastError.message);
-                    that.events.onError.fire(chrome.runtime.lastError);
-                }
-            });
-        }
-    });
+    if (that.magnifierChanged) {
+        // set the zoom value if it hasn't already been set.
+        chrome.tabs.getZoom(tab.id, function (currentZoom) {
+            if (currentZoom !== value) {
+                chrome.tabs.setZoom(tab.id, value, function () {
+                    if (chrome.runtime.lastError) {
+                        fluid.log("Could not apply zoom in tab'",
+                            tab.url, "', error was: ",
+                            chrome.runtime.lastError.message);
+                        that.events.onError.fire(chrome.runtime.lastError);
+                    }
+                });
+            }
+        });
+    }
 };
 
 gpii.chrome.zoom.applyZoomSettings = function (that) {
     var value = that.model.magnifierEnabled ? that.model.magnification : 1;
+    if (value !== 1) {
+        that.magnifierChanged = true;
+    }
     // Iterate over all tabs in the current window and set the zoom factor
     // Only changing in the current window to address cases where changing the
     // zoom level in other windows causes it to gain focus. See: https://issues.gpii.net/browse/GPII-2525
