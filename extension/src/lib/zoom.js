@@ -28,7 +28,8 @@ fluid.defaults("gpii.chrome.zoom", {
         onError: null,
         onTabOpened: null,
         onTabUpdated: null,
-        onWindowFocusChanged: null
+        onWindowFocusChanged: null,
+        onZoomChanged: null
     },
     eventRelayMap: {
         "chrome.tabs.onCreated": "onTabOpened",
@@ -56,6 +57,7 @@ fluid.defaults("gpii.chrome.zoom", {
         }
     },
     listeners: {
+        "onCreate.bindEvents": "gpii.chrome.zoom.bindEvents",
         "onTabOpened.setupTab": {
             funcName: "{that}.updateTab",
             args: "{arguments}.0"
@@ -64,9 +66,17 @@ fluid.defaults("gpii.chrome.zoom", {
             funcName: "{that}.updateTab",
             args: "{arguments}.2"
         },
-        "onWindowFocusChanged.applyZoomSettings": "{that}.applyZoomSettings"
+        "onWindowFocusChanged.applyZoomSettings": "{that}.applyZoomSettings",
+        "onZoomChanged": {
+            changePath: "magnification",
+            value: "{arguments}.0.newZoomFactor"
+        }
     }
 });
+
+gpii.chrome.zoom.bindEvents = function (that) {
+    chrome.tabs.onZoomChange.addListener(that.events.onZoomChanged.fire);
+};
 
 gpii.chrome.zoom.applyZoomInTab = function (that, tab, value) {
     // set the zoom value if it hasn't already been set.
