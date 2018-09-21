@@ -46,6 +46,9 @@ fluid.defaults("gpii.chrome.tests.zoom.tester", {
         magnification: 2,
         magnifierEnabled: true
     },
+    browserZoom: {
+        newZoomFactor: 2.5
+    },
     disableZoom: {
         magnifierEnabled: false
     },
@@ -143,7 +146,32 @@ fluid.defaults("gpii.chrome.tests.zoom.tester", {
                        "{that}.options.newZoomLevel.magnification"]
             }]
         }, {
-            name: "magnification changes, tabs are updated",
+            name: "magnification changed through browser",
+            expect: 6,
+            sequence: [{
+                funcName: "{zoom}.events.onZoomChanged.fire",
+                args: ["{that}.options.browserZoom"]
+            }, {
+                event: "{that}.events.onSetZoom",
+                listener: "gpii.chrome.tests.zoom.checkSetZoom",
+                args: ["{arguments}.0", "{arguments}.1",
+                       "{that}.options.tabs.0.id",
+                       "{that}.options.browserZoom.newZoomFactor"]
+            }, {
+                event: "{that}.events.onSetZoom",
+                listener: "gpii.chrome.tests.zoom.checkSetZoom",
+                args: ["{arguments}.0", "{arguments}.1",
+                       "{that}.options.tabs.1.id",
+                       "{that}.options.browserZoom.newZoomFactor"]
+            }, {
+                event: "{that}.events.onSetZoom",
+                listener: "gpii.chrome.tests.zoom.checkSetZoom",
+                args: ["{arguments}.0", "{arguments}.1",
+                       "{that}.options.tabs.2.id",
+                       "{that}.options.browserZoom.newZoomFactor"]
+            }]
+        }, {
+            name: "magnification disabled, tabs are updated",
             expect: 6,
             sequence: [{
                 funcName: "gpii.chrome.tests.zoom.setSettings",
