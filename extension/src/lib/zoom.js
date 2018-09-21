@@ -75,7 +75,14 @@ fluid.defaults("gpii.chrome.zoom", {
 });
 
 gpii.chrome.zoom.bindEvents = function (that) {
-    chrome.tabs.onZoomChange.addListener(that.events.onZoomChanged.fire);
+    chrome.tabs.onZoomChange.addListener(function (ZoomChangeInfo) {
+        // Only fire the onZoomChanged event if the Zoom factor is actually different.
+        // This is necessary because chrome will fire its onZoomChange event when a new tab or window is opened;
+        // with old and new zoom factors of 0. If this check isn't here, it will cause all pages to be reset.
+        if (ZoomChangeInfo.oldZoomFactor !== ZoomChangeInfo.newZoomFactor) {
+            that.events.onZoomChanged.fire(ZoomChangeInfo);
+        }
+    });
 };
 
 gpii.chrome.zoom.applyZoomInTab = function (that, tab, value) {
