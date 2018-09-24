@@ -36,7 +36,7 @@
         "posttest": "node node_modules/nyc/bin/nyc.js report --temp-directory coverage --reporter text-summary --reporter html"
     },
     "dependencies": {
-        "infusion": "3.0.0-dev.20180913T150451Z.f62b8e56f.FLUID-6257",
+        "infusion": "3.0.0-dev.20180921T161909Z.4fd6139fa",
         "ws": "6.0.0"
     },
     "devDependencies": {

@@ -76,7 +76,8 @@ module.exports = function (grunt) {
         adjustersLib: [
             // jQuery
             "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
-            "node_modules/infusion/src/lib/jquery/ui/js/jquery-ui.js",
+            "node_modules/infusion/src/lib/jquery/ui/js/version.js",
+            "node_modules/infusion/src/lib/jquery/ui/js/keycode.js",
 
             // Infusion Core
             "node_modules/infusion/src/framework/core/js/Fluid.js",

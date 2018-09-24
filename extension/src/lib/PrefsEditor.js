@@ -177,7 +177,7 @@
         gradeNames: ["fluid.prefs.panel.textSize"],
         preferenceMap: {
             "gpii.chrome.prefs.textSize": {
-                "model.value": "default",
+                "model.value": "value",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"
@@ -196,7 +196,7 @@
         gradeNames: ["fluid.prefs.panel.lineSpace"],
         preferenceMap: {
             "gpii.chrome.prefs.lineSpace": {
-                "model.value": "default",
+                "model.value": "value",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"
@@ -208,7 +208,7 @@
         gradeNames: ["fluid.prefs.panel.contrast"],
         preferenceMap: {
             "gpii.chrome.prefs.contrast": {
-                "model.value": "default",
+                "model.value": "value",
                 "controlValues.theme": "enum"
             }
         }
@@ -218,7 +218,7 @@
         gradeNames: ["fluid.prefs.panel.switchAdjuster"],
         preferenceMap: {
             "gpii.chrome.prefs.simplify": {
-                "model.value": "default"
+                "model.value": "value"
             }
         }
     });
@@ -227,7 +227,7 @@
         gradeNames: ["fluid.prefs.panel.switchAdjuster"],
         preferenceMap: {
             "gpii.chrome.prefs.clickToSelect": {
-                "model.value": "default"
+                "model.value": "value"
             }
         }
     });
@@ -236,7 +236,7 @@
         gradeNames: ["fluid.prefs.panel.themePicker"],
         preferenceMap: {
             "gpii.chrome.prefs.highlight": {
-                "model.value": "default",
+                "model.value": "value",
                 "controlValues.theme": "enum"
             }
         },
