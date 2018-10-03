@@ -99,6 +99,7 @@
 
     fluid.defaults("gpii.chrome.portBinding", {
         gradeNames: ["fluid.component"],
+        // Name of the port connection. Will be used as the prefix for the name passed to the connection.
         connectionName: "",
         members: {
             port: {
