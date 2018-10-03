@@ -250,12 +250,12 @@
         jqUnit.asyncTest("Test gpii.uioPlus.captions.createPlayers - removal", function () {
             // setup
             var container = $(".removal");
-            var video = $("<iframe id=\"toRemove\" width=\"560\" height=\"315\""
+            var video = $("<iframe id=\"toRemove\" class=\"flc-video\" width=\"560\" height=\"315\""
                 + "src=\"https://www.youtube.com/embed/SjnXy0Iplvs\""
                 + "frameborder=\"0\" style=\"border: solid 4px #37474F\""
                 + "allow=\"autoplay; encrypted-media\" allowfullscreen> </iframe>");
             container.append(video);
-            var videos = $("iframe");
+            var videos = $("iframe.flc-video");
 
             var playerStub = sinon.stub(gpii.uioPlus, "player");
             var expected = [];
