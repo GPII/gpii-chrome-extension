@@ -177,7 +177,14 @@
                 "range.max": "maximum",
                 "step": "divisibleBy"
             }
-        }
+        },
+        distributeOptions: [{
+            record: {
+                scale: 2
+            },
+            target: "{that textfieldStepper}.options",
+            namespace: "scale"
+        }]
     });
 
     fluid.defaults("gpii.chrome.prefs.panel.lineSpace", {
@@ -382,8 +389,8 @@
             "gpii.chrome.prefs.textSize": {
                 "type": "number",
                 "default": 1,
-                "minimum": 0.5,
-                "maximum": 4,
+                "minimum": 0.25,
+                "maximum": 5,
                 "divisibleBy": 0.1
             }
         }
