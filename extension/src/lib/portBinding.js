@@ -260,6 +260,7 @@
      * @param {Component} that - the component itself
      * @param {Number} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
+     * @param {Object} data - the incoming data from the message.
      */
     gpii.chrome.portBinding.requestNotAccepted = function (that, type, data) {
         that.postReceipt(type, data.id, null, {message: "Request of type: " + data.type + " are not accepted."});
@@ -293,9 +294,12 @@
      * sent with or without an error and with what payload.
      *
      * @param {Component} that - the component itself
+     * @param {Number} type - identifies the type of message for listeners on the other end.
+     *                        See: gpii.chrome.portBinding.type
+     * @param {Function} handleFn - a function to handle the message
      * @param {Object} data - the incoming data from the message.
      *
-     * @return {Promise} - a promise that is resolved/rejected based on result of `handleMessageImpl` method
+     * @return {Promise} - a promise that is resolved/rejected based on the result of `handleFn` execution
      */
     gpii.chrome.portBinding.handleMessage = function (that, type, handleFn, data) {
         var promise = fluid.promise();
