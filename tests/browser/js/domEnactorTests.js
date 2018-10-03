@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -726,22 +726,17 @@
             testOpts: {
                 messages: {
                     one: {
-                        type: "gpii.chrome.domSettingsApplier-message",
+                        type: gpii.chrome.portBinding.type.WRITE,
                         id: "test-1",
                         payload: {settings: {testOne: 1}}
                     },
                     two: {
-                        type: "gpii.chrome.domSettingsApplier-message",
+                        type: gpii.chrome.portBinding.type.WRITE,
                         id: "test-2",
                         payload: {settings: {testTwo: 2}}
                     },
-                    three: {
-                        type: "otherType",
-                        id: "test-3",
-                        payload: {settings: {testThree: 3}}
-                    },
                     captionsEnabled: {
-                        type: "gpii.chrome.domSettingsApplier-message",
+                        type: gpii.chrome.portBinding.type.WRITE,
                         id: "test-4",
                         payload: {settings: {captionsEnabled: true, other: "test"}}
                     }
@@ -764,7 +759,7 @@
                 name: "domEnactor Tests",
                 tests: [{
                     name: "Port Connection",
-                    expect: 6,
+                    expect: 5,
                     sequence: [{
                         func: "gpii.tests.domEnactorTests.assertConnection",
                         args: ["{domEnactor}"]
@@ -784,12 +779,6 @@
                         path: "testTwo",
                         listener: "jqUnit.assertEquals",
                         args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.payload.settings.testTwo", "{domEnactor}.model.testTwo"]
-                    }, {
-                        func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.three"]
-                    }, {
-                        funcName: "jqUnit.assertUndefined",
-                        args: ["The message with the wrong \"type\" should have been rejected and not updated the model.", "{domEnactor}.model.testThree"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
                         args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.captionsEnabled"]

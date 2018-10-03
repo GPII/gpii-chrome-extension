@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -15,7 +15,7 @@
 
 "use strict";
 
-fluid.registerNamespace("gpii");
+var gpii = fluid.registerNamespace("gpii");
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 // This component makes use of css/Enactor.css to perform the adaptations
@@ -49,12 +49,7 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
             createOnEvent: "onConnect",
             options: {
                 model: "{domSettingsApplier}.model",
-                port: "{arguments}.0",
-                messageType: "gpii.chrome.domSettingsApplier",
-                filters: {
-                    messages: ["gpii.chrome.prefsEditor-message"],
-                    receipts: ["gpii.chrome.prefsEditor-receipt"]
-                }
+                port: "{arguments}.0"
             }
         }
     }
@@ -70,10 +65,13 @@ fluid.defaults("gpii.chrome.portConnection", {
             funcName: "fluid.identity",
             args: ["{that}.options.port"]
         },
-        handleMessageImpl: {
-            changePath: "",
-            value: "{arguments}.0.payload",
-            source: "incomingMessage"
+        handleWrite: {
+            funcName: "gpii.chrome.portConnection.updateModel",
+            args: ["{that}", "{arguments}.0.payload"]
+        },
+        handleRead: {
+            funcName: "fluid.identity",
+            args: ["{that}.model"]
         }
     },
     listeners: {
@@ -81,8 +79,15 @@ fluid.defaults("gpii.chrome.portConnection", {
     },
     modelListeners: {
         "": {
-            func: "{that}.postMessage",
+            func: "{that}.write",
             args: ["{that}.model"]
         }
     }
 });
+
+gpii.chrome.portConnection.updateModel = function (that, model) {
+    var transaction = that.applier.initiate();
+    transaction.fireChangeRequest({path: "", type: "DELETE"});
+    transaction.change("", model);
+    transaction.commit();
+};

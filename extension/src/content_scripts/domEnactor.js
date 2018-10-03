@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -37,10 +37,7 @@
             onIncomingSettings: null
         },
         listeners: {
-            "onIncomingSettings.updateModel": {
-                changePath: "",
-                value: "{arguments}.0"
-            },
+            "onIncomingSettings.updateModel": "{that}.updateModel",
             "onIncomingSettings.postSettingsToWebPage": "{that}.postSettingsToWebPage"
         },
         contextAwareness: {
@@ -68,6 +65,10 @@
                     "{arguments}.0",
                     {filter: "{that}.options.webSettings.filter"}
                 ]
+            },
+            updateModel: {
+                funcName: "gpii.chrome.domEnactor.updateModel",
+                args: ["{that}", "{arguments}.0"]
             }
         },
         distributeOptions: {
@@ -78,12 +79,16 @@
             portBinding: {
                 type: "gpii.chrome.portBinding",
                 options: {
-                    filters: {
-                        messages: ["gpii.chrome.domSettingsApplier-message"]
+                    connectionName: "contentScript",
+                    listeners: {
+                        "onIncomingRead.handle": {
+                            listener: "gpii.chrome.portBinding.requestNotAccepted",
+                            args: ["{that}", gpii.chrome.portBinding.type.READ_RECEIPT, "{arguments}.0"]
+                        }
                     },
-                    messageType: "gpii.chrome.domEnactor",
                     invokers: {
-                        handleMessageImpl: {
+                        handleRead: "fluid.identity",
+                        handleWrite: {
                             func: "{domEnactor}.events.onIncomingSettings.fire",
                             args: ["{arguments}.0.payload.settings"]
                         }
@@ -165,8 +170,11 @@
         }
     });
 
-    gpii.chrome.domEnactor.relaySettings = function (message, firer) {
-        firer(fluid.get(message, ["payload", "settings"]));
+    gpii.chrome.domEnactor.updateModel = function (that, model) {
+        var transaction = that.applier.initiate();
+        transaction.fireChangeRequest({path: "", type: "DELETE"});
+        transaction.change("", model);
+        transaction.commit();
     };
 
     /**

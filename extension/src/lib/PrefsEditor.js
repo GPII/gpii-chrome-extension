@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -20,11 +20,6 @@
     fluid.defaults("gpii.chrome.prefs.extensionPanel.store", {
         gradeNames: ["gpii.chrome.portBinding.store"],
         connectionName: "extensionPanel",
-        messageType: "gpii.chrome.prefsEditor",
-        filters: {
-            messages: ["gpii.chrome.domSettingsApplier-message"],
-            receipts: ["gpii.chrome.domSettingsApplier-receipt"]
-        },
         rules: {
             "panelIndex": "panelIndex",
             "preferences.gpii_chrome_prefs_contrast": "settings.contrastTheme",
@@ -112,9 +107,9 @@
                     },
                     listeners: {
                         // auto fetch changes from the store
-                        "{fluid.prefs.store}.events.onIncomingMessage": {
+                        "{fluid.prefs.store}.events.onIncomingRead": {
                             listener: "{that}.fetch",
-                            priority: "after:setLastIncomingMessage",
+                            priority: "after:handle",
                             namespace: "autoFetchFromStore"
                         },
                         "afterFetch.updateEnhancer": {
@@ -132,16 +127,6 @@
                             // can't use the autoSave option because we need to exclude init
                             listener: "{that}.save",
                             excludeSource: "init"
-                        },
-                        "{fluid.prefs.store}.model.preferences": {
-                            listener: "{that}.fetch",
-                            args: [], // removes the default arguments passed in by the model change event
-                            includeSource: "onIncomingMessage"
-                        },
-                        "{fluid.prefs.store}.model.panelIndex": {
-                            listener: "{that}.fetch",
-                            args: [], // removes the default arguments passed in by the model change event
-                            includeSource: "onIncomingMessage"
                         }
                     }
                 }

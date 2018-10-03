@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -53,12 +53,11 @@
         port.postMessage[method]();
     };
 
-    gpii.tests.chrome.portBinding.assertPostMessageWithID = function (port, expectedPost, callIndex) {
+    gpii.tests.chrome.portBinding.assertPostMessageWithUnknownID = function (prefix, port, expectedPost, callIndex) {
         callIndex = callIndex || 0;
         var actualPost = port.postMessage.args[callIndex][0];
-        jqUnit.assertEquals("The posted message type is correct", expectedPost.type, actualPost.type);
-        jqUnit.assertDeepEq("The posted message payload is correct", expectedPost.payload, actualPost.payload);
-        jqUnit.assertTrue("The posted message id has the correct prefix",  actualPost.id.startsWith(expectedPost.id));
+        jqUnit.assertEquals(prefix + ": The posted message type is correct", expectedPost.type, actualPost.type);
+        jqUnit.assertDeepEq(prefix + ": The posted message payload is correct", expectedPost.payload, actualPost.payload);
     };
 
     gpii.tests.chrome.portBinding.returnReceipt = function (that, receipt) {

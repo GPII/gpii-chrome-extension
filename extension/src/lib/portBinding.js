@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -15,6 +15,51 @@
 
 (function (fluid) {
     var gpii = fluid.registerNamespace("gpii");
+
+    fluid.registerNamespace("gpii.chrome.portBinding");
+
+    gpii.chrome.portBinding.type = {
+        READ: 0,
+        READ_RECEIPT: 1,
+        WRITE: 2,
+        WRITE_RECEIPT: 3
+    };
+
+    /*
+        The `gpii.chrome.portBinding` grade provides a system for creating a port connection and sending/receiving
+        messages across that port. To verify that messages sent across a port are received and acted upon correctly,
+        posts provide a promise that is resolved/rejected based on a returned receipt. Connections are also set to
+        return receipts after an incoming message has been handled.
+
+        Workflow:
+        post - ( sends payload with message id )
+             - message id gets stored in a map with the promise to resolve/reject
+             -  receiver takes action of the message and returns a receipt ( includes the same message id )
+
+        receive - (receives a message)
+                - if it is a returned receipt
+                  - look into message map and resolve/reject corresponding promise
+                  - remove from map
+                - if it is a new message
+                  - take action on the message
+                  - send a return message (receipt) containing the same message id
+
+
+        Post Messages:
+        1) read/write message
+           - wait for receipt
+        2) read-receipt/write-receipt
+           - do not wait for receipt
+
+        Received Messages:
+        1) read/write message
+           - action, return receipt
+        2) read-receipt/write-receipt
+           - remove from message map
+
+        To prevent handling receipts and messages that are broadcast but not intended for a connection, incoming message
+        is validated. The destination must match the current component, and the source must be from an accepted sender.
+    */
 
     /*
         The `gpii.chrome.portBinding` grade provides a system for creating a port connection and sending/receiving
@@ -55,7 +100,6 @@
     fluid.defaults("gpii.chrome.portBinding", {
         gradeNames: ["fluid.component"],
         connectionName: "",
-        messageType: "",
         members: {
             port: {
                 expander: {
@@ -64,14 +108,12 @@
             },
             openRequests: {}
         },
-        filters: {
-            messages: [],
-            receipts: []
-        },
         events: {
             onIncoming: null,
-            onIncomingMessage: null,
-            onIncomingReceipt: null,
+            onIncomingRead: null,
+            onIncomingReadReceipt: null,
+            onIncomingWrite: null,
+            onIncomingWriteReceipt: null,
             onDisconnect: null
         },
         listeners: {
@@ -80,42 +122,47 @@
                 listener: "gpii.chrome.portBinding.handleIncoming",
                 args: ["{that}", "{arguments}.0"]
             },
-            "onIncomingMessage.handleMessage": "{that}.handleMessage",
-            "onIncomingReceipt.handleReceipt": "{that}.handleReceipt"
+            "onIncomingRead.handle": {
+                listener: "{that}.handleMessage",
+                args: [gpii.chrome.portBinding.type.READ_RECEIPT, "{that}.handleRead", "{arguments}.0"]
+            },
+            "onIncomingReadReceipt.handle": "{that}.handleReceipt",
+            "onIncomingWrite.handle": {
+                listener: "{that}.handleMessage",
+                args: [gpii.chrome.portBinding.type.WRITE_RECEIPT, "{that}.handleWrite", "{arguments}.0"]
+            },
+            "onIncomingWriteReceipt.handle": "{that}.handleReceipt"
         },
         invokers: {
-            postMessage: {
-                funcName: "gpii.chrome.portBinding.postMessage",
-                args: ["{that}", "{that}.options.messageType", "{arguments}.0"]
+            read: {
+                funcName: "gpii.chrome.portBinding.postRequest",
+                args: ["{that}", gpii.chrome.portBinding.type.READ, "{arguments}.0"]
+            },
+            write: {
+                funcName: "gpii.chrome.portBinding.postRequest",
+                args: ["{that}", gpii.chrome.portBinding.type.WRITE, "{arguments}.0"]
             },
             postReceipt: {
                 funcName: "gpii.chrome.portBinding.postReceipt",
-                args: ["{that}", "{that}.options.messageType", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+                args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2", "{arguments}.3"]
             },
             setPort: {
                 funcName: "gpii.chrome.portBinding.setPort",
                 args: ["{that}.options.connectionName", "{that}.id"]
             },
-            isReceipt: {
-                funcName: "gpii.chrome.portBinding.isAcceptable",
-                args: ["{that}.options.filters.receipts", "{arguments}.0"]
-            },
-            isMessage: {
-                funcName: "gpii.chrome.portBinding.isAcceptable",
-                args: ["{that}.options.filters.messages", "{arguments}.0"]
-            },
             handleMessage: {
                 funcName: "gpii.chrome.portBinding.handleMessage",
-                args: ["{that}", "{arguments}.0"]
+                args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
             },
             handleReceipt: {
                 funcName: "gpii.chrome.portBinding.handleReceipt",
                 args: ["{that}", "{arguments}.0"]
             },
-            // Must be implemented by an integrator. It will be called by the handleMessage flow and may
-            // return a promise to indicate if the task has completed successfully or not. If a promise isn't returned
-            // all responses will be treated as a success.
-            handleMessageImpl: "fluid.notImplemented"
+            // handleRead and handleWrite must be implemented by an integrator. They will be called by the handleMessage
+            // flow for handling read and write requests. They may return a promise to indicate if the task has
+            // completed successfully or not. If a promise isn't returned all responses will be treated as a success.
+            handleRead: "fluid.notImplemented",
+            handleWrite: "fluid.notImplemented"
         }
     });
 
@@ -150,47 +197,54 @@
     };
 
     /**
-     * Posts messages over the {Port} connection. The content of the message must be provided in the `payload` argument.
-     * A promise is returned and will be resolved/rejected upon receiving a receipt from the other end. An `id` is sent
-     * with the message and should be used as the `id` in a receipt to identify which message the receipt is for.
+     * Posts a request over the {Port} connection. The content of the message must be provided in the `payload`
+     * argument. A promise is returned and will be resolved/rejected upon receiving a receipt from the other end. An
+     * `id` is sent with the message and should be used as the `id` in a receipt to identify which message the receipt
+     * is for.
      *
      * @param {Component} that - the component itself
-     * @param {String} type - identifies the type of message for listeners on the other end. Also used as the prefix
-     *                           for the id.
+     * @param {Number} type - identifies the type of message for listeners on the other end.
+     *                        See: gpii.chrome.portBinding.type
      * @param {Object} payload - the content of the message
      *
      * @return {Promise} - a promise that is resolved/rejected upon receipt from the other end.
      */
-    gpii.chrome.portBinding.postMessage = function (that, type, payload) {
+    gpii.chrome.portBinding.postRequest = function (that, type, payload) {
         var promise = fluid.promise();
         var id = type + "-" + fluid.allocateGuid();
-        type = type + "-message";
         that.openRequests[id] = promise;
 
         try {
-            that.port.postMessage({type: type, id: id, payload: payload});
+            that.port.postMessage({
+                id: id,
+                type: type,
+                payload: payload
+            });
         } catch (error) {
             delete that.openRequests[id];
             promise.reject(error);
         }
 
-
         return promise;
     };
 
     /**
-     * Posts receipt over the {Port} connection to reply to a previously received message. Content of the receipt may be
-     * provided in the `payload` argument.
+     * Posts the receipt over the {Port} connection to reply to a previously received message. Content of the receipt
+     * may be provided in the `payload` argument.
      *
      * @param {Component} that - the component itself
-     * @param {String} type - identifies the type of message for listeners on the other end.
+     * @param {Number} type - identifies the type of message for listeners on the other end.
+     *                        See: gpii.chrome.portBinding.type
      * @param {String} id - must match a previously received message.
      * @param {Object} payload - the content to return
      * @param {Object} error - an error object to return if the previous message handling failed.
      */
     gpii.chrome.portBinding.postReceipt = function (that, type, id, payload, error) {
-        type = type + "-receipt";
-        var toPost = {type: type, id: id, payload: payload};
+        var toPost = {
+            id: id,
+            type: type,
+            payload: payload
+        };
 
         if (error) {
             toPost.error = error;
@@ -200,34 +254,36 @@
     };
 
     /**
-     * Determines if message/receipt type should be accepted for handling.
+     * Can be used to replace the listener for the onIncomingRead and onIncomingWrite events if those operations aren't
+     * supported.
      *
-     * @param {String|Array} filter - a type or array of types to accept
-     * @param {String} type - the type to check
-     *
-     * @return {Boolean} - returns `true` if `type` is acceptable and `false` otherwise.
+     * @param {Component} that - the component itself
+     * @param {Number} type - identifies the type of message for listeners on the other end.
+     *                        See: gpii.chrome.portBinding.type
      */
-    gpii.chrome.portBinding.isAcceptable = function (filter, type) {
-        filter = fluid.makeArray(filter);
-        return fluid.find(filter, function (accepted) {
-            if (accepted === type) {
-                return true;
-            }
-        }, false);
+    gpii.chrome.portBinding.requestNotAccepted = function (that, type, data) {
+        that.postReceipt(type, data.id, null, {message: "Request of type: " + data.type + " are not accepted."});
     };
 
     /**
-     * Determines if an incoming port message is an acceptable receipt or message and will first the data to the
-     * respective events: `onIncomingReceipt`, `onIncomingMessage`.
+     * Directs the incoming message to the appropriate event:
+     * `onIncomingRead`, `onIncomingReadReceipt`, `onIncomingWrite`, `onIncomingWriteReceipt`
      *
      * @param {Component} that - the component itself
      * @param {Object} data - the data to handle from the incoming port message
      */
     gpii.chrome.portBinding.handleIncoming = function (that, data) {
-        if (that.isReceipt(data.type)) {
-            that.events.onIncomingReceipt.fire(data);
-        } else if (that.isMessage(data.type)) {
-            that.events.onIncomingMessage.fire(data);
+        if (data.type === gpii.chrome.portBinding.type.READ) {
+            that.events.onIncomingRead.fire(data);
+        }
+        if (data.type === gpii.chrome.portBinding.type.READ_RECEIPT) {
+            that.events.onIncomingReadReceipt.fire(data);
+        }
+        if (data.type === gpii.chrome.portBinding.type.WRITE) {
+            that.events.onIncomingWrite.fire(data);
+        }
+        if (data.type === gpii.chrome.portBinding.type.WRITE_RECEIPT) {
+            that.events.onIncomingWriteReceipt.fire(data);
         }
     };
 
@@ -241,17 +297,17 @@
      *
      * @return {Promise} - a promise that is resolved/rejected based on result of `handleMessageImpl` method
      */
-    gpii.chrome.portBinding.handleMessage = function (that, data) {
+    gpii.chrome.portBinding.handleMessage = function (that, type, handleFn, data) {
         var promise = fluid.promise();
 
         promise.then(function (value) {
-            that.postReceipt(data.id, value);
+            that.postReceipt(type, data.id, value);
         }, function (reason) {
             // this should be a rejected receipt
-            that.postReceipt(data.id, data.payload, {error: reason});
+            that.postReceipt(type, data.id, data.payload, reason);
         });
 
-        var handlePromise = that.handleMessageImpl(data);
+        var handlePromise = handleFn(data);
         handlePromise = fluid.toPromise(handlePromise);
         fluid.promise.follow(handlePromise, promise);
 
@@ -267,12 +323,15 @@
      */
     gpii.chrome.portBinding.handleReceipt = function (that, receipt) {
         var promise = that.openRequests[receipt.id];
-        delete that.openRequests[receipt.id];
 
-        if (receipt.error) {
-            promise.reject(receipt.error);
-        } else {
-            promise.resolve(receipt.payload);
+        if (promise) {
+            delete that.openRequests[receipt.id];
+
+            if (receipt.error) {
+                promise.reject(receipt.error);
+            } else {
+                promise.resolve(receipt.payload);
+            }
         }
     };
 
@@ -288,35 +347,28 @@
                 type: "fluid.dataSource.encoding.model"
             }
         },
-        members: {
-            lastIncomingPayload: {}
-        },
         listeners: {
-            "onIncomingMessage.setLastIncomingPayload": "{that}.setLastIncomingPayload",
-            "onRead.impl": {
-                listener: "fluid.identity",
-                args: ["{that}.lastIncomingPayload"]
+            "onRead.impl": "{that}.read",
+            "onIncomingRead.handle": {
+                listener: "gpii.chrome.portBinding.requestNotAccepted",
+                args: ["{that}", gpii.chrome.portBinding.type.READ_RECEIPT, "{arguments}.0"]
+            },
+            "onIncomingWrite.handle": {
+                listener: "gpii.chrome.portBinding.requestNotAccepted",
+                args: ["{that}", gpii.chrome.portBinding.type.WRITE_RECEIPT, "{arguments}.0"]
             }
         },
         invokers: {
-            setLastIncomingPayload: {
-                funcName: "gpii.chrome.portBinding.store.setLastIncomingPayload",
-                args: ["{that}", "{arguments}.0"]
-            },
-            handleMessageImpl: "gpii.chrome.portBinding.store.setLastIncomingPayload"
+            handleRead: "fluid.identity",
+            handleWrite: "fluid.identity"
         }
     });
-
-    gpii.chrome.portBinding.store.setLastIncomingPayload = function (that, message) {
-        that.lastIncomingPayload = fluid.get(message, ["payload"]);
-        return that.lastIncomingPayload;
-    };
 
     fluid.defaults("gpii.chrome.portBinding.store.writable", {
         gradeNames: ["fluid.prefs.tempStore.writable"],
         listeners: {
             "onWrite.impl": {
-                listener: "{that}.postMessage"
+                listener: "{that}.write"
             }
         }
     });

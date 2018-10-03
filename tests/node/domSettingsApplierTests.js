@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -39,12 +39,21 @@ fluid.defaults("gpii.tests.domSettingsApplierTests", {
                         options: {
                             listeners: {
                                 "onCreate.passMessage": {
-                                    "this": "{that}.options.port.onMessage",
+                                    "this": "{that}.options.port.onPost",
                                     method: "addListener",
                                     args: ["{domSettingsApplier}.events.messagePosted.fire"]
                                 }
                             }
                         }
+                    }
+                },
+                modelListeners: {
+                    "": {
+                        namespace: "test",
+                        listener: function (log) {
+                            console.log("****************", log);
+                        },
+                        args: ["{change}.value"]
                     }
                 }
             }
@@ -70,8 +79,22 @@ gpii.tests.mockPort = {
         },
         listeners: []
     },
+    // this even is just for testing
+    onPost: {
+        addListener: function (fn) {
+            gpii.tests.mockPort.onPost.listeners.push(fn);
+        },
+        listeners: []
+    },
     postMessage: function (msg) {
+        // automatically post a receipt
+        var reply = fluid.copy(msg);
+        reply.type++; // increment from READ/WRITE to READ_RECEIPT/WRITE_RECEIPT;
         fluid.each(gpii.tests.mockPort.onMessage.listeners, function (fn) {
+            fn(reply);
+        });
+        // this is just for testing.
+        fluid.each(gpii.tests.mockPort.onPost.listeners, function (fn) {
             fn(msg);
         });
     },
@@ -92,8 +115,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
             test: "testValue"
         },
         message: {
-            type: "gpii.chrome.domSettingsApplier-message",
-            id: "gpii.chrome.domSettingsApplier-",
+            type: gpii.chrome.portBinding.type.WRITE,
             payload: "{that}.options.testOpts.model"
         }
     },
@@ -101,7 +123,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
         name: "GPII Chrome Extension domSettingsApplier unit tests",
         tests: [{
             name: "Port Connection",
-            expect: 6,
+            expect: 5,
             sequence: [{
                 func: "gpii.tests.utils.assertEventRelayBound",
                 args: ["{domSettingsApplier}", "{domSettingsApplier}.options.eventRelayMap"]
@@ -135,7 +157,6 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
 gpii.tests.domSettingsApplierTester.verifyPostedMessage = function (expectedPost, message) {
     jqUnit.assertEquals("The posted message type is correct", expectedPost.type, message.type);
     jqUnit.assertDeepEq("The posted message payload is correct", expectedPost.payload, message.payload);
-    jqUnit.assertTrue("The posted message id has the correct prefix",  message.id.startsWith(expectedPost.id));
 };
 
 fluid.test.runTests([
