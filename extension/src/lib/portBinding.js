@@ -190,7 +190,7 @@
     /**
      * Binds/relays {Port} events to infusion events that can be used by the component.
      *
-     * @param {Component} that - the component itself
+     * @param {Component} that - an instance of `gpii.chrome.portBinding`
      */
     gpii.chrome.portBinding.bindPortEvents = function (that) {
         that.port.onDisconnect.addListener(that.events.onDisconnect.fire);
@@ -203,7 +203,7 @@
      * `id` is sent with the message and should be used as the `id` in a receipt to identify which message the receipt
      * is for.
      *
-     * @param {Component} that - the component itself
+     * @param {Component} that - an instance of `gpii.chrome.portBinding`
      * @param {Number} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
      * @param {Object} payload - the content of the message
@@ -233,7 +233,7 @@
      * Posts the receipt over the {Port} connection to reply to a previously received message. Content of the receipt
      * may be provided in the `payload` argument.
      *
-     * @param {Component} that - the component itself
+     * @param {Component} that - an instance of `gpii.chrome.portBinding`
      * @param {Number} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
      * @param {String} id - must match a previously received message.
@@ -258,7 +258,7 @@
      * Can be used to replace the listener for the onIncomingRead and onIncomingWrite events if those operations aren't
      * supported.
      *
-     * @param {Component} that - the component itself
+     * @param {Component} that - an instance of `gpii.chrome.portBinding`
      * @param {Number} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
      * @param {Object} data - the incoming data from the message.
@@ -271,7 +271,7 @@
      * Directs the incoming message to the appropriate event:
      * `onIncomingRead`, `onIncomingReadReceipt`, `onIncomingWrite`, `onIncomingWriteReceipt`
      *
-     * @param {Component} that - the component itself
+     * @param {Component} that - an instance of `gpii.chrome.portBinding`
      * @param {Object} data - the data to handle from the incoming port message
      */
     gpii.chrome.portBinding.handleIncoming = function (that, data) {
@@ -294,7 +294,7 @@
      * integrator. The result or promise returned by `handleMessageImpl` is used to determine if a receipt should be
      * sent with or without an error and with what payload.
      *
-     * @param {Component} that - the component itself
+     * @param {Component} that - an instance of `gpii.chrome.portBinding`
      * @param {Number} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
      * @param {Function} handleFn - a function to handle the message
@@ -323,7 +323,7 @@
      * Handles the receipt of a posted message. Based on the `id` in the receipt, the promise related to the originally
      * sent message will be removed from the `openRequests` object and resolved/rejected as needed.
      *
-     * @param {Component} that - the component itself
+     * @param {Component} that - an instance of `gpii.chrome.portBinding`
      * @param {Object} receipt - the data from the receipt
      */
     gpii.chrome.portBinding.handleReceipt = function (that, receipt) {
