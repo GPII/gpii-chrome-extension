@@ -19,10 +19,10 @@
     fluid.registerNamespace("gpii.chrome.portBinding");
 
     gpii.chrome.portBinding.type = {
-        READ: 0,
-        READ_RECEIPT: 1,
-        WRITE: 2,
-        WRITE_RECEIPT: 3
+        READ: "UIO_PLUS_READ_REQUEST",
+        READ_RECEIPT: "UIO_PLUS_READ_RECEIPT",
+        WRITE: "UIO_PLUS_WRITE_REQUEST",
+        WRITE_RECEIPT: "UIO_PLUS_WRITE_RECEIPT"
     };
 
     /*

@@ -92,19 +92,6 @@
                     type: gpii.chrome.portBinding.type.WRITE,
                     // the id is created with a unique number, so it will not be tested
                     payload: gpii.tests.stored.testSettings
-                },
-
-
-
-                posted: {
-                    type: "gpii.chrome.prefsEditor-message",
-                    id: "gpii.chrome.prefsEditor-",
-                    payload: gpii.tests.stored.testSettings
-                },
-                incomingReceipt: {
-                    type: "gpii.chrome.domSettingsApplier-receipt",
-                    // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
-                    payload: gpii.tests.stored.testSettings
                 }
             },
             modules: [{
@@ -786,36 +773,9 @@
             jqUnit.assertDeepEq("The uiEnhancer's model should be set", newModel.preferences, prefsEditorStack.enhancer.uiEnhancer.model);
         };
 
-        gpii.tests.prefsEditorTests.generateMessages = function (changes, defaults) {
-            return fluid.transform(changes, function (value, setting) {
-                var model = fluid.copy(defaults);
-                model.settings[setting] = value;
-                return {
-                    type: gpii.chrome.portBinding.type.WRITE,
-                    // the id is created with a unique number, so it will not be tested
-                    payload: model
-                };
-            });
-        };
-
         fluid.defaults("gpii.tests.prefsEditorStackTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
             testOpts: {
-                defaultSettings: {
-                    settings: {
-                        inputsLargerEnabled: false,
-                        selfVoicingEnabled: false,
-                        tableOfContentsEnabled: false,
-                        contrastTheme: "default",
-                        selectionTheme: "default",
-                        clickToSelectEnabled: false,
-                        lineSpace: 1,
-                        characterSpace: 1,
-                        simplifiedUiEnabled: false,
-                        fontSize: 1,
-                        captionsEnabled: false
-                    }
-                },
                 defaultModel:{
                     preferences: {
                         fluid_prefs_enhanceInputs: false,
@@ -846,32 +806,6 @@
                         fluid_prefs_captions: true
                     }
                 },
-                newSettings: {
-                    settings: {
-                        inputsLargerEnabled: true,
-                        selfVoicingEnabled: true,
-                        tableOfContentsEnabled: true,
-                        contrastTheme: "yb",
-                        selectionTheme: "green",
-                        clickToSelectEnabled: true,
-                        lineSpace: 2.7,
-                        characterSpace: 1.2,
-                        simplifiedUiEnabled: true,
-                        fontSize: 3.1,
-                        captionsEnabled: true
-                    }
-                },
-                postedChanges: {
-                    expander: {
-                        funcName: "gpii.tests.prefsEditorTests.generateMessages",
-                        args: ["{that}.options.testOpts.newSettings.settings", "{that}.options.testOpts.defaultSettings"]
-                    }
-                },
-                externalMessage: {
-                    type: gpii.chrome.portBinding.type.WRITE,
-                    id: "test-1",
-                    payload: "{that}.options.testOpts.newSettings"
-                },
                 adjusters: [
                     "fluid_prefs_panel_enhanceInputs",
                     "fluid_prefs_panel_layoutControls",
@@ -884,12 +818,7 @@
                     "gpii_chrome_prefs_panel_simplify",
                     "gpii_chrome_prefs_panel_textSize",
                     "fluid_prefs_panel_captions"
-                ],
-                receipt: {
-                    type: "gpii.chrome.domSettingsApplier-receipt",
-                    // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
-                    payload: {accepted: true}
-                }
+                ]
             },
             modules: [{
                 name: "Prefs Editor Tests",

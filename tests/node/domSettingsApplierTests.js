@@ -89,7 +89,14 @@ gpii.tests.mockPort = {
     postMessage: function (msg) {
         // automatically post a receipt
         var reply = fluid.copy(msg);
-        reply.type++; // increment from READ/WRITE to READ_RECEIPT/WRITE_RECEIPT;
+
+        // convert READ/WRITE to READ_RECEIPT/WRITE_RECEIPT
+        if (msg.type === gpii.chrome.portBinding.type.READ) {
+            reply.type = gpii.chrome.portBinding.type.READ_RECEIPT;
+        } else if (msg.type === gpii.chrome.portBinding.type.WRITE) {
+            reply.type = gpii.chrome.portBinding.type.WRITE_RECEIPT;
+        }
+
         fluid.each(gpii.tests.mockPort.onMessage.listeners, function (fn) {
             fn(reply);
         });
