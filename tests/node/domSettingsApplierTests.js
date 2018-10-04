@@ -79,23 +79,23 @@ gpii.tests.mockPort = {
         },
         listeners: []
     },
-    // this even is just for testing
+    // this event is just for testing
     onPost: {
         addListener: function (fn) {
             gpii.tests.mockPort.onPost.listeners.push(fn);
         },
         listeners: []
     },
+    requestToReceiptMap: {
+        "UIO_PLUS_READ_REQUEST": "UIO_PLUS_READ_RECEIPT",
+        "UIO_PLUS_WRITE_REQUEST": "UIO_PLUS_WRITE_RECEIPT"
+    },
     postMessage: function (msg) {
         // automatically post a receipt
         var reply = fluid.copy(msg);
 
         // convert READ/WRITE to READ_RECEIPT/WRITE_RECEIPT
-        if (msg.type === gpii.chrome.portBinding.type.READ) {
-            reply.type = gpii.chrome.portBinding.type.READ_RECEIPT;
-        } else if (msg.type === gpii.chrome.portBinding.type.WRITE) {
-            reply.type = gpii.chrome.portBinding.type.WRITE_RECEIPT;
-        }
+        reply.type = fluid.get(gpii.tests.mockPort.requestToReceiptMap, msg.type) || msg.type;
 
         fluid.each(gpii.tests.mockPort.onMessage.listeners, function (fn) {
             fn(reply);
@@ -122,7 +122,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
             test: "testValue"
         },
         message: {
-            type: gpii.chrome.portBinding.type.WRITE,
+            type: "UIO_PLUS_WRITE_REQUEST",
             payload: "{that}.options.testOpts.model"
         }
     },

@@ -726,17 +726,17 @@
             testOpts: {
                 messages: {
                     one: {
-                        type: gpii.chrome.portBinding.type.WRITE,
+                        type: "UIO_PLUS_WRITE_REQUEST",
                         id: "test-1",
                         payload: {settings: {testOne: 1}}
                     },
                     two: {
-                        type: gpii.chrome.portBinding.type.WRITE,
+                        type: "UIO_PLUS_WRITE_REQUEST",
                         id: "test-2",
                         payload: {settings: {testTwo: 2}}
                     },
                     captionsEnabled: {
-                        type: gpii.chrome.portBinding.type.WRITE,
+                        type: "UIO_PLUS_WRITE_REQUEST",
                         id: "test-4",
                         payload: {settings: {captionsEnabled: true, other: "test"}}
                     }
