@@ -79,7 +79,7 @@
             portBinding: {
                 type: "gpii.chrome.portBinding",
                 options: {
-                    connectionName: "contentScript",
+                    portName: "contentScript",
                     listeners: {
                         "onIncomingRead.handle": {
                             listener: "gpii.chrome.portBinding.requestNotAccepted",

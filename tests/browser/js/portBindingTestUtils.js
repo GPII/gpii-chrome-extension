@@ -17,15 +17,7 @@
 
     fluid.defaults("gpii.tests.portBinding.portName", {
         testOpts: {
-            expectedPortName: {
-                expander: {
-                    funcName: "fluid.stringTemplate",
-                    args: ["%connectionName-%id", {
-                        connectionName: "{portBinding}.options.connectionName",
-                        id: "{portBinding}.id"
-                    }]
-                }
-            }
+            expectedPortName: "{portBinding}.options.portName"
         }
     });
 

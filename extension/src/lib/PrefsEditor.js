@@ -19,7 +19,7 @@
     //       have to know the model paths ahead of time.
     fluid.defaults("gpii.chrome.prefs.extensionPanel.store", {
         gradeNames: ["gpii.chrome.portBinding.store"],
-        connectionName: "extensionPanel",
+        portName: "extensionPanel",
         rules: {
             "panelIndex": "panelIndex",
             "preferences.gpii_chrome_prefs_contrast": "settings.contrastTheme",

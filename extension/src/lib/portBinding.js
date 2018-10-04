@@ -99,8 +99,8 @@
 
     fluid.defaults("gpii.chrome.portBinding", {
         gradeNames: ["fluid.component"],
-        // Name of the port connection. Will be used as the prefix for the name passed to the connection.
-        connectionName: "",
+        // Name of the port connection. Will be sent as the `name` when a port connection is created.
+        portName: "",
         members: {
             port: {
                 expander: {
@@ -149,7 +149,7 @@
             },
             setPort: {
                 funcName: "gpii.chrome.portBinding.setPort",
-                args: ["{that}.options.connectionName", "{that}.id"]
+                args: [{name: "{that}.options.portName"}]
             },
             handleMessage: {
                 funcName: "gpii.chrome.portBinding.handleMessage",
@@ -177,14 +177,14 @@
     /**
      * Creates a connection and returns a port.
      *
-     * @param {String} connectionName - the name of the connection. Will be used as the prefix for the name passed
-     *                                  to the connection.
-     * @param {String} id - the id of the connection. Will be used as the suffix for the name passed to the conneciton.
+     * @param {Object} options - Options to pass to the port connection. For example a `name` can be passed along to
+     *                           the connection listener.
+     *                           see: https://developer.chrome.com/extensions/runtime#method-connect
      *
      * @return {Port} - the chrome port connection
      */
-    gpii.chrome.portBinding.setPort = function (connectionName, id) {
-        return chrome.runtime.connect({name: connectionName + "-" + id});
+    gpii.chrome.portBinding.setPort = function (options) {
+        return chrome.runtime.connect(options);
     };
 
     /**

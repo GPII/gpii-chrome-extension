@@ -25,7 +25,7 @@
 
         fluid.defaults("gpii.tests.chrome.portBinding", {
             gradeNames: ["gpii.chrome.portBinding"],
-            connectionName: "portBindingTests",
+            portName: "portBindingTests",
             members: {
                 handleReadSpy: {
                     expander: {
@@ -339,7 +339,7 @@
                     type: "gpii.chrome.portBinding.store",
                     options: {
                         gradeNames: ["gpii.tests.chrome.portBinding", "fluid.dataSource.writable"],
-                        connectionName: "portBindingStoreTests"
+                        portName: "portBindingStoreTests"
                     }
                 },
                 portBindingStoreTester: {
