@@ -204,7 +204,7 @@
      * is for.
      *
      * @param {Component} that - an instance of `gpii.chrome.portBinding`
-     * @param {Number} type - identifies the type of message for listeners on the other end.
+     * @param {String} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
      * @param {Object} payload - the content of the message
      *
@@ -234,7 +234,7 @@
      * may be provided in the `payload` argument.
      *
      * @param {Component} that - an instance of `gpii.chrome.portBinding`
-     * @param {Number} type - identifies the type of message for listeners on the other end.
+     * @param {String} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
      * @param {String} id - must match a previously received message.
      * @param {Object} payload - the content to return
@@ -259,7 +259,7 @@
      * supported.
      *
      * @param {Component} that - an instance of `gpii.chrome.portBinding`
-     * @param {Number} type - identifies the type of message for listeners on the other end.
+     * @param {String} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
      * @param {Object} data - the incoming data from the message.
      */
@@ -290,14 +290,29 @@
     };
 
     /**
+     * A function to handle incoming request messages. The function will be passed in the message `data` as its only
+     * argument. The `data` in a well formed request will typically take the form of
+     * {
+     *     type: {String} // see: gpii.chrome.portBinding.type for possible types
+     *     id: {String} // a unique ID. This will be returned in the receipt.
+     *     payload: {Object} // the content of the request. May not be included in all requests
+     * }
+     *
+     * The MessageHandler function should return a promise, which will be used to indicate if the message request was
+     * accepted or rejected. If a promise isn't retuned, all requests will be treated as accepted.
+     *
+     * @typedef {Function} MessageHandler
+     */
+
+    /**
      * Handles an incoming message. It will call the `handleMessageImpl` invoker; which needs to be set by an
      * integrator. The result or promise returned by `handleMessageImpl` is used to determine if a receipt should be
      * sent with or without an error and with what payload.
      *
      * @param {Component} that - an instance of `gpii.chrome.portBinding`
-     * @param {Number} type - identifies the type of message for listeners on the other end.
+     * @param {String} type - identifies the type of message for listeners on the other end.
      *                        See: gpii.chrome.portBinding.type
-     * @param {Function} handleFn - a function to handle the message
+     * @param {MessageHandler} handleFn - a function to handle the message
      * @param {Object} data - the incoming data from the message.
      *
      * @return {Promise} - a promise that is resolved/rejected based on the result of `handleFn` execution
