@@ -412,7 +412,7 @@
 
         fluid.test.runTests([
             "gpii.tests.portBindingTests",
-            // "gpii.tests.portBindingStoreTests"
+            "gpii.tests.portBindingStoreTests"
         ]);
     });
 })(jQuery);
