@@ -24,9 +24,10 @@
             main: "main, [role~='main'], .main, #main",
             genericContent: ".content, #content, .body:not('body'), #body:not('body')",
             nav: "nav, [role~='navigation'], .navigation, .nav, #nav, #navigation",
-            search: "[role~='search'], [type~='search']"
+            search: "[role~='search'], [type~='search']",
+            visible: ".gpiic-simplify-visible"
         },
-        alwaysVisible: ["search"],
+        alwaysVisible: ["search", "visible"],
         markup: {
             navToggle: "<button class='gpiic-simplify-navToggle'></button>"
         },
@@ -51,11 +52,19 @@
                 excludeSource: "init"
             }
         },
+        events: {
+            onAlwaysVisibleNodeAdded: null
+        },
         listeners: {
             "onCreate.toggleNav": {
                 listener: "{that}.toggleNav",
                 args: ["{that}.model.showNav"]
-            }
+            },
+            "onDestroy.disconnectObserver": {
+                listener: "gpii.simplify.disconnectObserver",
+                args: ["{that}"]
+            },
+            "onAlwaysVisibleNodeAdded.makeVisible": "gpii.simplify.setVisible"
         },
         injectNavToggle: true,
         invokers: {
@@ -103,8 +112,35 @@
         }
     };
 
+    gpii.simplify.setVisible = function (elm) {
+        $(elm).css("visibility", "visible");
+    };
+
     gpii.simplify.set = function (that, state) {
         var content = that.findContent();
+
+        if (!that.observer) {
+            var selectors = [];
+            fluid.each(that.options.alwaysVisible, function (selectorName) {
+                var selector = fluid.get(that.options.selectors, selectorName);
+                if (selector) {
+                    selectors.push(selector);
+                }
+            });
+
+            // set visibility of dynamically added nodes
+            that.observer = new MutationObserver(function (mutationRecords) {
+                var selector = selectors.join(",");
+                mutationRecords.forEach(function (mutationRecord) {
+                    mutationRecord.addedNodes.forEach(function (node) {
+                        if (node.matches && node.matches(selector)) {
+                            that.events.onAlwaysVisibleNodeAdded.fire($(node));
+                        }
+                    });
+                });
+            });
+        }
+
         if (state && content.length) {
             content.css("visibility", "visible");
             fluid.each(that.options.alwaysVisible, function (selector) {
@@ -115,6 +151,7 @@
                 gpii.simplify.injectToggle(that, content);
             }
             that.locate("navToggle").show();
+            that.observer.observe(that.container[0], {childList: true, subtree: true });
         } else if (content.length) {
             that.locate("navToggle").hide();
             that.container.css("visibility", "");
@@ -122,6 +159,13 @@
             fluid.each(that.options.alwaysVisible, function (selector) {
                 that.locate(selector).css("visibility", "");
             });
+            that.observer.disconnect();
+        }
+    };
+
+    gpii.simplify.disconnectObserver = function (that) {
+        if (that.observer) {
+            that.observer.disconnect();
         }
     };
 

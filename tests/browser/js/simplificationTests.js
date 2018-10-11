@@ -202,9 +202,32 @@
                         listener: "gpii.tests.simplifyTests.assertNotSimplified",
                         args: ["{simplify}"]
                     }]
+                }, {
+                    name: "Dynamically added always visible element",
+                    expect: 1,
+                    sequence: [{
+                        func: "{simplify}.applier.change",
+                        args: ["simplify", true]
+                    }, {
+                        func: "fluid.tests.simplifyTester.injectElm",
+                        args: ["{simplify}"]
+                    }, {
+                        event: "{simplify}.events.onAlwaysVisibleNodeAdded",
+                        priority: "after:makeVisible",
+                        listener: "fluid.tests.simplifyTester.assertElmVisible"
+                    }]
                 }]
             }]
         });
+
+        fluid.tests.simplifyTester.injectElm = function (that) {
+            var elm = $("<button class=\"gpiic-simplify-visible\">Test</button>");
+            that.container.append(elm);
+        };
+
+        fluid.tests.simplifyTester.assertElmVisible = function (elm) {
+            jqUnit.assertEquals("The element should be visible", "visible", elm.css("visibility"));
+        };
 
         fluid.defaults("gpii.tests.simplifyNoNavToggleTests", {
             gradeNames: ["fluid.test.testEnvironment"],

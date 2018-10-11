@@ -138,6 +138,13 @@
                                     },
                                     domReader: {
                                         type: "fluid.emptySubcomponent"
+                                    },
+                                    selectionReader: {
+                                        options: {
+                                            markup: {
+                                                playButton: "<button class=\"flc-orator-selectionReader-play gpiic-simplify-visible fl-orator-selectionReader-play\"><span class=\"fl-icon-orator\"></span><span>%playButton</span></button>"
+                                            }
+                                        }
                                     }
                                 }
                             }
