@@ -46,15 +46,6 @@ fluid.defaults("gpii.tests.domSettingsApplierTests", {
                             }
                         }
                     }
-                },
-                modelListeners: {
-                    "": {
-                        namespace: "test",
-                        listener: function (log) {
-                            console.log("****************", log);
-                        },
-                        args: ["{change}.value"]
-                    }
                 }
             }
         },
