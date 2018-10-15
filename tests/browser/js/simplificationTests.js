@@ -209,7 +209,7 @@
                         func: "{simplify}.applier.change",
                         args: ["simplify", true]
                     }, {
-                        func: "fluid.tests.simplifyTester.injectElm",
+                        func: "fluid.tests.simplifyTester.injectElement",
                         args: ["{simplify}"]
                     }, {
                         event: "{simplify}.events.onAlwaysVisibleNodeAdded",
@@ -220,7 +220,7 @@
             }]
         });
 
-        fluid.tests.simplifyTester.injectElm = function (that) {
+        fluid.tests.simplifyTester.injectElement = function (that) {
             var elm = $("<button class=\"gpiic-simplify-visible\">Test</button>");
             that.container.append(elm);
         };
