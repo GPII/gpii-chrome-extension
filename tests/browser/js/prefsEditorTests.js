@@ -79,17 +79,17 @@
             gradeNames: ["fluid.test.testCaseHolder", "gpii.tests.portBinding.portName"],
             testOpts: {
                 readReceipt: {
-                    type: "UIO_PLUS_READ_RECEIPT",
+                    type: "gpii.chrome.readReceipt",
                     // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                     payload: gpii.tests.stored.testSettings
                 },
                 writeReceipt: {
-                    type: "UIO_PLUS_WRITE_RECEIPT",
+                    type: "gpii.chrome.writeReceipt",
                     // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                     payload: gpii.tests.stored.testSettings
                 },
                 writeRequest: {
-                    type: "UIO_PLUS_WRITE_REQUEST",
+                    type: "gpii.chrome.writeRequest",
                     // the id is created with a unique number, so it will not be tested
                     payload: gpii.tests.stored.testSettings
                 }
@@ -715,7 +715,7 @@
                                         listener: "gpii.tests.chrome.portBinding.returnReceipt",
                                         priority: "first",
                                         args: ["{that}", {
-                                            type: "UIO_PLUS_READ_RECEIPT",
+                                            type: "gpii.chrome.readReceipt",
                                             payload: {}
                                         }]
                                     }

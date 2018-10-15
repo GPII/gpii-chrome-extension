@@ -49,10 +49,10 @@
            - remove from message map
 
         By default the following message types are handled.
-        - "UIO_PLUS_READ_REQUEST"
-        - "UIO_PLUS_READ_RECEIPT"
-        - "UIO_PLUS_WRITE_REQUEST"
-        - "UIO_PLUS_WRITE_RECEIPT"
+        - "gpii.chrome.readRequest"
+        - "gpii.chrome.readReceipt"
+        - "gpii.chrome.writeRequest"
+        - "gpii.chrome.writeReceipt"
     */
 
     fluid.defaults("gpii.chrome.portBinding", {
@@ -78,10 +78,10 @@
         // defines which event handles which a message type
         // message types that aren't defined here are ignored.
         messageForwardingMap: {
-            "UIO_PLUS_READ_REQUEST": "onIncomingRead",
-            "UIO_PLUS_READ_RECEIPT": "onIncomingReadReceipt",
-            "UIO_PLUS_WRITE_REQUEST": "onIncomingWrite",
-            "UIO_PLUS_WRITE_RECEIPT": "onIncomingWriteReceipt"
+            "gpii.chrome.readRequest": "onIncomingRead",
+            "gpii.chrome.readReceipt": "onIncomingReadReceipt",
+            "gpii.chrome.writeRequest": "onIncomingWrite",
+            "gpii.chrome.writeReceipt": "onIncomingWriteReceipt"
         },
         listeners: {
             "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents",
@@ -91,23 +91,23 @@
             },
             "onIncomingRead.handle": {
                 listener: "{that}.handleMessage",
-                args: ["UIO_PLUS_READ_RECEIPT", "{that}.handleRead", "{arguments}.0"]
+                args: ["gpii.chrome.readReceipt", "{that}.handleRead", "{arguments}.0"]
             },
             "onIncomingReadReceipt.handle": "{that}.handleReceipt",
             "onIncomingWrite.handle": {
                 listener: "{that}.handleMessage",
-                args: ["UIO_PLUS_WRITE_RECEIPT", "{that}.handleWrite", "{arguments}.0"]
+                args: ["gpii.chrome.writeReceipt", "{that}.handleWrite", "{arguments}.0"]
             },
             "onIncomingWriteReceipt.handle": "{that}.handleReceipt"
         },
         invokers: {
             read: {
                 funcName: "gpii.chrome.portBinding.postRequest",
-                args: ["{that}", "UIO_PLUS_READ_REQUEST", "{arguments}.0"]
+                args: ["{that}", "gpii.chrome.readRequest", "{arguments}.0"]
             },
             write: {
                 funcName: "gpii.chrome.portBinding.postRequest",
-                args: ["{that}", "UIO_PLUS_WRITE_REQUEST", "{arguments}.0"]
+                args: ["{that}", "gpii.chrome.writeRequest", "{arguments}.0"]
             },
             postReceipt: {
                 funcName: "gpii.chrome.portBinding.postReceipt",
@@ -238,7 +238,7 @@
      * @param {Object} data - the data to handle from the incoming port message
      */
     gpii.chrome.portBinding.handleIncoming = function (that, data) {
-        var eventName = fluid.get(that.options.messageForwardingMap, data.type);
+        var eventName = that.options.messageForwardingMap[data.type];
 
         if (eventName) {
             that.events[eventName].fire(data);
@@ -249,7 +249,7 @@
      * A function to handle incoming request messages. The function will be passed in the message `data` as its only
      * argument. The `data` in a well formed request will typically take the form of
      * {
-     *     type: {String} // the message type e.g. "UIO_PLUS_READ_REQUEST"
+     *     type: {String} // the message type e.g. "gpii.chrome.readRequest"
      *     id: {String} // a unique ID. This will be returned in the receipt.
      *     payload: {Object} // the content of the request. May not be included in all requests
      * }
@@ -326,11 +326,11 @@
             "onRead.impl": "{that}.read",
             "onIncomingRead.handle": {
                 listener: "gpii.chrome.portBinding.requestNotAccepted",
-                args: ["{that}", "UIO_PLUS_READ_RECEIPT", "{arguments}.0"]
+                args: ["{that}", "gpii.chrome.readReceipt", "{arguments}.0"]
             },
             "onIncomingWrite.handle": {
                 listener: "gpii.chrome.portBinding.requestNotAccepted",
-                args: ["{that}", "UIO_PLUS_WRITE_RECEIPT", "{arguments}.0"]
+                args: ["{that}", "gpii.chrome.writeReceipt", "{arguments}.0"]
             }
         },
         invokers: {

@@ -78,15 +78,15 @@ gpii.tests.mockPort = {
         listeners: []
     },
     requestToReceiptMap: {
-        "UIO_PLUS_READ_REQUEST": "UIO_PLUS_READ_RECEIPT",
-        "UIO_PLUS_WRITE_REQUEST": "UIO_PLUS_WRITE_RECEIPT"
+        "gpii.chrome.readRequest": "gpii.chrome.readReceipt",
+        "gpii.chrome.writeRequest": "gpii.chrome.writeReceipt"
     },
     postMessage: function (msg) {
         // automatically post a receipt
         var reply = fluid.copy(msg);
 
         // convert READ/WRITE to READ_RECEIPT/WRITE_RECEIPT
-        reply.type = fluid.get(gpii.tests.mockPort.requestToReceiptMap, msg.type) || msg.type;
+        reply.type = gpii.tests.mockPort.requestToReceiptMap[ msg.type] || msg.type;
 
         fluid.each(gpii.tests.mockPort.onMessage.listeners, function (fn) {
             fn(reply);
@@ -113,7 +113,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
             test: "testValue"
         },
         message: {
-            type: "UIO_PLUS_WRITE_REQUEST",
+            type: "gpii.chrome.writeRequest",
             payload: "{that}.options.testOpts.model"
         }
     },

@@ -83,7 +83,7 @@
                     listeners: {
                         "onIncomingRead.handle": {
                             listener: "gpii.chrome.portBinding.requestNotAccepted",
-                            args: ["{that}", "UIO_PLUS_READ_RECEIPT", "{arguments}.0"]
+                            args: ["{that}", "gpii.chrome.readReceipt", "{arguments}.0"]
                         }
                     },
                     invokers: {

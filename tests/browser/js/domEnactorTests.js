@@ -726,17 +726,17 @@
             testOpts: {
                 messages: {
                     one: {
-                        type: "UIO_PLUS_WRITE_REQUEST",
+                        type: "gpii.chrome.writeRequest",
                         id: "test-1",
                         payload: {settings: {testOne: 1}}
                     },
                     two: {
-                        type: "UIO_PLUS_WRITE_REQUEST",
+                        type: "gpii.chrome.writeRequest",
                         id: "test-2",
                         payload: {settings: {testTwo: 2}}
                     },
                     captionsEnabled: {
-                        type: "UIO_PLUS_WRITE_REQUEST",
+                        type: "gpii.chrome.writeRequest",
                         id: "test-4",
                         payload: {settings: {captionsEnabled: true, other: "test"}}
                     }

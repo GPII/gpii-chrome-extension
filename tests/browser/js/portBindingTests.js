@@ -83,28 +83,28 @@
                 posted: {pref: "posted"},
                 messages: {
                     incomingRead: {
-                        type: "UIO_PLUS_READ_REQUEST",
+                        type: "gpii.chrome.readRequest",
                         id: "incomingRead-1",
                         payload: {
                             toReturn: {value: "test"}
                         }
                     },
                     returnedReadReceipt: {
-                        type: "UIO_PLUS_READ_RECEIPT",
+                        type: "gpii.chrome.readReceipt",
                         id: "incomingRead-1",
                         payload: {
                             value: "test"
                         }
                     },
                     incomingReadRejected: {
-                        type: "UIO_PLUS_READ_REQUEST",
+                        type: "gpii.chrome.readRequest",
                         id: "incomingRead-2",
                         payload: {
                             reject: true
                         }
                     },
                     returnedRejectedReadReceipt: {
-                        type: "UIO_PLUS_READ_RECEIPT",
+                        type: "gpii.chrome.readReceipt",
                         id: "incomingRead-2",
                         payload: {
                             reject: true
@@ -114,28 +114,28 @@
                         }
                     },
                     incomingWrite: {
-                        type: "UIO_PLUS_WRITE_REQUEST",
+                        type: "gpii.chrome.writeRequest",
                         id: "incomingRead-1",
                         payload: {
                             toReturn: {value: "test"}
                         }
                     },
                     returnedWriteReceipt: {
-                        type: "UIO_PLUS_WRITE_RECEIPT",
+                        type: "gpii.chrome.writeReceipt",
                         id: "incomingRead-1",
                         payload: {
                             value: "test"
                         }
                     },
                     incomingWriteRejected: {
-                        type: "UIO_PLUS_WRITE_REQUEST",
+                        type: "gpii.chrome.writeRequest",
                         id: "incomingRead-2",
                         payload: {
                             reject: true
                         }
                     },
                     returnedRejectedWriteReceipt: {
-                        type: "UIO_PLUS_WRITE_RECEIPT",
+                        type: "gpii.chrome.writeReceipt",
                         id: "incomingRead-2",
                         payload: {
                             reject: true
@@ -145,28 +145,28 @@
                         }
                     },
                     readRequest: {
-                        type: "UIO_PLUS_READ_REQUEST",
+                        type: "gpii.chrome.readRequest",
                         // the id is created with a unique number, so it will not be tested
                         payload: {}
                     },
                     readRequestReceipt: {
-                        type: "UIO_PLUS_READ_RECEIPT",
+                        type: "gpii.chrome.readReceipt",
                         // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                         payload: {pref: "one"}
                     },
                     readRequestRejectedReceipt: {
-                        type: "UIO_PLUS_READ_RECEIPT",
+                        type: "gpii.chrome.readReceipt",
                         // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                         payload: {pref: "one"},
                         error: {message: "rejected"}
                     },
                     writeRequest: {
-                        type: "UIO_PLUS_WRITE_REQUEST",
+                        type: "gpii.chrome.writeRequest",
                         // the id is created with a unique number, so it will not be tested
                         payload: {pref: "posted"}
                     },
                     writeRequestReceipt: {
-                        type: "UIO_PLUS_WRITE_RECEIPT",
+                        type: "gpii.chrome.writeReceipt",
                         // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                         payload: {pref: "posted"}
                     }
@@ -358,17 +358,17 @@
                 },
                 messages: {
                     readRequestReceipt: {
-                        type: "UIO_PLUS_READ_RECEIPT",
+                        type: "gpii.chrome.readReceipt",
                         // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                         payload: "{that}.options.testOpts.prefs"
                     },
                     writeRequest: {
-                        type: "UIO_PLUS_WRITE_REQUEST",
+                        type: "gpii.chrome.writeRequest",
                         // the id is created with a unique number, so it will not be tested
                         payload: "{that}.options.testOpts.prefs"
                     },
                     writeRequestReceipt: {
-                        type: "UIO_PLUS_WRITE_RECEIPT",
+                        type: "gpii.chrome.writeReceipt",
                         // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                         payload: "{that}.options.testOpts.prefs"
                     }
