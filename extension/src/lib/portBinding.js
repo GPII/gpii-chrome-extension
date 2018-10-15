@@ -81,28 +81,27 @@
             onIncomingWriteReceipt: null,
             onDisconnect: null
         },
-        // Defines which event handles which message type(s). May specify an array of types.
-        // Message types that aren't defined here are ignored.
-        sentMessageTypes: {
+        // Defines which types of messages may be handled and/or sent
+        messageTypes: {
             "readRequest": "gpii.chrome.readRequest",
             "readReceipt": "gpii.chrome.readReceipt",
             "writeRequest": "gpii.chrome.writeRequest",
             "writeReceipt": "gpii.chrome.writeReceipt"
         },
-        // Defines which event handles which message type(s). May specify an array of types.
-        // Message types that aren't defined here are ignored.
-        messageHandlingMap: {
-            "onIncomingRead": "gpii.chrome.readRequest",
-            "onIncomingReadReceipt": "gpii.chrome.readReceipt",
-            "onIncomingWrite": "gpii.chrome.writeRequest",
-            "onIncomingWriteReceipt": "gpii.chrome.writeReceipt"
-        },
-        // an inverse lookup for the messageHandlingMap
-        messageForwardingMap: {
+        // an inverse lookup for the messageTypes
+        messageTypeInverseMap: {
             expander: {
                 funcName: "gpii.chrome.portBinding.invertMap",
-                args: ["{that}.options.messageHandlingMap"]
+                args: ["{that}.options.messageTypes"]
             }
+        },
+        // Defines which message types are handled by which event.
+        // Message types that aren't defined here are ignored.
+        messageHandlingMap: {
+            readRequest: "onIncomingRead",
+            readReceipt: "onIncomingReadReceipt",
+            writeRequest: "onIncomingWrite",
+            writeReceipt: "onIncomingWriteReceipt"
         },
         listeners: {
             "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents",
@@ -112,23 +111,23 @@
             },
             "onIncomingRead.handle": {
                 listener: "{that}.handleMessage",
-                args: ["{that}.options.sentMessageTypes.readReceipt", "{arguments}.0", "{that}.handleRead"]
+                args: ["{that}.options.messageTypes.readReceipt", "{arguments}.0", "{that}.handleRead"]
             },
             "onIncomingReadReceipt.handle": "{that}.handleReceipt",
             "onIncomingWrite.handle": {
                 listener: "{that}.handleMessage",
-                args: ["{that}.options.sentMessageTypes.writeReceipt", "{arguments}.0", "{that}.handleWrite"]
+                args: ["{that}.options.messageTypes.writeReceipt", "{arguments}.0", "{that}.handleWrite"]
             },
             "onIncomingWriteReceipt.handle": "{that}.handleReceipt"
         },
         invokers: {
             read: {
                 funcName: "gpii.chrome.portBinding.postRequest",
-                args: ["{that}", "{that}.options.sentMessageTypes.readRequest", "{arguments}.0"]
+                args: ["{that}", "{that}.options.messageTypes.readRequest", "{arguments}.0"]
             },
             write: {
                 funcName: "gpii.chrome.portBinding.postRequest",
-                args: ["{that}", "{that}.options.sentMessageTypes.writeRequest", "{arguments}.0"]
+                args: ["{that}", "{that}.options.messageTypes.writeRequest", "{arguments}.0"]
             },
             postReceipt: {
                 funcName: "gpii.chrome.portBinding.postReceipt",
@@ -159,8 +158,8 @@
     });
 
     /**
-     * Reverses a mapping object. If the value (rhs) contained an array. A new entry for each item, pointing at the same
-     * original property (rhs), will be created. The original is preserved.
+     * Reverses a mapping object, swapping the values (rhs) and props (lhs). The original is preserved.
+     * {"a": "b"} -> {"b": "a"}
      *
      * @param {Object} map - the mapping object to invert
      *
@@ -168,11 +167,8 @@
      */
     gpii.chrome.portBinding.invertMap = function (map) {
         var inverted = {};
-        fluid.each(map, function (values, prop) {
-            values = fluid.makeArray(values);
-            fluid.each(values, function (value) {
-                inverted[value] = prop;
-            });
+        fluid.each(map, function (value, prop) {
+            inverted[value] = prop;
         });
         return inverted;
     };
@@ -282,7 +278,8 @@
      * @param {Object} data - the data to handle from the incoming port message
      */
     gpii.chrome.portBinding.handleIncoming = function (that, data) {
-        var eventName = that.options.messageForwardingMap[data.type];
+        var messageType = that.options.messageTypeInverseMap[data.type];
+        var eventName = that.options.messageHandlingMap[messageType];
 
         if (eventName) {
             that.events[eventName].fire(data);
