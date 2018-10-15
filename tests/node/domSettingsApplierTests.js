@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -22,6 +22,7 @@ var gpii = fluid.registerNamespace("gpii");
 
 require("./testUtils.js");
 require("../../extension/src/lib/chromeEvented.js");
+require("../../extension/src/lib/portBinding.js");
 require("../../extension/src/lib/domSettingsApplier.js");
 
 fluid.defaults("gpii.tests.domSettingsApplierTests", {
@@ -38,7 +39,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTests", {
                         options: {
                             listeners: {
                                 "onCreate.passMessage": {
-                                    "this": "{that}.options.port.onMessage",
+                                    "this": "{that}.options.port.onPost",
                                     method: "addListener",
                                     args: ["{domSettingsApplier}.events.messagePosted.fire"]
                                 }
@@ -69,8 +70,29 @@ gpii.tests.mockPort = {
         },
         listeners: []
     },
+    // this event is just for testing
+    onPost: {
+        addListener: function (fn) {
+            gpii.tests.mockPort.onPost.listeners.push(fn);
+        },
+        listeners: []
+    },
+    requestToReceiptMap: {
+        "gpii.chrome.readRequest": "gpii.chrome.readReceipt",
+        "gpii.chrome.writeRequest": "gpii.chrome.writeReceipt"
+    },
     postMessage: function (msg) {
+        // automatically post a receipt
+        var reply = fluid.copy(msg);
+
+        // convert READ/WRITE to READ_RECEIPT/WRITE_RECEIPT
+        reply.type = gpii.tests.mockPort.requestToReceiptMap[ msg.type] || msg.type;
+
         fluid.each(gpii.tests.mockPort.onMessage.listeners, function (fn) {
+            fn(reply);
+        });
+        // this is just for testing.
+        fluid.each(gpii.tests.mockPort.onPost.listeners, function (fn) {
             fn(msg);
         });
     },
@@ -89,13 +111,17 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
     testOpts: {
         model: {
             test: "testValue"
+        },
+        message: {
+            type: "gpii.chrome.writeRequest",
+            payload: "{that}.options.testOpts.model"
         }
     },
     modules: [{
         name: "GPII Chrome Extension domSettingsApplier unit tests",
         tests: [{
             name: "Port Connection",
-            expect: 4,
+            expect: 5,
             sequence: [{
                 func: "gpii.tests.utils.assertEventRelayBound",
                 args: ["{domSettingsApplier}", "{domSettingsApplier}.options.eventRelayMap"]
@@ -112,8 +138,8 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
                 args: ["test", "{that}.options.testOpts.model.test"]
             }, {
                 event: "{domSettingsApplier}.events.messagePosted",
-                listener: "jqUnit.assertDeepEq",
-                args: ["The port's onMessage event was fired", "{that}.options.testOpts.model", "{arguments}.0"]
+                listener: "gpii.tests.domSettingsApplierTester.verifyPostedMessage",
+                args: ["{that}.options.testOpts.message", "{arguments}.0"]
             }, {
                 func: "{domSettingsApplier}.destroy"
             }, {
@@ -125,6 +151,11 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
         }]
     }]
 });
+
+gpii.tests.domSettingsApplierTester.verifyPostedMessage = function (expectedPost, message) {
+    jqUnit.assertEquals("The posted message type is correct", expectedPost.type, message.type);
+    jqUnit.assertDeepEq("The posted message payload is correct", expectedPost.payload, message.payload);
+};
 
 fluid.test.runTests([
     "gpii.tests.domSettingsApplierTests"

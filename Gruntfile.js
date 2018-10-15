@@ -2,7 +2,7 @@
  * GPII Chrome Extension for Google Chrome
  *
  * Copyright 2016 RtF-US
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -21,6 +21,7 @@ module.exports = function (grunt) {
         extensionLib: [
             "node_modules/infusion/src/framework/core/js/jquery.standalone.js",
             "node_modules/infusion/src/framework/core/js/Fluid.js",
+            "node_modules/infusion/src/framework/core/js/FluidPromises.js",
             "node_modules/infusion/src/framework/core/js/FluidDebugging.js",
             "node_modules/infusion/src/framework/core/js/FluidIoC.js",
             "node_modules/infusion/src/framework/core/js/DataBinding.js",
@@ -41,9 +42,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/renderer/js/fluidParser.js",
             "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
             "node_modules/infusion/src/framework/enhancement/js/ProgressiveEnhancement.js",
-            "node_modules/infusion/src/framework/preferences/js/Enactors.js",
-            "node_modules/infusion/src/framework/preferences/js/CaptionsEnactor.js",
-            "extension/src/lib/captionsEnactor.js"
+            "node_modules/infusion/src/framework/preferences/js/Enactors.js"
         ],
         contentScriptsLib: [
             "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
@@ -72,13 +71,13 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/components/textToSpeech/js/TextToSpeech.js",
             "node_modules/infusion/src/components/orator/js/Orator.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingEnactor.js",
-            "node_modules/infusion/src/framework/preferences/js/LetterSpaceEnactor.js",
-            "node_modules/infusion/src/framework/preferences/js/CaptionsEnactor.js"
+            "node_modules/infusion/src/framework/preferences/js/LetterSpaceEnactor.js"
         ],
         adjustersLib: [
             // jQuery
             "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
-            "node_modules/infusion/src/lib/jquery/ui/js/jquery-ui.js",
+            "node_modules/infusion/src/lib/jquery/ui/js/version.js",
+            "node_modules/infusion/src/lib/jquery/ui/js/keycode.js",
 
             // Infusion Core
             "node_modules/infusion/src/framework/core/js/Fluid.js",
@@ -104,7 +103,6 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/renderer/js/RendererUtilities.js",
 
             // Infusion Components
-            "node_modules/infusion/src/components/tableOfContents/js/TableOfContents.js",
             "node_modules/infusion/src/components/textfieldControl/js/Textfield.js",
             "node_modules/infusion/src/components/textfieldControl/js/TextfieldStepper.js",
             "node_modules/infusion/src/components/switch/js/Switch.js",
@@ -119,9 +117,6 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingPanel.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpacePanel.js",
             "node_modules/infusion/src/framework/preferences/js/CaptionsPanel.js",
-            "node_modules/infusion/src/framework/preferences/js/Enactors.js",
-            "node_modules/infusion/src/framework/preferences/js/LetterSpaceEnactor.js",
-            "node_modules/infusion/src/framework/preferences/js/CaptionsEnactor.js",
             "node_modules/infusion/src/framework/preferences/js/StarterGrades.js",
             "node_modules/infusion/src/framework/preferences/js/ArrowScrolling.js",
             "node_modules/infusion/src/framework/preferences/js/SeparatedPanelPrefsEditor.js",
@@ -168,6 +163,7 @@ module.exports = function (grunt) {
         ],
         extension: [
             "extension/src/lib/chromeEvented.js",
+            "extension/src/lib/portBinding.js",
             "extension/src/lib/domSettingsApplier.js",
             "extension/src/lib/highContrast.js",
             "extension/src/lib/chromeSettings.js",
@@ -243,6 +239,10 @@ module.exports = function (grunt) {
                     {
                         src: ["extension/src/lib/captionsEnactor.js"],
                         dest: "build/src/captionsEnactor.js"
+                    },
+                    {
+                        src: ["extension/src/lib/portBinding.js"],
+                        dest: "build/src/portBinding.js"
                     },
                     {
                         expand: true,

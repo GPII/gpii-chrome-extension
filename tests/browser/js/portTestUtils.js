@@ -27,7 +27,13 @@
                     },
                     listeners: []
                 },
-                postMessage: sinon.spy()
+                onDisconnect: {
+                    addListener: function (handler) {
+                        port.onDisconnect.listeners.push(handler);
+                    },
+                    listeners: []
+                },
+                postMessage: sinon.stub()
             };
             return port;
         };
@@ -35,7 +41,12 @@
         gpii.tests.mockPort.trigger = {
             onMessage: function (port, msg) {
                 fluid.each(port.onMessage.listeners, function (handler) {
-                    handler(msg);
+                    handler(msg, port);
+                });
+            },
+            onDisconnect: function (port) {
+                fluid.each(port.onDisconnect.listeners, function (handler) {
+                    handler(port);
                 });
             }
         };
