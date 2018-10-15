@@ -53,6 +53,12 @@
         - "gpii.chrome.readReceipt"
         - "gpii.chrome.writeRequest"
         - "gpii.chrome.writeReceipt"
+
+        By default the following message types are sent.
+        - "gpii.chrome.readRequest"
+        - "gpii.chrome.readReceipt"
+        - "gpii.chrome.writeRequest"
+        - "gpii.chrome.writeReceipt"
     */
 
     fluid.defaults("gpii.chrome.portBinding", {
@@ -75,13 +81,28 @@
             onIncomingWriteReceipt: null,
             onDisconnect: null
         },
-        // defines which event handles which a message type
-        // message types that aren't defined here are ignored.
+        // Defines which event handles which message type(s). May specify an array of types.
+        // Message types that aren't defined here are ignored.
+        sentMessageTypes: {
+            "readRequest": "gpii.chrome.readRequest",
+            "readReceipt": "gpii.chrome.readReceipt",
+            "writeRequest": "gpii.chrome.writeRequest",
+            "writeReceipt": "gpii.chrome.writeReceipt"
+        },
+        // Defines which event handles which message type(s). May specify an array of types.
+        // Message types that aren't defined here are ignored.
+        messageHandlingMap: {
+            "onIncomingRead": "gpii.chrome.readRequest",
+            "onIncomingReadReceipt": "gpii.chrome.readReceipt",
+            "onIncomingWrite": "gpii.chrome.writeRequest",
+            "onIncomingWriteReceipt": "gpii.chrome.writeReceipt"
+        },
+        // an inverse lookup for the messageHandlingMap
         messageForwardingMap: {
-            "gpii.chrome.readRequest": "onIncomingRead",
-            "gpii.chrome.readReceipt": "onIncomingReadReceipt",
-            "gpii.chrome.writeRequest": "onIncomingWrite",
-            "gpii.chrome.writeReceipt": "onIncomingWriteReceipt"
+            expander: {
+                funcName: "gpii.chrome.portBinding.invertMap",
+                args: ["{that}.options.messageHandlingMap"]
+            }
         },
         listeners: {
             "onCreate.bindPortEvents": "gpii.chrome.portBinding.bindPortEvents",
@@ -91,23 +112,23 @@
             },
             "onIncomingRead.handle": {
                 listener: "{that}.handleMessage",
-                args: ["gpii.chrome.readReceipt", "{that}.handleRead", "{arguments}.0"]
+                args: ["{that}.options.sentMessageTypes.readReceipt", "{arguments}.0", "{that}.handleRead"]
             },
             "onIncomingReadReceipt.handle": "{that}.handleReceipt",
             "onIncomingWrite.handle": {
                 listener: "{that}.handleMessage",
-                args: ["gpii.chrome.writeReceipt", "{that}.handleWrite", "{arguments}.0"]
+                args: ["{that}.options.sentMessageTypes.writeReceipt", "{arguments}.0", "{that}.handleWrite"]
             },
             "onIncomingWriteReceipt.handle": "{that}.handleReceipt"
         },
         invokers: {
             read: {
                 funcName: "gpii.chrome.portBinding.postRequest",
-                args: ["{that}", "gpii.chrome.readRequest", "{arguments}.0"]
+                args: ["{that}", "{that}.options.sentMessageTypes.readRequest", "{arguments}.0"]
             },
             write: {
                 funcName: "gpii.chrome.portBinding.postRequest",
-                args: ["{that}", "gpii.chrome.writeRequest", "{arguments}.0"]
+                args: ["{that}", "{that}.options.sentMessageTypes.writeRequest", "{arguments}.0"]
             },
             postReceipt: {
                 funcName: "gpii.chrome.portBinding.postReceipt",
@@ -116,6 +137,10 @@
             setPort: {
                 funcName: "gpii.chrome.portBinding.setPort",
                 args: [{name: "{that}.options.portName"}]
+            },
+            rejectMessage: {
+                funcName: "gpii.chrome.portBinding.requestNotAccepted",
+                args: ["{that}", "{arguments}.0", "{arguments}.1"]
             },
             handleMessage: {
                 funcName: "gpii.chrome.portBinding.handleMessage",
@@ -132,6 +157,25 @@
             handleWrite: "fluid.notImplemented"
         }
     });
+
+    /**
+     * Reverses a mapping object. If the value (rhs) contained an array. A new entry for each item, pointing at the same
+     * original property (rhs), will be created. The original is preserved.
+     *
+     * @param {Object} map - the mapping object to invert
+     *
+     * @return {Object} - a new inverted map will be returned
+     */
+    gpii.chrome.portBinding.invertMap = function (map) {
+        var inverted = {};
+        fluid.each(map, function (values, prop) {
+            values = fluid.makeArray(values);
+            fluid.each(values, function (value) {
+                inverted[value] = prop;
+            });
+        });
+        return inverted;
+    };
 
     /**
      * An object which allows two way communication with other pages.
@@ -267,12 +311,12 @@
      *
      * @param {Component} that - an instance of `gpii.chrome.portBinding`
      * @param {String} type - identifies the type of message for listeners on the other end.
-     * @param {MessageHandler} handleFn - a function to handle the message
      * @param {Object} data - the incoming data from the message.
+     * @param {MessageHandler} handleFn - a function to handle the message
      *
      * @return {Promise} - a promise that is resolved/rejected based on the result of `handleFn` execution
      */
-    gpii.chrome.portBinding.handleMessage = function (that, type, handleFn, data) {
+    gpii.chrome.portBinding.handleMessage = function (that, type, data, handleFn) {
         var promise = fluid.promise();
 
         promise.then(function (value) {
@@ -325,12 +369,10 @@
         listeners: {
             "onRead.impl": "{that}.read",
             "onIncomingRead.handle": {
-                listener: "gpii.chrome.portBinding.requestNotAccepted",
-                args: ["{that}", "gpii.chrome.readReceipt", "{arguments}.0"]
+                listener: "{that}.rejectMessage"
             },
             "onIncomingWrite.handle": {
-                listener: "gpii.chrome.portBinding.requestNotAccepted",
-                args: ["{that}", "gpii.chrome.writeReceipt", "{arguments}.0"]
+                listener: "{that}.rejectMessage"
             }
         },
         invokers: {

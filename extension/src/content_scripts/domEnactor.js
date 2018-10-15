@@ -82,8 +82,7 @@
                     portName: "contentScript",
                     listeners: {
                         "onIncomingRead.handle": {
-                            listener: "gpii.chrome.portBinding.requestNotAccepted",
-                            args: ["{that}", "gpii.chrome.readReceipt", "{arguments}.0"]
+                            listener: "{that}.rejectMessage"
                         }
                     },
                     invokers: {
