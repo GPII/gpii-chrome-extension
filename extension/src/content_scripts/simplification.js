@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -17,12 +17,9 @@
     var gpii = fluid.registerNamespace("gpii");
 
     fluid.defaults("gpii.simplify", {
-        gradeNames: ["fluid.viewComponent"],
+        gradeNames: ["gpii.chrome.contentView"],
         selectors: {
             navToggle: ".gpiic-simplify-navToggle",
-            article: "article, [role~='article'], .article, #article",
-            main: "main, [role~='main'], .main, #main",
-            genericContent: ".content, #content, .body:not('body'), #body:not('body')",
             nav: "nav, [role~='navigation'], .navigation, .nav, #nav, #navigation",
             search: "[role~='search'], [type~='search']",
             visible: ".gpiic-simplify-visible"
@@ -36,6 +33,14 @@
         },
         styles: {
             navToggle: "gpii-simplify-navToggle"
+        },
+        members: {
+            nav: {
+                expander: {
+                    funcName: "{that}.locateOutOfContent",
+                    args: ["nav"]
+                }
+            }
         },
         model: {
             simplify: false,
@@ -68,15 +73,6 @@
         },
         injectNavToggle: true,
         invokers: {
-            findContent: {
-                funcName: "gpii.chrome.utils.findFirstSelector",
-                // returns an empty jQuery element by default to ensure jQuery methods are present
-                args: ["{that}", ["article", "main", "genericContent"], $()]
-            },
-            findNav: {
-                funcName: "gpii.simplify.findNav",
-                args: ["{that}"]
-            },
             set: {
                 funcName: "gpii.simplify.set",
                 args: ["{that}", "{arguments}.0"]
@@ -88,17 +84,10 @@
         }
     });
 
-    gpii.simplify.findNav = function (that) {
-        var content = that.findContent();
-        var navInContent = content.find(that.options.selectors.nav);
-        return that.locate("nav").not(navInContent);
-    };
-
     gpii.simplify.injectToggle = function (that, content) {
         var navToggle = that.locate("navToggle");
-        var nav = that.findNav();
 
-        if (!navToggle.length && nav.length) {
+        if (!navToggle.length && that.nav.length) {
             navToggle = $(that.options.markup.navToggle);
             navToggle.attr("aria-pressed", that.model.showNav);
             navToggle.text(that.options.strings.navToggle);
@@ -117,8 +106,6 @@
     };
 
     gpii.simplify.set = function (that, state) {
-        var content = that.findContent();
-
         if (!that.observer) {
             var selectors = [];
             fluid.each(that.options.alwaysVisible, function (selectorName) {
@@ -141,21 +128,21 @@
             });
         }
 
-        if (state && content.length) {
-            content.css("visibility", "visible");
+        if (state && that.content.length) {
+            that.content.css("visibility", "visible");
             fluid.each(that.options.alwaysVisible, function (selector) {
                 that.locate(selector).css("visibility", "visible");
             });
             that.container.css("visibility", "hidden");
             if (that.options.injectNavToggle) {
-                gpii.simplify.injectToggle(that, content);
+                gpii.simplify.injectToggle(that, that.content);
             }
             that.locate("navToggle").show();
             that.observer.observe(that.container[0], {childList: true, subtree: true });
-        } else if (content.length) {
+        } else if (that.content.length) {
             that.locate("navToggle").hide();
             that.container.css("visibility", "");
-            content.css("visibility", "");
+            that.content.css("visibility", "");
             fluid.each(that.options.alwaysVisible, function (selector) {
                 that.locate(selector).css("visibility", "");
             });
@@ -170,13 +157,12 @@
     };
 
     gpii.simplify.toggleNav = function (that, state) {
-        var nav = that.findNav();
         var navToggle = that.locate("navToggle");
         if (state && that.model.simplify) {
-            nav.css("visibility", "visible");
+            that.nav.css("visibility", "visible");
             navToggle.attr("aria-pressed", state);
         } else {
-            nav.css("visibility", "");
+            that.nav.css("visibility", "");
             navToggle.attr("aria-pressed", state);
         }
     };

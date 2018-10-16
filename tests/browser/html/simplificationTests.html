@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="../../../node_modules/infusion/tests/lib/qunit/addons/composite/qunit-composite.css">
 
         <script src="../../../node_modules/infusion/dist/infusion-all.js"></script>
-        <script src="../../../extension/src/content_scripts/utils.js"></script>
+        <script src="../../../extension/src/content_scripts/contentView.js"></script>
         <script src="../../../extension/src/content_scripts/simplification.js"></script>
 
         <script src="../../../node_modules/infusion/tests/lib/qunit/js/qunit.js"></script>
@@ -46,27 +46,6 @@
 
         <div class="gpiic-simplify-init-noContent">
             <div>No discernible content</div>
-        </div>
-
-        <div class="gpiic-simplify-allContent">
-            <div class="gpiic-simplify-article">
-                <article>article element</article>
-                <div role="article">article role</div>
-                <div class="article">article class</div>
-                <div id="article">article id</div>
-            </div>
-            <div class="gpiic-simplify-main">
-                <main>main element</main>
-                <div role="main">main role</div>
-                <div class="main">main class</div>
-                <div id="main">main id</div>
-            </div>
-            <div class="gpiic-simplify-genericContent">
-                <div class="content">content class</div>
-                <div id="content">content id</div>
-                <div class="body">body class</div>
-                <div id="body">body id</div>
-            </div>
         </div>
 
         <div class="gpiic-simplify-navigation">

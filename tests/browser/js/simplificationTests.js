@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -62,51 +62,14 @@
             jqUnit.assertValue("The simplify enactor should have initialized", that);
             jqUnit.assertFalse("Visibility styling on the container should not have been set", that.container.attr("style"));
             jqUnit.assertEquals("The navigation toggle button should not be inserted", 0, navToggle.length);
-            jqUnit.assertEquals("Should not have found any content elements", 0, that.findContent().length);
-        });
-
-        jqUnit.test("findContent - article", function () {
-            jqUnit.expect(1);
-            var that = gpii.simplify(".gpiic-simplify-article");
-            var content = that.findContent();
-
-            jqUnit.assertEquals("Should have found all article like elements", 4, content.length);
-        });
-
-        jqUnit.test("findContent - main", function () {
-            jqUnit.expect(1);
-            var that = gpii.simplify(".gpiic-simplify-main");
-            var content = that.findContent();
-
-            jqUnit.assertEquals("Should have found all main like elements", 4, content.length);
-        });
-
-        jqUnit.test("findContent - generic", function () {
-            jqUnit.expect(1);
-            var that = gpii.simplify(".gpiic-simplify-genericContent");
-            var content = that.findContent();
-
-            jqUnit.assertEquals("Should have found all generic content elements", 4, content.length);
-        });
-
-        jqUnit.test("findContent - all content", function () {
-            jqUnit.expect(5);
-            var that = gpii.simplify(".gpiic-simplify-allContent");
-            var content = that.findContent();
-
-            jqUnit.assertEquals("Should have only found all article like elements", 4, content.length);
-
-            content.each(function (idx, node) {
-                jqUnit.assertTrue("The elemen at index " + idx + " satisfies the article requirements", $(node).is(that.options.selectors.article));
-            });
+            jqUnit.assertEquals("Should not have found any content elements", 0, that.content.length);
         });
 
         jqUnit.test("findNav - generic", function () {
             jqUnit.expect(1);
             var that = gpii.simplify(".gpiic-simplify-navigation");
-            var nav = that.findNav();
 
-            jqUnit.assertEquals("Should have found all of the nav elements", 6, nav.length);
+            jqUnit.assertEquals("Should have found all of the nav elements", 6, that.nav.length);
         });
 
 
@@ -132,7 +95,7 @@
 
         gpii.tests.simplifyTests.assertSimplified = function (that) {
             jqUnit.assertEquals("The container should be set to hidden", "hidden", that.container.css("visibility"));
-            that.findContent().each(function (idx, node) {
+            that.content.each(function (idx, node) {
                 jqUnit.isVisible("The content element at index " + idx + " should be visible", node);
             });
             fluid.each(that.options.alwaysVisible, function (selector) {
@@ -149,14 +112,14 @@
         };
 
         gpii.tests.simplifyTests.assertNavShown = function (that) {
-            that.findNav().each(function (idx, node) {
+            that.nav.each(function (idx, node) {
                 jqUnit.isVisible("The navigation element at index " + idx + " should be visible", node);
             });
             jqUnit.assertEquals("The aria-pressed state for the nav toggle should be set to true", "true", that.locate("navToggle").attr("aria-pressed"));
         };
 
         gpii.tests.simplifyTests.assertNavNotShown = function (that) {
-            that.findNav().each(function (idx, node) {
+            that.nav.each(function (idx, node) {
                 jqUnit.assertEquals("The navigation element at index " + idx + " should be set to hidden", "hidden", $(node).css("visibility"));
             });
             jqUnit.assertEquals("The aria-pressed state for the nav toggle should be set to false", "false", that.locate("navToggle").attr("aria-pressed"));

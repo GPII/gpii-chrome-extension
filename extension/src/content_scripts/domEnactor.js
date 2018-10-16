@@ -315,7 +315,7 @@
 
     // Table of contents
     fluid.defaults("gpii.chrome.enactor.tableOfContents", {
-        gradeNames: ["fluid.prefs.enactor.tableOfContents"],
+        gradeNames: ["gpii.chrome.contentView", "fluid.prefs.enactor.tableOfContents"],
         tocTemplate: {
             // Converts the relative path to a fully-qualified URL in the extension.
             expander: {
@@ -329,6 +329,7 @@
             main: "main, [role~='main'], .main, #main",
             genericContent: ".content, #content, .body:not('body'), #body:not('body')"
         },
+        defaultContent: "{that}.container",
         // Handle the initial model value when the component creation cycle completes instead of
         // relying on model listeners. See https://issues.fluidproject.org/browse/FLUID-5519
         listeners: {
@@ -345,10 +346,6 @@
             injectToCContainer: {
                 funcName: "gpii.chrome.enactor.tableOfContents.injectToCContainer",
                 args: ["{that}"]
-            },
-            findContentRegion: {
-                funcName: "gpii.chrome.utils.findFirstSelector",
-                args: ["{that}", ["article", "main", "genericContent"], "{that}.container"]
             }
         },
         markup: {
@@ -362,26 +359,24 @@
 
     gpii.chrome.enactor.tableOfContents.injectToCContainer = function (that) {
         if (!that.locate("tocContainer").length) {
-            var contentRegion = that.findContentRegion();
-            contentRegion.prepend(that.options.markup.tocContainer);
+            that.content.prepend(that.options.markup.tocContainer);
         }
     };
 
     // Self Voicing
     fluid.defaults("gpii.chrome.enactor.selfVoicing", {
-        gradeNames: ["fluid.prefs.enactor.selfVoicing"],
+        gradeNames: ["gpii.chrome.contentView", "fluid.prefs.enactor.selfVoicing"],
         selectors: {
-            article: "article, [role~='article'], .article, #article",
-            main: "main, [role~='main'], .main, #main",
-            genericContent: ".content, #content, .body:not('body'), #body:not('body')",
             controllerParentContainer: ".flc-prefs-selfVoicingWidget",
             domReaderContent: ".flc-orator-content"
         },
+        domReaderContent: ["domReaderContent", "article", "main", "genericContent"],
+        controllerParentContainer: ["controllerParentContainer", "article", "main", "genericContent"],
         distributeOptions: [{
             record: {
                 expander: {
-                    funcName: "gpii.chrome.utils.findFirstSelector",
-                    args: ["{selfVoicing}", ["controllerParentContainer", "article", "main", "genericContent"], "{selfVoicing}.container"]
+                    funcName: "gpii.chrome.contentView.findFirstSelector",
+                    args: ["{selfVoicing}", "{selfVoicing}.options.controllerParentContainer", "{selfVoicing}.container"]
                 }
             },
             target: "{that orator > controller}.options.parentContainer",
@@ -389,8 +384,8 @@
         }, {
             record: {
                 expander: {
-                    funcName: "gpii.chrome.utils.findFirstSelector",
-                    args: ["{selfVoicing}", ["domReaderContent", "article", "main", "genericContent"], "{selfVoicing}.container"]
+                    funcName: "gpii.chrome.contentView.findFirstSelector",
+                    args: ["{selfVoicing}", "{selfVoicing}.options.domReaderContent", "{selfVoicing}.container"]
                 }
             },
             target: "{that orator}.options.components.domReader.container",
