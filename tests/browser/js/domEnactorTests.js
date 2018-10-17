@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -782,9 +782,21 @@
             gradeNames: ["fluid.test.testCaseHolder"],
             testOpts: {
                 messages: {
-                    one: {settings: {testOne: 1}},
-                    two: {settings: {testTwo: 2}},
-                    captionsEnabled: {settings: {captionsEnabled: true, other: "test"}}
+                    one: {
+                        type: "gpii.chrome.writeRequest",
+                        id: "test-1",
+                        payload: {settings: {testOne: 1}}
+                    },
+                    two: {
+                        type: "gpii.chrome.writeRequest",
+                        id: "test-2",
+                        payload: {settings: {testTwo: 2}}
+                    },
+                    captionsEnabled: {
+                        type: "gpii.chrome.writeRequest",
+                        id: "test-4",
+                        payload: {settings: {captionsEnabled: true, other: "test"}}
+                    }
                 },
                 expectedMessage: {captionsEnabled: true}
             },
@@ -810,23 +822,23 @@
                         args: ["{domEnactor}"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.one"]
+                        args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.one"]
                     }, {
                         event: "{domEnactor}.events.onIncomingSettings",
                         listener: "jqUnit.assertDeepEq",
                         priority: "last:testing",
-                        args: ["The onIncomingSettings event was fired", "{that}.options.testOpts.messages.one.settings", "{arguments}.0"]
+                        args: ["The onIncomingSettings event was fired", "{that}.options.testOpts.messages.one.payload.settings", "{arguments}.0"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.two"]
+                        args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.two"]
                     }, {
                         changeEvent: "{domEnactor}.applier.modelChanged",
                         path: "testTwo",
                         listener: "jqUnit.assertEquals",
-                        args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.settings.testTwo", "{domEnactor}.model.testTwo"]
+                        args: ["The model should have been updated after receiving the message", "{that}.options.testOpts.messages.two.payload.settings.testTwo", "{domEnactor}.model.testTwo"]
                     }, {
                         func: "gpii.tests.mockPort.trigger.onMessage",
-                        args: ["{domEnactor}.port", "{that}.options.testOpts.messages.captionsEnabled"]
+                        args: ["{domEnactor}.portBinding.port", "{that}.options.testOpts.messages.captionsEnabled"]
                     }, {
                         event: "{that}.events.onMessageReceived",
                         listener: "jqUnit.assertDeepEq",

@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -19,7 +19,7 @@
     //       have to know the model paths ahead of time.
     fluid.defaults("gpii.chrome.prefs.extensionPanel.store", {
         gradeNames: ["gpii.chrome.portBinding.store"],
-        connectionName: "extensionPanel",
+        portName: "extensionPanel",
         rules: {
             "panelIndex": "panelIndex",
             "preferences.fluid_prefs_captions": "settings.captionsEnabled",
@@ -108,9 +108,9 @@
                     },
                     listeners: {
                         // auto fetch changes from the store
-                        "{fluid.prefs.store}.events.onIncomingMessage": {
+                        "{fluid.prefs.store}.events.onIncomingRead": {
                             listener: "{that}.fetch",
-                            priority: "after:setLastIncomingMessage",
+                            priority: "after:handle",
                             namespace: "autoFetchFromStore"
                         },
                         "afterFetch.updateEnhancer": {
@@ -128,16 +128,6 @@
                             // can't use the autoSave option because we need to exclude init
                             listener: "{that}.save",
                             excludeSource: "init"
-                        },
-                        "{fluid.prefs.store}.model.preferences": {
-                            listener: "{that}.fetch",
-                            args: [], // removes the default arguments passed in by the model change event
-                            includeSource: "onIncomingMessage"
-                        },
-                        "{fluid.prefs.store}.model.panelIndex": {
-                            listener: "{that}.fetch",
-                            args: [], // removes the default arguments passed in by the model change event
-                            includeSource: "onIncomingMessage"
                         }
                     }
                 }
@@ -173,7 +163,7 @@
         gradeNames: ["fluid.prefs.panel.textSize"],
         preferenceMap: {
             "gpii.chrome.prefs.textSize": {
-                "model.value": "default",
+                "model.value": "value",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"
@@ -192,7 +182,7 @@
         gradeNames: ["fluid.prefs.panel.lineSpace"],
         preferenceMap: {
             "gpii.chrome.prefs.lineSpace": {
-                "model.value": "default",
+                "model.value": "value",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"
@@ -216,7 +206,7 @@
         gradeNames: ["fluid.prefs.panel.contrast"],
         preferenceMap: {
             "gpii.chrome.prefs.contrast": {
-                "model.value": "default",
+                "model.value": "value",
                 "controlValues.theme": "enum"
             }
         }
@@ -226,7 +216,7 @@
         gradeNames: ["fluid.prefs.panel.switchAdjuster"],
         preferenceMap: {
             "gpii.chrome.prefs.simplify": {
-                "model.value": "default"
+                "model.value": "value"
             }
         }
     });
@@ -235,7 +225,7 @@
         gradeNames: ["fluid.prefs.panel.switchAdjuster"],
         preferenceMap: {
             "gpii.chrome.prefs.clickToSelect": {
-                "model.value": "default"
+                "model.value": "value"
             }
         }
     });
@@ -244,7 +234,7 @@
         gradeNames: ["fluid.prefs.panel.themePicker"],
         preferenceMap: {
             "gpii.chrome.prefs.highlight": {
-                "model.value": "default",
+                "model.value": "value",
                 "controlValues.theme": "enum"
             }
         },

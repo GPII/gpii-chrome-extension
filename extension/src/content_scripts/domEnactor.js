@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid, chrome */
+/* global fluid */
 "use strict";
 
 (function ($, fluid) {
@@ -23,22 +23,21 @@
         gradeNames: ["fluid.contextAware", "fluid.viewComponent"],
         model: {
             // Accepted model values:
-            // contrastTheme: string,
-            // lineSpace: number,    // the multiplier to the current line space
-            // inputsLarger: boolean,
-            // selectionTheme: string,
-            // simplifiedUiEnabled: boolean,
-            // tableOfContents: boolean
+            // contrastTheme: String,
+            // lineSpace: Number,    // the multiplier to the current line space
+            // characterSpace: Number,
+            // inputsLargerEnabled: Boolean,
+            // selectionTheme: String,
+            // simplifiedUiEnabled: Boolean,
+            // tableOfContentsEnabled: Boolean,
+            // selfVoicingEnabled: Boolean,
+            // captionsEnabled: Boolean
         },
         events: {
             onIncomingSettings: null
         },
         listeners: {
-            "onCreate.bindPortEvents": "gpii.chrome.domEnactor.bindPortEvents",
-            "onIncomingSettings.updateModel": {
-                changePath: "",
-                value: "{arguments}.0"
-            },
+            "onIncomingSettings.updateModel": "{that}.updateModel",
             "onIncomingSettings.postSettingsToWebPage": "{that}.postSettingsToWebPage"
         },
         contextAwareness: {
@@ -66,6 +65,10 @@
                     "{arguments}.0",
                     {filter: "{that}.options.webSettings.filter"}
                 ]
+            },
+            updateModel: {
+                funcName: "gpii.chrome.domEnactor.updateModel",
+                args: ["{that}", "{arguments}.0"]
             }
         },
         distributeOptions: {
@@ -73,6 +76,24 @@
             target: "{that > fluid.prefs.enactor}.container"
         },
         components: {
+            portBinding: {
+                type: "gpii.chrome.portBinding",
+                options: {
+                    portName: "contentScript",
+                    listeners: {
+                        "onIncomingRead.handle": {
+                            listener: "{that}.rejectMessage"
+                        }
+                    },
+                    invokers: {
+                        handleRead: "fluid.identity",
+                        handleWrite: {
+                            func: "{domEnactor}.events.onIncomingSettings.fire",
+                            args: ["{arguments}.0.payload.settings"]
+                        }
+                    }
+                }
+            },
             charSpace: {
                 type: "gpii.chrome.enactor.charSpace",
                 options: {
@@ -156,11 +177,11 @@
         }
     });
 
-    gpii.chrome.domEnactor.bindPortEvents = function (that) {
-        that.port = chrome.runtime.connect({name: "domEnactor-" + that.id});
-        that.port.onMessage.addListener(function (data) {
-            that.events.onIncomingSettings.fire(data.settings);
-        });
+    gpii.chrome.domEnactor.updateModel = function (that, model) {
+        var transaction = that.applier.initiate();
+        transaction.fireChangeRequest({path: "", type: "DELETE"});
+        transaction.change("", model);
+        transaction.commit();
     };
 
     /**
