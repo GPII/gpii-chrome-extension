@@ -47,6 +47,7 @@
         "js": [
             "content_scripts/webInjection.js",
             "content_scripts/contentView.js",
+            "content_scripts/mutationObserver.js",
             "content_scripts/simplification.js",
             "content_scripts/domEnactor.js",
             "content_scripts/domSettingsHandler.js"

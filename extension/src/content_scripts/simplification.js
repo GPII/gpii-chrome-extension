@@ -49,7 +49,8 @@
         modelListeners: {
             simplify: {
                 listener: "{that}.set",
-                args: ["{change}.value"]
+                args: ["{change}.value"],
+                excludeSource: ["init"]
             },
             showNav: {
                 listener: "{that}.toggleNav",
@@ -65,13 +66,29 @@
                 listener: "{that}.toggleNav",
                 args: ["{that}.model.showNav"]
             },
-            "onDestroy.disconnectObserver": {
-                listener: "gpii.simplify.disconnectObserver",
-                args: ["{that}"]
-            },
-            "onAlwaysVisibleNodeAdded.makeVisible": "gpii.simplify.setVisible"
+            "onCreate.set": {
+                listener: "{that}.set",
+                args: ["{that}.model.simplify"]
+            }
         },
         injectNavToggle: true,
+        components: {
+            observer: {
+                type: "gpii.chrome.mutationObserver",
+                container: "{that}.container",
+                options: {
+                    defaultObserveConfig: {
+                        attributes: false
+                    },
+                    listeners: {
+                        "onNodeAdded.makeVisible": {
+                            listener: "gpii.simplify.setVisible",
+                            args: ["{simplify}", "{arguments}.0", "{arguments}.1"]
+                        }
+                    }
+                }
+            }
+        },
         invokers: {
             set: {
                 funcName: "gpii.simplify.set",
@@ -101,33 +118,19 @@
         }
     };
 
-    gpii.simplify.setVisible = function (elm) {
-        $(elm).css("visibility", "visible");
+    gpii.simplify.setVisible = function (that, node, mutationRecord) {
+        var elm = node.nodeType === Node.ELEMENT_NODE ? $(node) : $(mutationRecord.target);
+
+        var makeVisible = fluid.find(that.options.alwaysVisible, function (selectorName) {
+            return elm.is(that.options.selectors[selectorName]) || undefined;
+        }, false);
+
+        if (makeVisible) {
+            elm.css("visibility", "visible");
+        }
     };
 
     gpii.simplify.set = function (that, state) {
-        if (!that.observer) {
-            var selectors = [];
-            fluid.each(that.options.alwaysVisible, function (selectorName) {
-                var selector = fluid.get(that.options.selectors, selectorName);
-                if (selector) {
-                    selectors.push(selector);
-                }
-            });
-
-            // set visibility of dynamically added nodes
-            that.observer = new MutationObserver(function (mutationRecords) {
-                var selector = selectors.join(",");
-                mutationRecords.forEach(function (mutationRecord) {
-                    mutationRecord.addedNodes.forEach(function (node) {
-                        if (node.matches && node.matches(selector)) {
-                            that.events.onAlwaysVisibleNodeAdded.fire($(node));
-                        }
-                    });
-                });
-            });
-        }
-
         if (state && that.content.length) {
             that.content.css("visibility", "visible");
             fluid.each(that.options.alwaysVisible, function (selector) {
@@ -138,7 +141,7 @@
                 gpii.simplify.injectToggle(that, that.content);
             }
             that.locate("navToggle").show();
-            that.observer.observe(that.container[0], {childList: true, subtree: true });
+            that.observer.observe();
         } else if (that.content.length) {
             that.locate("navToggle").hide();
             that.container.css("visibility", "");
@@ -146,12 +149,6 @@
             fluid.each(that.options.alwaysVisible, function (selector) {
                 that.locate(selector).css("visibility", "");
             });
-            that.observer.disconnect();
-        }
-    };
-
-    gpii.simplify.disconnectObserver = function (that) {
-        if (that.observer) {
             that.observer.disconnect();
         }
     };

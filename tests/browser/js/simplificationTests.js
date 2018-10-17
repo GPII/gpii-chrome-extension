@@ -175,7 +175,7 @@
                         func: "fluid.tests.simplifyTester.injectElement",
                         args: ["{simplify}"]
                     }, {
-                        event: "{simplify}.events.onAlwaysVisibleNodeAdded",
+                        event: "{simplify}.observer.events.onNodeAdded",
                         priority: "after:makeVisible",
                         listener: "fluid.tests.simplifyTester.assertElmVisible"
                     }]
@@ -189,7 +189,7 @@
         };
 
         fluid.tests.simplifyTester.assertElmVisible = function (elm) {
-            jqUnit.assertEquals("The element should be visible", "visible", elm.css("visibility"));
+            jqUnit.assertEquals("The element should be visible", "visible", $(elm).css("visibility"));
         };
 
         fluid.defaults("gpii.tests.simplifyNoNavToggleTests", {
