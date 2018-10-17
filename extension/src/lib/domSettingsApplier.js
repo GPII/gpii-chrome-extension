@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017 OCAD University
+ * Copyright 2017-2018 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -56,38 +56,38 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
 });
 
 fluid.defaults("gpii.chrome.portConnection", {
-    gradeNames: ["fluid.modelComponent"],
+    gradeNames: ["gpii.chrome.portBinding", "fluid.modelComponent"],
     // TODO: When FLUID-5912 is fixed, move port to the members block.
     //       https://issues.fluidproject.org/browse/FLUID-5912
     port: null, // must be supplied by integrator
-    events: {
-        onDisconnect: null,
-        onIncomingMessage: null
-    },
-    listeners: {
-        "onCreate.bindToPortEvents": {
-            funcName: "gpii.chrome.portConnection.bindToPortEvents",
-            args: ["{that}", "{that}.options.port"]
+    invokers: {
+        setPort: {
+            funcName: "fluid.identity",
+            args: ["{that}.options.port"]
         },
-        "onDisconnect.destroy": "{that}.destroy",
-        "onIncomingMessage.updateModel": "{that}.updateModel"
-    },
-    modelListeners: {
-        "": {
-            "this": "{that}.options.port",
-            method: "postMessage",
+        handleWrite: {
+            funcName: "gpii.chrome.portConnection.updateModel",
+            args: ["{that}", "{arguments}.0.payload"]
+        },
+        handleRead: {
+            funcName: "fluid.identity",
             args: ["{that}.model"]
         }
     },
-    invokers: {
-        updateModel: {
-            changePath: "",
-            value: "{arguments}.0"
+    listeners: {
+        "onDisconnect.destroy": "{that}.destroy"
+    },
+    modelListeners: {
+        "": {
+            func: "{that}.write",
+            args: ["{that}.model"]
         }
     }
 });
 
-gpii.chrome.portConnection.bindToPortEvents = function (that, port) {
-    port.onDisconnect.addListener(that.events.onDisconnect.fire);
-    port.onMessage.addListener(that.events.onIncomingMessage.fire);
+gpii.chrome.portConnection.updateModel = function (that, model) {
+    var transaction = that.applier.initiate();
+    transaction.fireChangeRequest({path: "", type: "DELETE"});
+    transaction.change("", model);
+    transaction.commit();
 };

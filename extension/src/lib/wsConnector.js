@@ -54,7 +54,8 @@ fluid.defaults("gpii.wsConnector", {
         "onCreate.connect": "{wsConnector}.connect",
         "onConnect.setup": {
             funcName: "gpii.wsConnector.setup",
-            args: "{that}"
+            args: "{that}",
+            priority: "after:connect"
         },
         onError: {
             funcName: "gpii.wsConnector.error",
@@ -105,7 +106,6 @@ gpii.wsConnector.setup = function (that) {
             solutionId: that.options.solutionId
         }
     };
-
     that.socket.send(JSON.stringify(authPayload));
     that.socket.onmessage = that.messageHandler;
 };
