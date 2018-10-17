@@ -831,7 +831,7 @@
                 name: "Prefs Editor Tests",
                 tests: [{
                     name: "Instantiation",
-                    expect:23,
+                    expect:22,
                     sequence: [{
                         event: "{testEnvironment prefsEditorStack prefsEditorLoader}.events.onReady",
                         listener: "gpii.tests.prefsEditorTests.assertInit",
@@ -876,15 +876,6 @@
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
                         args: ["{prefsEditorStack}", ["preferences", "gpii_chrome_prefs_contrast"], "{that}.options.testOpts.newModel"],
                         spec: {path: "preferences.gpii_chrome_prefs_contrast", priority: "last:testing"},
-                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
-                    }, {
-                        // word space model change
-                        func: "gpii.tests.changeInput",
-                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_wordSpace.dom.textfieldStepperContainer", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_wordSpace"]
-                    }, {
-                        listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", "preferences.gpii_chrome_prefs_wordSpace", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_wordSpace", "{that}.options.testOpts.modelChanges.wordSpace"],
-                        spec: {path: "preferences.gpii_chrome_prefs_wordSpace", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
                         // enhance inputs model change
@@ -948,6 +939,15 @@
                         listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
                         args: ["{prefsEditorStack}", ["preferences", "gpii_chrome_prefs_textSize"], "{that}.options.testOpts.newModel"],
                         spec: {path: "preferences.gpii_chrome_prefs_textSize", priority: "last:testing"},
+                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
+                        // word space model change
+                        func: "gpii.tests.changeInput",
+                        args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.gpii_chrome_prefs_panel_wordSpace.dom.textfieldStepperContainer", "{that}.options.testOpts.newModel.preferences.gpii_chrome_prefs_wordSpace"]
+                    }, {
+                        listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
+                        args: ["{prefsEditorStack}", ["preferences", "gpii_chrome_prefs_wordSpace"], "{that}.options.testOpts.newModel"],
+                        spec: {path: "preferences.gpii_chrome_prefs_wordSpace", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }]
                 }]

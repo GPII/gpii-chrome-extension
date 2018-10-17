@@ -194,7 +194,7 @@
         gradeNames: ["fluid.prefs.panel.wordSpace"],
         preferenceMap: {
             "gpii.chrome.prefs.wordSpace": {
-                "model.value": "default",
+                "model.value": "value",
                 "range.min": "minimum",
                 "range.max": "maximum",
                 "step": "divisibleBy"
