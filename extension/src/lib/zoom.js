@@ -75,12 +75,17 @@ fluid.defaults("gpii.chrome.zoom", {
 });
 
 gpii.chrome.zoom.bindEvents = function (that) {
+    // Debouncing the event relay.
+    // GPII-3440: To prevent multiple open windows from triggering conflicting zoom changes and causing an infinite
+    // loop of onZoomChange events.
+    var relayZoomChange = fluid.debounce(that.events.onZoomChanged.fire, 100);
+
     chrome.tabs.onZoomChange.addListener(function (ZoomChangeInfo) {
         // Only fire the onZoomChanged event if the Zoom factor is actually different.
         // This is necessary because chrome will fire its onZoomChange event when a new tab or window is opened;
         // with old and new zoom factors of 0. If this check isn't here, it will cause all pages to be reset.
         if (ZoomChangeInfo.oldZoomFactor !== ZoomChangeInfo.newZoomFactor) {
-            that.events.onZoomChanged.fire(ZoomChangeInfo);
+            relayZoomChange(ZoomChangeInfo);
         }
     });
 };
