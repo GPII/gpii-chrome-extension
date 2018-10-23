@@ -22,17 +22,18 @@
         portName: "extensionPanel",
         rules: {
             "panelIndex": "panelIndex",
-            "preferences.gpii_chrome_prefs_contrast": "settings.contrastTheme",
+            "preferences.fluid_prefs_captions": "settings.captionsEnabled",
             "preferences.fluid_prefs_enhanceInputs": "settings.inputsLargerEnabled",
-            "preferences.gpii_chrome_prefs_lineSpace": "settings.lineSpace",
             "preferences.fluid_prefs_letterSpace": "settings.characterSpace",
-            "preferences.fluid_prefs_tableOfContents": "settings.tableOfContentsEnabled",
-            "preferences.gpii_chrome_prefs_textSize": "settings.fontSize",
             "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
-            "preferences.gpii_chrome_prefs_simplify": "settings.simplifiedUiEnabled",
-            "preferences.gpii_chrome_prefs_highlight": "settings.selectionTheme",
+            "preferences.fluid_prefs_tableOfContents": "settings.tableOfContentsEnabled",
+            "preferences.gpii_chrome_prefs_contrast": "settings.contrastTheme",
             "preferences.gpii_chrome_prefs_clickToSelect": "settings.clickToSelectEnabled",
-            "preferences.fluid_prefs_captions": "settings.captionsEnabled"
+            "preferences.gpii_chrome_prefs_highlight": "settings.selectionTheme",
+            "preferences.gpii_chrome_prefs_lineSpace": "settings.lineSpace",
+            "preferences.gpii_chrome_prefs_simplify": "settings.simplifiedUiEnabled",
+            "preferences.gpii_chrome_prefs_textSize": "settings.fontSize",
+            "preferences.gpii_chrome_prefs_wordSpace": "settings.wordSpace"
         },
         listeners: {
             "onRead.transform": {
@@ -189,6 +190,18 @@
         }
     });
 
+    fluid.defaults("gpii.chrome.prefs.panel.wordSpace", {
+        gradeNames: ["fluid.prefs.panel.wordSpace"],
+        preferenceMap: {
+            "gpii.chrome.prefs.wordSpace": {
+                "model.value": "value",
+                "range.min": "minimum",
+                "range.max": "maximum",
+                "step": "divisibleBy"
+            }
+        }
+    });
+
     fluid.defaults("gpii.chrome.prefs.panel.contrast", {
         gradeNames: ["fluid.prefs.panel.contrast"],
         preferenceMap: {
@@ -252,22 +265,13 @@
             },
             "template": "%templatePrefix/PrefsEditorPanel.html",
             "message": "%messagePrefix/prefsEditor.json",
-            "textSize": {
-                "type": "gpii.chrome.prefs.textSize",
+            "captions": {
+                "type": "fluid.prefs.captions",
                 "panel": {
-                    "type": "gpii.chrome.prefs.panel.textSize",
-                    "container": ".flc-prefsEditor-text-size",
-                    "message": "%messagePrefix/zoom.json",
-                    "template": "%templatePrefix/PrefsEditorTemplate-textSize.html"
-                }
-            },
-            "lineSpace": {
-                "type": "gpii.chrome.prefs.lineSpace",
-                "panel": {
-                    "type": "gpii.chrome.prefs.panel.lineSpace",
-                    "container": ".flc-prefsEditor-line-space",
-                    "message": "%messagePrefix/lineSpace.json",
-                    "template": "%templatePrefix/PrefsEditorTemplate-lineSpace.html"
+                    "type": "fluid.prefs.panel.captions",
+                    "container": ".flc-prefsEditor-captions",
+                    "template": "%templatePrefix/PrefsEditorTemplate-captions.html",
+                    "message": "%messagePrefix/ytCaptions.json"
                 }
             },
             "charSpace": {
@@ -277,6 +281,15 @@
                     "container": ".flc-prefsEditor-char-space",
                     "message": "%messagePrefix/charSpace.json",
                     "template": "%templatePrefix/PrefsEditorTemplate-letterSpace.html"
+                }
+            },
+            "clickToSelect": {
+                "type": "gpii.chrome.prefs.clickToSelect",
+                "panel": {
+                    "type": "gpii.chrome.prefs.panel.clickToSelect",
+                    "container": ".flc-prefsEditor-clickToSelect",
+                    "template": "%templatePrefix/ClickToSelectPanelTemplate.html",
+                    "message": "%messagePrefix/clickToSelect.json"
                 }
             },
             "contrast": {
@@ -300,22 +313,22 @@
                     "message": "%messagePrefix/contrast.json"
                 }
             },
-            "selfVoicing": {
-                "type": "fluid.prefs.speak",
+            "enhanceInputs": {
+                "type": "fluid.prefs.enhanceInputs",
                 "panel": {
-                    "type": "fluid.prefs.panel.speak",
-                    "container": ".flc-prefsEditor-selfVoicing",
-                    "template": "%templatePrefix/PrefsEditorTemplate-speak.html",
-                    "message": "%messagePrefix/speak.json"
+                    "type": "fluid.prefs.panel.enhanceInputs",
+                    "container": ".flc-prefsEditor-enhanceInputs",
+                    "template": "%templatePrefix/PrefsEditorTemplate-enhanceInputs.html",
+                    "message": "%messagePrefix/enhanceInputs.json"
                 }
             },
-            "simplify": {
-                "type": "gpii.chrome.prefs.simplify",
+            "lineSpace": {
+                "type": "gpii.chrome.prefs.lineSpace",
                 "panel": {
-                    "type": "gpii.chrome.prefs.panel.simplify",
-                    "container": ".flc-prefsEditor-simplify",
-                    "template": "%templatePrefix/SimplifyPanelTemplate.html",
-                    "message": "%messagePrefix/simplify.json"
+                    "type": "gpii.chrome.prefs.panel.lineSpace",
+                    "container": ".flc-prefsEditor-line-space",
+                    "message": "%messagePrefix/lineSpace.json",
+                    "template": "%templatePrefix/PrefsEditorTemplate-lineSpace.html"
                 }
             },
             "selectionHighlight": {
@@ -334,13 +347,22 @@
                     "message": "%messagePrefix/selectionHighlight.json"
                 }
             },
-            "clickToSelect": {
-                "type": "gpii.chrome.prefs.clickToSelect",
+            "selfVoicing": {
+                "type": "fluid.prefs.speak",
                 "panel": {
-                    "type": "gpii.chrome.prefs.panel.clickToSelect",
-                    "container": ".flc-prefsEditor-clickToSelect",
-                    "template": "%templatePrefix/ClickToSelectPanelTemplate.html",
-                    "message": "%messagePrefix/clickToSelect.json"
+                    "type": "fluid.prefs.panel.speak",
+                    "container": ".flc-prefsEditor-selfVoicing",
+                    "template": "%templatePrefix/PrefsEditorTemplate-speak.html",
+                    "message": "%messagePrefix/speak.json"
+                }
+            },
+            "simplify": {
+                "type": "gpii.chrome.prefs.simplify",
+                "panel": {
+                    "type": "gpii.chrome.prefs.panel.simplify",
+                    "container": ".flc-prefsEditor-simplify",
+                    "template": "%templatePrefix/SimplifyPanelTemplate.html",
+                    "message": "%messagePrefix/simplify.json"
                 }
             },
             "tableOfContents": {
@@ -352,22 +374,22 @@
                     "message": "%messagePrefix/tableOfContents.json"
                 }
             },
-            "enhanceInputs": {
-                "type": "fluid.prefs.enhanceInputs",
+            "textSize": {
+                "type": "gpii.chrome.prefs.textSize",
                 "panel": {
-                    "type": "fluid.prefs.panel.enhanceInputs",
-                    "container": ".flc-prefsEditor-enhanceInputs",
-                    "template": "%templatePrefix/PrefsEditorTemplate-enhanceInputs.html",
-                    "message": "%messagePrefix/enhanceInputs.json"
+                    "type": "gpii.chrome.prefs.panel.textSize",
+                    "container": ".flc-prefsEditor-text-size",
+                    "message": "%messagePrefix/zoom.json",
+                    "template": "%templatePrefix/PrefsEditorTemplate-textSize.html"
                 }
             },
-            "captions": {
-                "type": "fluid.prefs.captions",
+            "wordSpace": {
+                "type": "gpii.chrome.prefs.wordSpace",
                 "panel": {
-                    "type": "fluid.prefs.panel.captions",
-                    "container": ".flc-prefsEditor-captions",
-                    "template": "%templatePrefix/PrefsEditorTemplate-captions.html",
-                    "message": "%messagePrefix/ytCaptions.json"
+                    "type": "gpii.chrome.prefs.panel.wordSpace",
+                    "container": ".flc-prefsEditor-word-space",
+                    "message": "%messagePrefix/wordSpace.json",
+                    "template": "%templatePrefix/PrefsEditorTemplate-wordSpace.html"
                 }
             }
         }
@@ -392,7 +414,7 @@
             "gpii.chrome.prefs.lineSpace": {
                 "type": "number",
                 "default": 1,
-                "minimum": 1,
+                "minimum": 0.7,
                 "maximum": 3,
                 "divisibleBy": 0.1
             }
@@ -437,6 +459,19 @@
                 "type": "string",
                 "default": "default",
                 "enum": ["default", "yellow", "green", "pink"]
+            }
+        }
+    });
+
+    fluid.defaults("gpii.chrome.prefs.schemas.wordSpace", {
+        gradeNames: ["fluid.prefs.schemas"],
+        schema: {
+            "gpii.chrome.prefs.wordSpace": {
+                "type": "number",
+                "default": 1,
+                "minimum": 0.7,
+                "maximum": 4,
+                "divisibleBy": 0.1
             }
         }
     });
