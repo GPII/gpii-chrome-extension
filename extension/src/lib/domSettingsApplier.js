@@ -32,16 +32,18 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
     },
     model: {
         // Accepted model values:
-        // settings.contrastTheme: string,
-        // settings.lineSpace: number,    // the multiplier to the current line space
-        // settings.characterSpace: number,
-        // settings.inputsLarger: boolean,
-        // settings.selectionTheme: string,
-        // settings.simplifiedUiEnabled: boolean,
-        // settings.tableOfContentsEnabled: boolean,
-        // settings.selfVoicingEnabled: boolean,
-        // settings.syllabificationEnabled: boolean,
-        // settings.captionsEnabled: boolean
+        //
+        // settings.captionsEnabled: Boolean
+        // settings.characterSpace: Number,
+        // settings.contrastTheme: String,
+        // settings.inputsLarger: Boolean,
+        // settings.lineSpace: Number,    // the multiplier to the current line space
+        // settings.selectionTheme: String,
+        // settings.selfVoicingEnabled: Boolean,
+        // settings.simplifiedUiEnabled: Boolean,
+        // settings.syllabificationEnabled: Boolean,
+        // settings.tableOfContentsEnabled: Boolean,
+        // settings.wordSpace: Number
     },
     dynamicComponents: {
         port: {

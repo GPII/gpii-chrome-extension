@@ -428,6 +428,63 @@
             }]
         });
 
+        /**********************************
+         * Character and Word Space Tests *
+         **********************************/
+
+        fluid.registerNamespace("gpii.tests.spacingSetterTester");
+
+        fluid.defaults("gpii.tests.spacingSetter.modelChanges", {
+            gradeNames: "fluid.test.sequenceElement",
+            sequence: [{
+                func: "gpii.tests.spacingSetterTester.assertSpace",
+                args: ["{spacingSetter}", "{testCaseHolder}.options.cssProp", 1, 0.2]
+            }, {
+                func: "{spacingSetter}.applier.change",
+                args: ["value", 1.3]
+            }, {
+                changeEvent: "{spacingSetter}.applier.modelChanged",
+                path: "value",
+                listener: "gpii.tests.spacingSetterTester.assertSpace",
+                args: ["{spacingSetter}", "{testCaseHolder}.options.cssProp", 1.3, 0.2]
+            }, {
+                func: "{spacingSetter}.applier.change",
+                args: ["value", 2]
+            }, {
+                changeEvent: "{spacingSetter}.applier.modelChanged",
+                path: "value",
+                listener: "gpii.tests.spacingSetterTester.assertSpace",
+                args: ["{spacingSetter}", "{testCaseHolder}.options.cssProp", 2, 0.2]
+            }, {
+                func: "{spacingSetter}.applier.change",
+                args: ["value", 1]
+            }, {
+                changeEvent: "{spacingSetter}.applier.modelChanged",
+                path: "value",
+                listener: "gpii.tests.spacingSetterTester.assertSpace",
+                args: ["{spacingSetter}", "{testCaseHolder}.options.cssProp", 1, 0.2]
+            }]
+        });
+
+        fluid.defaults("gpii.tests.spacingSetter.sequences", {
+            gradeNames: "fluid.test.sequence",
+            sequenceElements: {
+                modelChanges: {
+                    gradeNames: "gpii.tests.spacingSetter.modelChanges",
+                    priority: "after:end"
+                }
+            }
+        });
+
+        gpii.tests.spacingSetterTester.assertSpace = function (that, cssProp, expectedValue, baseSpace) {
+            baseSpace = baseSpace || 0;
+            var expectedUnit = fluid.roundToDecimal(expectedValue - 1, 2);
+            var expectedSpacing = fluid.roundToDecimal(baseSpace + expectedUnit, 2) + "em";
+            jqUnit.assertEquals("The model value should be set to " + expectedValue, expectedValue, that.model.value);
+            jqUnit.assertEquals("The model unit should be set to " + expectedUnit, expectedUnit, that.model.unit);
+            jqUnit.assertEquals("The " + cssProp + " should be set to " + expectedSpacing, cssProp + ": " + expectedSpacing + ";", that.container.attr("style"));
+        };
+
         /*************************
          * Character Space Tests *
          *************************/
@@ -450,50 +507,50 @@
             }
         });
 
-        gpii.tests.charSpaceTests.assertCharSpace = function (that, expectedValue, baseCharSpace) {
-            baseCharSpace = baseCharSpace || 0;
-            var expectedUnit = fluid.roundToDecimal(expectedValue - 1, 2);
-            var expectedLetterSpacing = fluid.roundToDecimal(baseCharSpace + expectedUnit, 2) + "em";
-            jqUnit.assertEquals("The model value should be set to " + expectedValue, expectedValue, that.model.value);
-            jqUnit.assertEquals("The model unit should be set to " + expectedUnit, expectedUnit, that.model.unit);
-            jqUnit.assertEquals("The letter-spacing should be set to " + expectedLetterSpacing, "letter-spacing: " + expectedLetterSpacing + ";", that.container.attr("style"));
-        };
-
         fluid.defaults("gpii.tests.charSpaceTester", {
             gradeNames: ["fluid.test.testCaseHolder"],
+            cssProp: "letter-spacing",
             modules: [{
                 name: "Character Space Tests",
                 tests: [{
                     name: "Model Changes",
                     expect: 12,
-                    sequence: [{
-                        func: "gpii.tests.charSpaceTests.assertCharSpace",
-                        args: ["{charSpace}", 1, 0.2]
-                    }, {
-                        func: "{charSpace}.applier.change",
-                        args: ["value", 1.3]
-                    }, {
-                        changeEvent: "{charSpace}.applier.modelChanged",
-                        path: "value",
-                        listener: "gpii.tests.charSpaceTests.assertCharSpace",
-                        args: ["{charSpace}", 1.3, 0.2]
-                    }, {
-                        func: "{charSpace}.applier.change",
-                        args: ["value", 2]
-                    }, {
-                        changeEvent: "{charSpace}.applier.modelChanged",
-                        path: "value",
-                        listener: "gpii.tests.charSpaceTests.assertCharSpace",
-                        args: ["{charSpace}", 2, 0.2]
-                    }, {
-                        func: "{charSpace}.applier.change",
-                        args: ["value", 1]
-                    }, {
-                        changeEvent: "{charSpace}.applier.modelChanged",
-                        path: "value",
-                        listener: "gpii.tests.charSpaceTests.assertCharSpace",
-                        args: ["{charSpace}", 1, 0.2]
-                    }]
+                    sequenceGrade: "gpii.tests.spacingSetter.sequences"
+                }]
+            }]
+        });
+
+        /********************
+         * Word Space Tests *
+         ********************/
+
+        fluid.defaults("gpii.tests.wordSpaceTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                wordSpace: {
+                    type: "fluid.prefs.enactor.wordSpace",
+                    container: ".gpii-test-wordSpace",
+                    options: {
+                        model: {
+                            value: 1
+                        }
+                    }
+                },
+                wordSpaceTester: {
+                    type: "gpii.tests.wordSpaceTester"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.wordSpaceTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            cssProp: "word-spacing",
+            modules: [{
+                name: "Word Space Tests",
+                tests: [{
+                    name: "Model Changes",
+                    expect: 12,
+                    sequenceGrade: "gpii.tests.spacingSetter.sequences"
                 }]
             }]
         });
@@ -862,6 +919,7 @@
             "gpii.tests.contrastTests",
             "gpii.tests.lineSpaceTests",
             "gpii.tests.charSpaceTests",
+            "gpii.tests.wordSpaceTests",
             "gpii.tests.inputsLargerTests",
             "gpii.tests.tocTests",
             "gpii.tests.selfVoicingTests",
