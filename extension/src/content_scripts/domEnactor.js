@@ -94,27 +94,19 @@
                     }
                 }
             },
-            contrast: {
-                type: "gpii.chrome.enactor.contrast",
-                options: {
-                    model: {
-                        value: "{domEnactor}.model.contrastTheme"
-                    }
-                }
-            },
-            lineSpace: {
-                type: "gpii.chrome.enactor.lineSpace",
-                options: {
-                    model: {
-                        value: "{domEnactor}.model.lineSpace"
-                    }
-                }
-            },
             charSpace: {
                 type: "gpii.chrome.enactor.charSpace",
                 options: {
                     model: {
                         value: "{domEnactor}.model.characterSpace"
+                    }
+                }
+            },
+            contrast: {
+                type: "gpii.chrome.enactor.contrast",
+                options: {
+                    model: {
+                        value: "{domEnactor}.model.contrastTheme"
                     }
                 }
             },
@@ -126,20 +118,20 @@
                     }
                 }
             },
+            lineSpace: {
+                type: "gpii.chrome.enactor.lineSpace",
+                options: {
+                    model: {
+                        value: "{domEnactor}.model.lineSpace"
+                    }
+                }
+            },
             selectionHighlight: {
                 type: "gpii.chrome.enactor.selectionHighlight",
                 options: {
                     model: {
                         value: "{domEnactor}.model.selectionTheme",
                         selectParagraph: "{domEnactor}.model.clickToSelectEnabled"
-                    }
-                }
-            },
-            tableOfContents: {
-                type: "gpii.chrome.enactor.tableOfContents",
-                options: {
-                    model: {
-                        toc: "{domEnactor}.model.tableOfContentsEnabled"
                     }
                 }
             },
@@ -163,6 +155,22 @@
                                 }
                             }
                         }
+                    }
+                }
+            },
+            tableOfContents: {
+                type: "gpii.chrome.enactor.tableOfContents",
+                options: {
+                    model: {
+                        toc: "{domEnactor}.model.tableOfContentsEnabled"
+                    }
+                }
+            },
+            wordSpace: {
+                type: "gpii.chrome.enactor.wordSpace",
+                options: {
+                    model: {
+                        value: "{domEnactor}.model.wordSpace"
                     }
                 }
             }
@@ -231,9 +239,8 @@
         }
     });
 
-    // Line space
-    fluid.defaults("gpii.chrome.enactor.lineSpace", {
-        gradeNames: ["fluid.prefs.enactor.lineSpace"],
+    // fontsize map
+    fluid.defaults("gpii.chrome.enactor.fontSizeMap", {
         fontSizeMap: {
             "xx-small": "9px",
             "x-small": "11px",
@@ -247,16 +254,17 @@
 
     // Character space
     fluid.defaults("gpii.chrome.enactor.charSpace", {
-        gradeNames: ["fluid.prefs.enactor.letterSpace"],
-        fontSizeMap: {
-            "xx-small": "9px",
-            "x-small": "11px",
-            "small": "13px",
-            "medium": "15px",
-            "large": "18px",
-            "x-large": "23px",
-            "xx-large": "30px"
-        }
+        gradeNames: ["gpii.chrome.enactor.fontSizeMap", "fluid.prefs.enactor.letterSpace"]
+    });
+
+    // Line space
+    fluid.defaults("gpii.chrome.enactor.lineSpace", {
+        gradeNames: ["gpii.chrome.enactor.fontSizeMap", "fluid.prefs.enactor.lineSpace"]
+    });
+
+    // Word space
+    fluid.defaults("gpii.chrome.enactor.wordSpace", {
+        gradeNames: ["gpii.chrome.enactor.fontSizeMap", "fluid.prefs.enactor.wordSpace"]
     });
 
     // Inputs larger
