@@ -106,7 +106,7 @@
      * node, the old one will be replaced. If an observation is disconnected, the observe method will need to be called
      * again to re-instate the mutation observation.
      *
-     * @param {Component} that - an instance of `gpii.chrome.mutationObserver
+     * @param {Component} that - an instance of `gpii.chrome.mutationObserver`
      * @param {DOMElement|jQuery} target - a DOM element or jQuery element to be observed. By default the component's
      *                                     container element is used.
      * @param {Object} options - config options to pass to the observations. This specifies which mutations should be

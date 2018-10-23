@@ -16,7 +16,7 @@
 (function ($, fluid) {
 
     /*
-     * `gpii.chrome.contentView` is a type of view component which extends the typical viewComponent faculties for
+     * `gpii.chrome.contentView` is a type of view component which extends the typical viewComponent facilities for
      * searching for selectors. The extended features allow for searching for "content" amongst a variety of selectors,
      * and returning the first one found. This is useful when trying to determine the primary content of a page, and is
      * typically used by enactors acting upon an entire document without explicit knowledge of the primary content area.
@@ -80,7 +80,7 @@
         selectorNames = fluid.makeArray(selectorNames);
 
         var found = fluid.find_if(selectorNames, function (selector) {
-            var  elms = that.locate(selector);
+            var elms = that.locate(selector);
             return elms.length > 0;
         });
 
@@ -104,7 +104,7 @@
      * Similar to `that.locate` but the search excludes any items found within the scope of the content.
      *
      * @param {Component} that - an instance of `gpii.chrome.contentView`
-     * @param {String} selectorName - a selector name as defined in the selector's block. Similar to using `that.locate`
+     * @param {String} selectorName - a selector name as defined in the selectors block. Similar to using `that.locate`
      *
      * @return {jQuery} - a jQuery object representing the selection found outside of the content
      */
