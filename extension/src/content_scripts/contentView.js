@@ -42,6 +42,10 @@
         content: ["article", "main", "genericContent"],
         defaultContent: "",
         members: {
+            // The content member provides the scoping for the `locateInContent` method,
+            // the "inverse" scoping for the `locateOutOfContent` method and can be used directly
+            // to refer to other operations on the primary content (e.g. as a container for another component).
+            // We assign this as a member so that it is available at creation, and only has to be executed once.
             content: {
                 expander: {
                     funcName: "gpii.chrome.contentView.findFirstSelector",
