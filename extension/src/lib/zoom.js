@@ -67,7 +67,7 @@ fluid.defaults("gpii.chrome.zoom", {
             args: "{arguments}.2"
         },
         "onWindowFocusChanged.applyZoomSettings": "{that}.applyZoomSettings",
-        "onZoomChanged": {
+        "onZoomChanged.updateMagnification": {
             changePath: "magnification",
             value: "{arguments}.0.newZoomFactor"
         }
