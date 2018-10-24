@@ -92,4 +92,5 @@ gpii.chrome.portConnection.updateModel = function (that, model) {
     transaction.fireChangeRequest({path: "", type: "DELETE"});
     transaction.change("", model);
     transaction.commit();
+    return that.model;
 };
