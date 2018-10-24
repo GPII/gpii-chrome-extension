@@ -126,6 +126,19 @@ fluid.defaults("gpii.chrome.tests.zoom.tester", {
                        "{that}.options.settings.magnification"]
             }]
         }, {
+            name: "When changing tabs, the zoom is set",
+            expect: 2,
+            sequence: [{
+                func: "{zoom}.events.onTabActivated.fire",
+                args: "{that}.options.updatedTab"
+            }, {
+                event: "{that}.events.onSetZoom",
+                listener: "gpii.chrome.tests.zoom.checkSetZoom",
+                args: ["{arguments}.0", "{arguments}.1",
+                       "{that}.options.updatedTab.id",
+                       "{that}.options.settings.magnification"]
+            }]
+        }, {
             name: "magnification changes, tabs are updated",
             expect: 6,
             sequence: [{
