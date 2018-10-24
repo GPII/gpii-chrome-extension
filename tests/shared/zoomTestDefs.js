@@ -47,7 +47,12 @@ fluid.defaults("gpii.chrome.tests.zoom.tester", {
         magnifierEnabled: true
     },
     browserZoom: {
-        newZoomFactor: 2.5
+        newZoomFactor: 2.5,
+        oldZoomFactor: 0
+    },
+    newTabZoom: {
+        newZoomFactor: 0,
+        oldZoomFactor: 0
     },
     disableZoom: {
         magnifierEnabled: false
@@ -147,28 +152,29 @@ fluid.defaults("gpii.chrome.tests.zoom.tester", {
             }]
         }, {
             name: "magnification changed through browser",
-            expect: 6,
+            expect: 2,
             sequence: [{
                 funcName: "{zoom}.events.onZoomChanged.fire",
                 args: ["{that}.options.browserZoom"]
             }, {
-                event: "{that}.events.onSetZoom",
-                listener: "gpii.chrome.tests.zoom.checkSetZoom",
-                args: ["{arguments}.0", "{arguments}.1",
-                       "{that}.options.tabs.0.id",
-                       "{that}.options.browserZoom.newZoomFactor"]
+                listener: "jqUnit.assertEquals",
+                args: [
+                    "The magnification model value should have updated",
+                    "{that}.options.browserZoom.newZoomFactor",
+                    "{zoom}.model.magnification"
+                ],
+                spec: {path: "magnification", priority: "last"},
+                changeEvent: "{zoom}.applier.modelChanged"
             }, {
-                event: "{that}.events.onSetZoom",
-                listener: "gpii.chrome.tests.zoom.checkSetZoom",
-                args: ["{arguments}.0", "{arguments}.1",
-                       "{that}.options.tabs.1.id",
-                       "{that}.options.browserZoom.newZoomFactor"]
+                funcName: "{zoom}.events.onZoomChanged.fire",
+                args: ["{that}.options.newTabZoom"]
             }, {
-                event: "{that}.events.onSetZoom",
-                listener: "gpii.chrome.tests.zoom.checkSetZoom",
-                args: ["{arguments}.0", "{arguments}.1",
-                       "{that}.options.tabs.2.id",
-                       "{that}.options.browserZoom.newZoomFactor"]
+                funcName: "jqUnit.assertEquals",
+                args: [
+                    "The magnification model value should not have updated",
+                    "{that}.options.browserZoom.newZoomFactor",
+                    "{zoom}.model.magnification"
+                ]
             }]
         }, {
             name: "magnification disabled, tabs are updated",

@@ -18,6 +18,16 @@
 var gpii = fluid.registerNamespace("gpii");
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
+/*
+ * `gpii.chrome.zome` sets the browser zoom. This can be used for enacting preferences such as magnification or
+ * font size. The browser zoom updates tabs in the currently focused window, updated tabs, created tabs, and tabs in
+ * other windows as they become focused.
+ *
+ * In addition to being able to set zoom from a preference set or editor, the zoom factor can be retrieved from the
+ * onZoomChanged event. This allows for a user to set the zoom using the browsers built in mechanisms and propagate
+ * that change to other tabs. See https://issues.gpii.net/browse/GPII-3386
+ */
+
 fluid.defaults("gpii.chrome.zoom", {
     gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent"],
     model: {
@@ -28,12 +38,15 @@ fluid.defaults("gpii.chrome.zoom", {
         onError: null,
         onTabOpened: null,
         onTabUpdated: null,
+        onTabActivated: null,
         onWindowFocusChanged: null,
         onZoomChanged: null
     },
     eventRelayMap: {
         "chrome.tabs.onCreated": "onTabOpened",
         "chrome.tabs.onUpdated": "onTabUpdated",
+        "chrome.tabs.onActivated": "onTabActivated",
+        "chrome.tabs.onZoomChange": "onZoomChanged",
         "chrome.windows.onFocusChanged": "onWindowFocusChanged"
     },
     invokers: {
@@ -53,41 +66,32 @@ fluid.defaults("gpii.chrome.zoom", {
     modelListeners: {
         "zoom.modelChanged": {
             path: ["magnifierEnabled", "magnification"],
-            funcName: "{that}.applyZoomSettings"
+            funcName: "{that}.applyZoomSettings",
+            excludeSource: ["onZoomChanged"]
         }
     },
     listeners: {
-        "onCreate.bindEvents": "gpii.chrome.zoom.bindEvents",
-        "onTabOpened.setupTab": {
-            funcName: "{that}.updateTab",
-            args: "{arguments}.0"
-        },
-        "onTabUpdated.setupTab": {
+        "onTabOpened.applyZoom": "{that}.updateTab",
+        "onTabUpdated.applyZoom": {
             funcName: "{that}.updateTab",
             args: "{arguments}.2"
         },
+        "onTabActivated.applyZoom": "{that}.updateTab",
         "onWindowFocusChanged.applyZoomSettings": "{that}.applyZoomSettings",
         "onZoomChanged.updateMagnification": {
-            changePath: "magnification",
-            value: "{arguments}.0.newZoomFactor"
+            funcName: "gpii.chrome.zoom.updateFromZoomChange",
+            args: ["{that}", "{arguments}.0"]
         }
     }
 });
 
-gpii.chrome.zoom.bindEvents = function (that) {
-    // Debouncing the event relay.
-    // GPII-3440: To prevent multiple open windows from triggering conflicting zoom changes and causing an infinite
-    // loop of onZoomChange events.
-    var relayZoomChange = fluid.debounce(that.events.onZoomChanged.fire, 100);
-
-    chrome.tabs.onZoomChange.addListener(function (ZoomChangeInfo) {
-        // Only fire the onZoomChanged event if the Zoom factor is actually different.
-        // This is necessary because chrome will fire its onZoomChange event when a new tab or window is opened;
-        // with old and new zoom factors of 0. If this check isn't here, it will cause all pages to be reset.
-        if (ZoomChangeInfo.oldZoomFactor !== ZoomChangeInfo.newZoomFactor) {
-            relayZoomChange(ZoomChangeInfo);
-        }
-    });
+gpii.chrome.zoom.updateFromZoomChange = function (that, ZoomChangeInfo) {
+    // Only fire the onZoomChanged event if the Zoom factor is actually different.
+    // This is necessary because chrome will fire its onZoomChange event when a new tab or window is opened;
+    // with old and new zoom factors of 0. If this check isn't present, all pages will be reset.
+    if (ZoomChangeInfo.oldZoomFactor !== ZoomChangeInfo.newZoomFactor) {
+        that.applier.change("magnification", ZoomChangeInfo.newZoomFactor, "ADD", "onZoomChanged");
+    }
 };
 
 gpii.chrome.zoom.applyZoomInTab = function (that, tab, value) {
