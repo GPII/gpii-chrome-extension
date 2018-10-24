@@ -112,16 +112,33 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
         model: {
             test: "testValue"
         },
+        incomingModel: {
+            test: "incomingValue"
+        },
         message: {
             type: "gpii.chrome.writeRequest",
             payload: "{that}.options.testOpts.model"
+        },
+        incomingWrite: {
+            id: "test-1",
+            type: "gpii.chrome.writeRequest",
+            payload: "{that}.options.testOpts.incomingModel"
+        },
+        updateMessage: {
+            type: "gpii.chrome.writeRequest",
+            payload: "{that}.options.testOpts.incomingModel"
+        },
+        writeReceipt: {
+            id: "test-1",
+            type: "gpii.chrome.writeReceipt",
+            payload: "{that}.options.testOpts.incomingModel"
         }
     },
     modules: [{
         name: "GPII Chrome Extension domSettingsApplier unit tests",
         tests: [{
             name: "Port Connection",
-            expect: 5,
+            expect: 10,
             sequence: [{
                 func: "gpii.tests.utils.assertEventRelayBound",
                 args: ["{domSettingsApplier}", "{domSettingsApplier}.options.eventRelayMap"]
@@ -134,6 +151,7 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
                 listener: "jqUnit.assertValue",
                 args: ["A port component should be created", "{domSettingsApplier}.port"]
             }, {
+                // model changed - send a write request
                 func: "{domSettingsApplier}.applier.change",
                 args: ["test", "{that}.options.testOpts.model.test"]
             }, {
@@ -141,6 +159,26 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
                 listener: "gpii.tests.domSettingsApplierTester.verifyPostedMessage",
                 args: ["{that}.options.testOpts.message", "{arguments}.0"]
             }, {
+                // receive a write request
+                func: "{domSettingsApplier}.port.events.onIncomingWrite.fire",
+                args: ["{that}.options.testOpts.incomingWrite"]
+            }, {
+                event: "{domSettingsApplier}.events.messagePosted",
+                listener: "gpii.tests.domSettingsApplierTester.verifyPostedMessage",
+                args: ["{that}.options.testOpts.updateMessage", "{arguments}.0"]
+            }, {
+                event: "{domSettingsApplier}.events.messagePosted",
+                listener: "gpii.tests.domSettingsApplierTester.verifyPostedMessage",
+                args: ["{that}.options.testOpts.writeReceipt", "{arguments}.0"]
+            }, {
+                funcName: "jqUnit.assertDeepEq",
+                args: [
+                    "The model should be updated to match the incoming write",
+                    "{that}.options.testOpts.incomingModel",
+                    "{domSettingsApplier}.model"
+                ]
+            }, {
+                // destroy the component
                 func: "{domSettingsApplier}.destroy"
             }, {
                 event: "{domSettingsApplier}.events.onDestroy",
