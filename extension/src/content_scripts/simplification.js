@@ -22,7 +22,7 @@
      * Simplification works by setting the container's visibility to hidden and then selectively showing parts of the
      * page including: the primary content (`that.content`) and elements for the selectors mentioned in the
      * `alwaysVisible` option. For dynamic content that conforms to the `alwaysVisible` selectors, a mutation observer
-     * is added to show them after they are added to the DOM, if the simplification is enaabled.
+     * is added to show them after they are added to the DOM, if the simplification is enabled.
      */
 
     fluid.defaults("gpii.simplify", {
