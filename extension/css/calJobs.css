@@ -8,30 +8,18 @@
 .gpii-ext-theme-by a, .gpii-ext-theme-by div,
 .gpii-ext-theme-bw a, .gpii-ext-theme-bw div,
 .gpii-ext-theme-wb a, .gpii-ext-theme-wb div,
-.gpii-ext-theme-lgdg a, .gpii-ext-theme-lgdg div,
+.gpii-ext-theme-gd a, .gpii-ext-theme-gd div,
 .gpii-ext-theme-gw a, .gpii-ext-theme-gw div,
 .gpii-ext-theme-bbr a, .gpii-ext-theme-bbr div {
     background-image: none !important;
 }
 
-.gpii-ext-theme-yb input, .gpii-ext-theme-yb button {
-    border: 1px solid #ffff00;
-}
-
+.gpii-ext-theme-yb input, .gpii-ext-theme-yb button,
 .gpii-ext-theme-bw input, .gpii-ext-theme-bw button,
 .gpii-ext-theme-by input, .gpii-ext-theme-by button,
-.gpii-ext-theme-bbr input, .gpii-ext-theme-bbr button {
-    border: 1px solid #000000;
-}
-
-.gpii-ext-theme-wb input, .gpii-ext-theme-wb button {
-    border: 1px solid #ffffff;
-}
-
-.gpii-ext-theme-lgdg input, .gpii-ext-theme-lgdg button {
-    border: 1px solid #bdbdbb;
-}
-
+.gpii-ext-theme-bbr input, .gpii-ext-theme-bbr button,
+.gpii-ext-theme-wb input, .gpii-ext-theme-wb button,
+.gpii-ext-theme-gd input, .gpii-ext-theme-gd button,
 .gpii-ext-theme-gw input, .gpii-ext-theme-gw button {
-    border: 1px solid #6c6c6c;
+    border: 1px solid currentColor;
 }

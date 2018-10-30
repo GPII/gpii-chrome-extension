@@ -240,7 +240,7 @@
             "wb": "gpii-ext-theme-wb",
             "by": "gpii-ext-theme-by",
             "yb": "gpii-ext-theme-yb",
-            "lgdg": "gpii-ext-theme-lgdg",
+            "gd": "gpii-ext-theme-gd",
             "gw": "gpii-ext-theme-gw",
             "bbr": "gpii-ext-theme-bbr"
         }

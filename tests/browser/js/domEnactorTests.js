@@ -313,15 +313,15 @@
                         args: ["{contrast}", "bw"]
                     }, {
                         func: "{contrast}.applier.change",
-                        args: ["value", "lgdg"]
+                        args: ["value", "gd"]
                     }, {
                         changeEvent: "{contrast}.applier.modelChanged",
                         path: "value",
                         listener: "jqUnit.assertEquals",
-                        args: ["The model.value should be set to \"lgdg\"", "lgdg", "{contrast}.model.value"]
+                        args: ["The model.value should be set to \"gd\"", "gd", "{contrast}.model.value"]
                     }, {
                         func: "gpii.tests.assertClasses",
-                        args: ["{contrast}", "lgdg"]
+                        args: ["{contrast}", "gd"]
                     }, {
                         func: "{contrast}.applier.change",
                         args: ["value", "gw"]
