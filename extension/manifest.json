@@ -46,7 +46,8 @@
         "exclude_globs": ["https://www.youtube.com/embed/*"],
         "js": [
             "content_scripts/webInjection.js",
-            "content_scripts/utils.js",
+            "content_scripts/contentView.js",
+            "content_scripts/mutationObserver.js",
             "content_scripts/simplification.js",
             "src/portBinding.js",
             "content_scripts/domEnactor.js",
