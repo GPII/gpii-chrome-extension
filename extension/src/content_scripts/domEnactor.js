@@ -82,7 +82,8 @@
                     portName: "contentScript",
                     listeners: {
                         "onIncomingRead.handle": {
-                            listener: "{that}.rejectMessage"
+                            listener: "{that}.rejectMessage",
+                            args: ["{that}.options.messageTypes.readReceipt", "{arguments}.0"]
                         }
                     },
                     invokers: {

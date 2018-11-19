@@ -366,10 +366,12 @@
         listeners: {
             "onRead.impl": "{that}.read",
             "onIncomingRead.handle": {
-                listener: "{that}.rejectMessage"
+                listener: "{that}.rejectMessage",
+                args: ["{that}.options.messageTypes.readReceipt", "{arguments}.0"]
             },
             "onIncomingWrite.handle": {
-                listener: "{that}.rejectMessage"
+                listener: "{that}.rejectMessage",
+                args: ["{that}.options.messageTypes.writeReceipt", "{arguments}.0"]
             }
         },
         invokers: {
