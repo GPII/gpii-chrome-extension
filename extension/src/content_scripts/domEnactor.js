@@ -370,7 +370,7 @@
         var promise = fluid.promise();
 
         chrome.runtime.sendMessage({
-            type: "contentScriptInjectionRequest",
+            type: "gpii.chrome.contentScriptInjectionRequest",
             src: src
         }, promise.resolve);
 

@@ -19,16 +19,16 @@
 
         fluid.registerNamespace("gpii.tests");
 
-        /****************
-         * Chrome Mocks *
-         ****************/
+        /*********************************************************************************************************
+         * Chrome Mocks
+         ********************************************************************************************************/
 
         // using the sinon-chrome stub, we return the correct path to the table of contents template
         chrome.runtime.getURL.returns("../../../node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html");
 
-        /*********************
-         * Common Assertions *
-         *********************/
+        /*********************************************************************************************************
+         * Common Assertions
+         ********************************************************************************************************/
 
         gpii.tests.assertClasses = function (that, setting) {
             fluid.each(that.options.classes, function (className, settingName) {
@@ -44,9 +44,9 @@
             jqUnit.assertUndefined("The " + subComponentName + " subcomponent should not have be created yet.", that[subComponentName]);
         };
 
-        /*****************************
-         * Selection Highlight Tests *
-         *****************************/
+        /*********************************************************************************************************
+         * Selection Highlight Tests
+         ********************************************************************************************************/
 
         jqUnit.module("Selection Highlight Tests");
 
@@ -233,9 +233,9 @@
             }]
         });
 
-        /***********************
-         * High Contrast Tests *
-         ***********************/
+        /*********************************************************************************************************
+         * High Contrast Tests
+         ********************************************************************************************************/
 
         jqUnit.module("Contrast Tests");
 
@@ -360,9 +360,9 @@
             }]
         });
 
-        /***********************
-         * Line Space Tests *
-         ***********************/
+        /*********************************************************************************************************
+         * Line Space Tests
+         ********************************************************************************************************/
 
         fluid.defaults("gpii.tests.lineSpaceTests", {
             gradeNames: ["fluid.test.testEnvironment"],
@@ -428,9 +428,9 @@
             }]
         });
 
-        /**********************************
-         * Character and Word Space Tests *
-         **********************************/
+        /*********************************************************************************************************
+         * Character and Word Space Test Helpers
+         ********************************************************************************************************/
 
         fluid.registerNamespace("gpii.tests.spacingSetterTester");
 
@@ -485,9 +485,9 @@
             jqUnit.assertEquals("The " + cssProp + " should be set to " + expectedSpacing, cssProp + ": " + expectedSpacing + ";", that.container.attr("style"));
         };
 
-        /*************************
-         * Character Space Tests *
-         *************************/
+        /*********************************************************************************************************
+         * Character Space Tests
+         ********************************************************************************************************/
 
         fluid.defaults("gpii.tests.charSpaceTests", {
             gradeNames: ["fluid.test.testEnvironment"],
@@ -520,9 +520,9 @@
             }]
         });
 
-        /********************
-         * Word Space Tests *
-         ********************/
+        /*********************************************************************************************************
+         * Word Space Tests
+         ********************************************************************************************************/
 
         fluid.defaults("gpii.tests.wordSpaceTests", {
             gradeNames: ["fluid.test.testEnvironment"],
@@ -555,9 +555,9 @@
             }]
         });
 
-        /***********************
-         * Inputs Larger Tests *
-         ***********************/
+        /*********************************************************************************************************
+         * Inputs Larger Tests
+         ********************************************************************************************************/
 
         fluid.defaults("gpii.tests.inputsLargerTests", {
             gradeNames: ["fluid.test.testEnvironment"],
@@ -620,9 +620,9 @@
             }]
         });
 
-        /***************************
-         * Table of Contents Tests *
-         ***************************/
+        /*********************************************************************************************************
+         * Table of Contents Tests
+         ********************************************************************************************************/
 
         fluid.defaults("gpii.tests.tocTests", {
             gradeNames: ["fluid.test.testEnvironment"],
@@ -689,9 +689,9 @@
             }]
         });
 
-        /**********************
-         * Self Voicing Tests *
-         **********************/
+        /*********************************************************************************************************
+         * Self Voicing Tests
+         ********************************************************************************************************/
 
         fluid.defaults("gpii.tests.selfVoicingTests", {
             gradeNames: ["fluid.test.testEnvironment"],
@@ -752,9 +752,147 @@
             jqUnit.isVisible("The orator controller should be visible", controller.container);
         };
 
-        /********************
-         * domEnactor Tests *
-         ********************/
+        /*********************************************************************************************************
+         * Syllabification Tests
+         ********************************************************************************************************/
+
+        fluid.defaults("gpii.tests.syllabificationTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                syllabification: {
+                    type: "gpii.chrome.enactor.syllabification",
+                    container: ".gpii-test-syllabification",
+                    options: {
+                        terms: {
+                            patternPrefix: "../../../node_modules/infusion/src/lib/hypher/patterns"
+                        },
+                        model: {
+                            enabled: false
+                        }
+                    }
+                },
+                syllabificationTester: {
+                    type: "gpii.tests.syllabificationTester"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.syllabificationTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            testOpts: {
+                text: "Global temperature has increased over the past 50 years.",
+                syllabified: [{
+                    type: Node.TEXT_NODE,
+                    text: "Global tem"
+                }, {
+                    type: Node.ELEMENT_NODE
+                }, {
+                    type: Node.TEXT_NODE,
+                    text: "per"
+                }, {
+                    type: Node.ELEMENT_NODE
+                }, {
+                    type: Node.TEXT_NODE,
+                    text: "a"
+                }, {
+                    type: Node.ELEMENT_NODE
+                }, {
+                    type: Node.TEXT_NODE,
+                    text: "ture has in"
+                }, {
+                    type: Node.ELEMENT_NODE
+                }, {
+                    type: Node.TEXT_NODE,
+                    text: "creased over the past 50 years."
+                }],
+                injectRequestMessage: {
+                    type: "gpii.chrome.contentScriptInjectionRequest",
+                    src: "../../../node_modules/infusion/src/lib/hypher/patterns/en-us.js"
+                }
+            },
+            modules: [{
+                name: "Syllabification Tests",
+                tests: [{
+                    name: "Model Changes",
+                    expect: 25,
+                    sequence: [{
+                        func: "gpii.tests.syllabificationTester.setup"
+                    }, {
+                        func: "gpii.tests.syllabificationTester.assertUnsyllabified",
+                        args: ["Init", "{syllabification}", "{that}.options.testOpts.text"]
+                    }, {
+                        func: "{syllabification}.applier.change",
+                        args: ["enabled", true]
+                    }, {
+                        event: "{syllabification}.events.afterSyllabification",
+                        priority: "last:testing",
+                        listener: "gpii.tests.syllabificationTester.assertInjectionCall",
+                        args: ["Syllabified", 0, "{that}.options.testOpts.injectRequestMessage"]
+                    }, {
+                        func: "gpii.tests.syllabificationTester.assertSyllabified",
+                        args: ["Syllabified", "{syllabification}", "{that}.options.testOpts.syllabified", "{that}.options.testOpts.text"]
+                    }, {
+                        func: "{syllabification}.applier.change",
+                        args: ["enabled", false]
+                    }, {
+                        changeEvent: "{syllabification}.applier.modelChanged",
+                        spec: {path: "enabled", priority: "last:testing"},
+                        listener: "gpii.tests.syllabificationTester.assertUnsyllabified",
+                        args: ["Syllabification Removed", "{syllabification}", "{that}.options.testOpts.text"]
+                    }, {
+                        // tear down
+                        func: "gpii.tests.syllabificationTester.tearDown"
+                    }]
+                }]
+            }]
+        });
+
+        gpii.tests.syllabificationTester.setup = function () {
+            var browserInject = function (msg, callback) {
+                var promise = fluid.prefs.enactor.syllabification.injectScript(msg.src);
+                promise.then(callback);
+            };
+            chrome.runtime.sendMessage.callsFake(browserInject);
+        };
+
+        gpii.tests.syllabificationTester.tearDown = function () {
+            chrome.runtime.sendMessage.flush();
+        };
+
+        gpii.tests.syllabificationTester.assertInjectionCall = function (prefix, callNum, expectedMessage) {
+            var result = chrome.runtime.sendMessage.getCall(callNum).calledWith(expectedMessage);
+            jqUnit.assertTrue(prefix + ": Call index #" + callNum + " of chrome.runtime.sendMessage should have been called with the correct message", result);
+        };
+
+        gpii.tests.syllabificationTester.assertUnsyllabified = function (prefix, that, expectedText) {
+            jqUnit.assertEquals(prefix + ": The text value should be correct", expectedText, that.container.text());
+            jqUnit.assertEquals(prefix + ": There should be no separator elements", 0, that.locate("separator").length);
+        };
+
+        gpii.tests.syllabificationTester.assertSyllabified = function (prefix, that, syllabified, expectedText) {
+            var childNodes = that.container[0].childNodes;
+            var separatorCount = 0;
+
+            jqUnit.assertEquals(prefix + ": The text for is returned correctly", expectedText, that.container.text());
+
+            fluid.each(syllabified, function (expected, index) {
+                var childNode = childNodes[index];
+                jqUnit.assertEquals(prefix + ": The childNode at index \"" + index + "\", is the correct node type", expected.type, childNode.nodeType);
+
+                if (expected.type === Node.TEXT_NODE) {
+                    jqUnit.assertEquals(prefix + ": The childNode at index \"" + index + "\", has the correct text content", expected.text, childNode.textContent);
+                } else {
+                    separatorCount += 1;
+                    jqUnit.assertTrue(prefix + ": The childNode at index \"" + index + "\", is a separator", $(childNode).is(that.options.selectors.separator));
+                }
+            });
+
+            jqUnit.assertEquals(prefix + ": The correct number of separator elements are added", separatorCount, that.locate("separator").length);
+        };
+
+        /*********************************************************************************************************
+         * domEnactor Tests
+         ********************************************************************************************************/
 
         fluid.defaults("gpii.tests.domEnactorTests", {
             gradeNames: ["fluid.test.testEnvironment"],
@@ -923,6 +1061,7 @@
             "gpii.tests.inputsLargerTests",
             "gpii.tests.tocTests",
             "gpii.tests.selfVoicingTests",
+            "gpii.tests.syllabificationTests",
             "gpii.tests.domEnactorTests",
             "gpii.tests.domEnactorWithoutSimplificationTests"
         ]);

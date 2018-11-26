@@ -25,6 +25,92 @@ require("../../extension/src/lib/chromeEvented.js");
 require("../../extension/src/lib/portBinding.js");
 require("../../extension/src/lib/domSettingsApplier.js");
 
+/*********************************************************************************************************
+ * gpii.chrome.contentScriptInjector tests
+ ********************************************************************************************************/
+
+fluid.defaults("gpii.tests.contentScriptInjectorTests", {
+    gradeNames: ["fluid.test.testEnvironment"],
+    components: {
+        contentScriptInjector: {
+            type: "gpii.chrome.contentScriptInjector"
+        },
+        contentScriptInjectorTester: {
+            type: "gpii.tests.contentScriptInjectorTester"
+        }
+    }
+});
+
+fluid.defaults("gpii.tests.contentScriptInjectorTester", {
+    gradeNames: ["fluid.test.testCaseHolder"],
+    events: {
+        onResponseReceived: null
+    },
+    testOpts: {
+        req: {
+            type: "gpii.chrome.contentScriptInjectionRequest",
+            src: "patterns/en-us.js"
+        },
+        sender: {
+            tab: {
+                id: 123
+            }
+        },
+        expectedInjectionArgs: {
+            tabID: 123,
+            message: {
+                file: "patterns/en-us.js",
+                runAt: "document_start"
+            }
+        }
+    },
+    modules: [{
+        name: "GPII Chrome Extension contentScriptInjector unit tests",
+        tests: [{
+            name: "Handle Inject Request",
+            expect: 2,
+            sequence: [{
+                // setup
+                func: "gpii.tests.contentScriptInjectorTester.setup"
+            }, {
+                func: "gpii.tests.contentScriptInjectorTester.triggerRuntimeMessage",
+                args: ["{that}.options.testOpts.req", "{that}.options.testOpts.sender", "{that}.events.onResponseReceived.fire"]
+            }, {
+                event: "{that}.events.onResponseReceived",
+                listener: "jqUnit.assert",
+                args: ["The sendResponse should have been called"]
+            }, {
+                func: "gpii.tests.contentScriptInjectorTester.assertExecuteScriptCall",
+                args: [0, "{that}.options.testOpts.expectedInjectionArgs.tabID", "{that}.options.testOpts.expectedInjectionArgs.message"]
+            }, {
+                // tear down
+                func: "gpii.tests.contentScriptInjectorTester.tearDown"
+            }]
+        }]
+    }]
+});
+
+gpii.tests.contentScriptInjectorTester.setup = function () {
+    chrome.tabs.executeScript.callsArg(2);
+};
+
+gpii.tests.contentScriptInjectorTester.tearDown = function () {
+    chrome.tabs.executeScript.flush();
+};
+
+gpii.tests.contentScriptInjectorTester.triggerRuntimeMessage = function (req, sender, sendResponse) {
+    chrome.runtime.onMessage.trigger(req, sender, sendResponse);
+};
+
+gpii.tests.contentScriptInjectorTester.assertExecuteScriptCall = function (callNum, expectedTabID, expectedMessage) {
+    var result = chrome.tabs.executeScript.getCall(callNum).calledWith(expectedTabID, expectedMessage);
+    jqUnit.assertTrue("Call index #" + callNum + " of chrome.tabs.executeScript should have been called with the correct message", result);
+};
+
+/*********************************************************************************************************
+ * gpii.chrome.domSettingsApplier tests
+ ********************************************************************************************************/
+
 fluid.defaults("gpii.tests.domSettingsApplierTests", {
     gradeNames: ["fluid.test.testEnvironment"],
     components: {
@@ -196,5 +282,6 @@ gpii.tests.domSettingsApplierTester.verifyPostedMessage = function (expectedPost
 };
 
 fluid.test.runTests([
+    "gpii.tests.contentScriptInjectorTests",
     "gpii.tests.domSettingsApplierTests"
 ]);

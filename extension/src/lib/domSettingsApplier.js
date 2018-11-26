@@ -113,38 +113,45 @@ gpii.chrome.portConnection.updateModel = function (that, model) {
 
 fluid.defaults("gpii.chrome.contentScriptInjector", {
     gradeNames: ["fluid.component", "gpii.chrome.eventedComponent"],
-    requestType: "contentScriptInjectionRequest",
-    events: {
-        onInjectionRequest: null
-    },
+    requestType: "gpii.chrome.contentScriptInjectionRequest",
     listeners: {
         "onCreate.bindEvents": {
             listener: "gpii.chrome.contentScriptInjector.bindEvents",
             args: ["{that}"]
+        },
+        "onDestroy.unbindEvents": {
+            listener: "gpii.chrome.contentScriptInjector.bindEvents",
+            args: ["{that}", true]
         }
     },
     invokers: {
-        injectContentScript: "gpii.chrome.contentScriptInjector.injectContentScript"
+        injectContentScript: "gpii.chrome.contentScriptInjector.injectContentScript",
+        handleRequest: {
+            funcName: "gpii.chrome.contentScriptInjector.handleRequest",
+            args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+        }
     }
 });
 
-gpii.chrome.contentScriptInjector.bindEvents = function (that) {
+gpii.chrome.contentScriptInjector.bindEvents = function (that, unbind) {
     // The onMessage event is bound manually and doesn't make use of `gpii.chrome.eventedComponent` because the handler
     // is required to return `true` in order to indicate that the `sendResponse` will be communicated asynchronously.
     // When using `gpii.chrome.eventedComponent` the return value of the handler is lost.
     // (See: https://developer.chrome.com/extensions/messaging#simple)
-    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-        return gpii.chrome.contentScriptInjector.handleRequest(that, request, sender, sendResponse);
+    var eventFuncName = [unbind ? "removeListener" : "addListener"];
+    chrome.runtime.onMessage[eventFuncName](function (request, sender, sendResponse) {
+        // Not relaying through an infusion event because only one sendResponse will be accepted.
+        that.handleRequest(request, sender, sendResponse);
+        return true;
     });
 };
 
 gpii.chrome.contentScriptInjector.handleRequest = function (that, request, sender, sendResponse) {
     var tabID = fluid.get(sender, ["tab", "id"]);
-    if (request.type === that.options.requestType && sender && sender.tab && sender.id) {
+    if (request.type === that.options.requestType && tabID) {
         var promise = that.injectContentScript(tabID, request.src);
         promise.then(sendResponse);
     }
-    return true;
 };
 
 gpii.chrome.contentScriptInjector.injectContentScript = function (tabID, src) {
