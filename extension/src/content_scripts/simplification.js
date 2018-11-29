@@ -83,7 +83,7 @@
         injectNavToggle: true,
         components: {
             observer: {
-                type: "gpii.chrome.mutationObserver",
+                type: "fluid.mutationObserver",
                 container: "{that}.container",
                 options: {
                     defaultObserveConfig: {
