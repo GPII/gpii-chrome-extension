@@ -23,9 +23,7 @@
          * portBinding tests *
          *********************/
 
-        fluid.defaults("gpii.tests.chrome.portBinding", {
-            gradeNames: ["gpii.chrome.portBinding"],
-            portName: "portBindingTests",
+        fluid.defaults("gpii.tests.chrome.portBindingSpies", {
             members: {
                 handleReadSpy: {
                     expander: {
@@ -50,6 +48,11 @@
                     args: ["{that}.handleWriteSpy", "{arguments}.0"]
                 }
             }
+        });
+
+        fluid.defaults("gpii.tests.chrome.portBinding", {
+            gradeNames: ["gpii.chrome.portBinding", "gpii.tests.chrome.portBindingSpies"],
+            portName: "portBindingTests"
         });
 
         gpii.tests.chrome.portBinding.handle = function (spy, data) {
@@ -115,28 +118,28 @@
                     },
                     incomingWrite: {
                         type: "gpii.chrome.writeRequest",
-                        id: "incomingRead-1",
+                        id: "incomingWrite-1",
                         payload: {
                             toReturn: {value: "test"}
                         }
                     },
                     returnedWriteReceipt: {
                         type: "gpii.chrome.writeReceipt",
-                        id: "incomingRead-1",
+                        id: "incomingWrite-1",
                         payload: {
                             value: "test"
                         }
                     },
                     incomingWriteRejected: {
                         type: "gpii.chrome.writeRequest",
-                        id: "incomingRead-2",
+                        id: "incomingWrite-2",
                         payload: {
                             reject: true
                         }
                     },
                     returnedRejectedWriteReceipt: {
                         type: "gpii.chrome.writeReceipt",
-                        id: "incomingRead-2",
+                        id: "incomingWrite-2",
                         payload: {
                             reject: true
                         },
@@ -338,7 +341,7 @@
                 portBindingStore: {
                     type: "gpii.chrome.portBinding.store",
                     options: {
-                        gradeNames: ["gpii.tests.chrome.portBinding", "fluid.dataSource.writable"],
+                        gradeNames: ["gpii.tests.chrome.portBindingSpies", "fluid.dataSource.writable"],
                         portName: "portBindingStoreTests"
                     }
                 },
@@ -371,6 +374,36 @@
                         type: "gpii.chrome.writeReceipt",
                         // the id will be added by gpii.tests.chrome.portBinding.returnReceipt
                         payload: "{that}.options.testOpts.prefs"
+                    },
+                    incomingReadRejected: {
+                        type: "gpii.chrome.readRequest",
+                        id: "incomingRead-1",
+                        payload: {
+                            reject: true
+                        }
+                    },
+                    returnedRejectedReadReceipt: {
+                        type: "gpii.chrome.readReceipt",
+                        id: "incomingRead-1",
+                        payload: null,
+                        error: {
+                            message: "Request of type: gpii.chrome.readRequest are not accepted."
+                        }
+                    },
+                    incomingWriteRejected: {
+                        type: "gpii.chrome.writeRequest",
+                        id: "incomingWrite-1",
+                        payload: {
+                            reject: true
+                        }
+                    },
+                    returnedRejectedWriteReceipt: {
+                        type: "gpii.chrome.writeReceipt",
+                        id: "incomingWrite-1",
+                        payload: null,
+                        error: {
+                            message: "Request of type: gpii.chrome.writeRequest are not accepted."
+                        }
                     }
                 }
             },
@@ -378,7 +411,7 @@
                 name: "portBinding store Tests",
                 tests: [{
                     name: "getting/setting",
-                    expect: 4,
+                    expect: 8,
                     sequence: [{
                         func: "gpii.tests.chrome.portBinding.assertConnection",
                         args: ["{that}.options.testOpts.expectedPortName"]
@@ -402,6 +435,36 @@
                         args: [null, "{that}.options.testOpts.prefs"],
                         resolve: "gpii.tests.chrome.portBinding.assertPostMessageWithUnknownID",
                         resolveArgs: ["Set", "{portBindingStore}.port", "{that}.options.testOpts.messages.writeRequest"]
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{portBindingStore}.port"]
+                    }, {
+                        // reject read Request
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{portBindingStore}.port", "{that}.options.testOpts.messages.incomingReadRejected"]
+                    }, {
+                        event: "{portBindingStore}.events.onIncomingRead",
+                        priority: "last:testing",
+                        listener: "jqUnit.assertDeepEq",
+                        args: ["Rejected Incoming Read: The onIncomingRead event should have passed along the message", "{that}.options.testOpts.messages.incomingReadRejected", "{arguments}.0"]
+                    }, {
+                        funcName: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        args: ["{portBindingStore}.port", "{that}.options.testOpts.messages.returnedRejectedReadReceipt"]
+                    }, {
+                        func: "gpii.tests.chrome.portBinding.resetPostMessage",
+                        args: ["{portBindingStore}.port"]
+                    }, {
+                        // reject write Request
+                        func: "gpii.tests.mockPort.trigger.onMessage",
+                        args: ["{portBindingStore}.port", "{that}.options.testOpts.messages.incomingWriteRejected"]
+                    }, {
+                        event: "{portBindingStore}.events.onIncomingWrite",
+                        priority: "last:testing",
+                        listener: "jqUnit.assertDeepEq",
+                        args: ["Rejected Incoming Write: The onIncomingWrite event should have passed along the message", "{that}.options.testOpts.messages.incomingWriteRejected", "{arguments}.0"]
+                    }, {
+                        funcName: "gpii.tests.chrome.portBinding.assertPostMessage",
+                        args: ["{portBindingStore}.port", "{that}.options.testOpts.messages.returnedRejectedWriteReceipt"]
                     }, {
                         func: "gpii.tests.chrome.portBinding.resetPostMessage",
                         args: ["{portBindingStore}.port"]
