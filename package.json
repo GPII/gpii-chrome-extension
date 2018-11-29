@@ -28,12 +28,12 @@
     "scripts": {
         "pretest": "node node_modules/rimraf/rimraf.js reports/* coverage/* && grunt build",
         "test": "npm run test:node && npm run test:browser",
-        "test:node": "node node_modules/nyc/bin/nyc.js --temp-directory coverage --reporter none node tests/node/all-tests.js",
+        "test:node": "node node_modules/nyc/bin/nyc.js node tests/node/all-tests.js",
         "test:browser": "node node_modules/testem/testem.js ci --file tests/browser/testem.js",
         "test:vagrant": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm test'",
         "test:vagrantBrowser": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:browser'",
         "test:vagrantNode": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:node'",
-        "posttest": "node node_modules/nyc/bin/nyc.js report --temp-directory coverage --reporter text-summary --reporter html"
+        "posttest": "node node_modules/nyc/bin/nyc.js report --reporter text-summary --reporter html"
     },
     "dependencies": {
         "infusion": "3.0.0-dev.20181030T133624Z.f977b0fa9",
