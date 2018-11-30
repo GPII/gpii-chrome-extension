@@ -30,6 +30,7 @@ module.exports = function (grunt) {
         ],
         contentScriptsLib: [
             "node_modules/infusion/src/lib/jquery/core/js/jquery.js",
+            "node_modules/infusion/src/lib/hypher/jquery.hypher.js",
             "node_modules/infusion/src/framework/core/js/Fluid.js",
             "node_modules/infusion/src/framework/core/js/FluidPromises.js",
             "node_modules/infusion/src/framework/core/js/DataSource.js",
@@ -43,6 +44,8 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
             "node_modules/infusion/src/framework/core/js/FluidDOMUtilities.js",
             "node_modules/infusion/src/framework/core/js/FluidRequests.js",
+            "node_modules/infusion/src/framework/core/js/MutationObserver.js",
+            "node_modules/infusion/src/framework/core/js/TextNodeParser.js",
             "node_modules/infusion/src/lib/fastXmlPull/js/fastXmlPull.js",
             "node_modules/infusion/src/framework/core/js/MessageResolver.js",
             "node_modules/infusion/src/framework/renderer/js/fluidParser.js",
@@ -56,7 +59,8 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/components/orator/js/Orator.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingEnactor.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpaceEnactor.js",
-            "node_modules/infusion/src/framework/preferences/js/WordSpaceEnactor.js"
+            "node_modules/infusion/src/framework/preferences/js/WordSpaceEnactor.js",
+            "node_modules/infusion/src/framework/preferences/js/SyllabificationEnactor.js"
         ],
         adjustersLib: [
             // jQuery
@@ -99,14 +103,12 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/UIEnhancer.js",
             "node_modules/infusion/src/framework/preferences/js/PrefsEditor.js",
             "node_modules/infusion/src/framework/preferences/js/Panels.js",
-            "node_modules/infusion/src/framework/preferences/js/SelfVoicingPanel.js",
-            "node_modules/infusion/src/framework/preferences/js/LetterSpacePanel.js",
-            "node_modules/infusion/src/framework/preferences/js/WordSpacePanel.js",
             "node_modules/infusion/src/framework/preferences/js/CaptionsPanel.js",
+            "node_modules/infusion/src/framework/preferences/js/LetterSpacePanel.js",
+            "node_modules/infusion/src/framework/preferences/js/SelfVoicingPanel.js",
+            "node_modules/infusion/src/framework/preferences/js/SyllabificationPanel.js",
+            "node_modules/infusion/src/framework/preferences/js/WordSpacePanel.js",
             "node_modules/infusion/src/framework/preferences/js/Enactors.js",
-            "node_modules/infusion/src/framework/preferences/js/LetterSpaceEnactor.js",
-            "node_modules/infusion/src/framework/preferences/js/WordSpaceEnactor.js",
-            "node_modules/infusion/src/framework/preferences/js/CaptionsEnactor.js",
             "node_modules/infusion/src/framework/preferences/js/StarterGrades.js",
             "node_modules/infusion/src/framework/preferences/js/ArrowScrolling.js",
             "node_modules/infusion/src/framework/preferences/js/SeparatedPanelPrefsEditor.js",
@@ -114,10 +116,11 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/PrimaryBuilder.js",
             "node_modules/infusion/src/framework/preferences/js/AuxBuilder.js",
             "node_modules/infusion/src/framework/preferences/js/StarterSchemas.js",
-            "node_modules/infusion/src/framework/preferences/js/SelfVoicingSchemas.js",
-            "node_modules/infusion/src/framework/preferences/js/LetterSpaceSchemas.js",
-            "node_modules/infusion/src/framework/preferences/js/WordSpaceSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/CaptionsSchemas.js",
+            "node_modules/infusion/src/framework/preferences/js/LetterSpaceSchemas.js",
+            "node_modules/infusion/src/framework/preferences/js/SelfVoicingSchemas.js",
+            "node_modules/infusion/src/framework/preferences/js/SyllabificationSchemas.js",
+            "node_modules/infusion/src/framework/preferences/js/WordSpaceSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/Builder.js",
 
             // from extension
@@ -147,6 +150,9 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/components/tableOfContents/css/TableOfContents.css",
             "node_modules/infusion/dist/assets/src/framework/preferences/css/PrefsEditor.css",
             "node_modules/infusion/dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditorFrame.css"
+        ],
+        syllablePatterns: [
+            "node_modules/infusion/src/lib/hypher/patterns/*.js"
         ],
         infusionTesting: [
             "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
@@ -293,6 +299,14 @@ module.exports = function (grunt) {
                             files.css
                         ),
                         dest: "build/css/",
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: [].concat(
+                            files.syllablePatterns
+                        ),
+                        dest: "build/syllablePatterns/",
                         expand: true,
                         flatten: true
                     },

@@ -19,9 +19,9 @@
 
         fluid.registerNamespace("gpii.tests");
 
-        /***************
-         * store tests *
-         ***************/
+        /*********************************************************************************************************
+         * store tests
+         ********************************************************************************************************/
 
         gpii.tests.stored = {
             testSettings: {
@@ -134,9 +134,9 @@
             }]
         });
 
-        /***************
+        /*********************************************************************************************************
          * Panel Tests *
-         ***************/
+         *********************************************************************************************************/
 
         gpii.tests.changeInput = function (container, newValue) {
             fluid.changeElementValue(container.find("input"), newValue);
@@ -173,7 +173,10 @@
             matchingInput.prop("checked", "checked").change();
         };
 
-        // Text Size
+
+        /*************
+         * Text Size *
+         *************/
         fluid.defaults("gpii.tests.chrome.prefs.panel.textSize", {
             gradeNames: ["gpii.chrome.prefs.panel.textSize", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             model: {
@@ -234,7 +237,9 @@
             }]
         });
 
-        // Line Space
+        /**************
+         * Line Space *
+         *************/
         fluid.defaults("gpii.tests.chrome.prefs.panel.lineSpace", {
             gradeNames: ["gpii.chrome.prefs.panel.lineSpace", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             model: {
@@ -302,7 +307,9 @@
             }]
         });
 
-        // Character Space
+        /*******************
+         * Character Space *
+         ******************/
         fluid.defaults("gpii.tests.chrome.prefs.panel.charSpace", {
             gradeNames: ["fluid.prefs.panel.letterSpace", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             model: {
@@ -370,6 +377,9 @@
             }]
         });
 
+        /************
+         * Contrast *
+         ***********/
         // Contrast
         fluid.defaults("gpii.chrome.tests.prefs.panel.contrast", {
             gradeNames: ["gpii.chrome.prefs.panel.contrast", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
@@ -449,7 +459,9 @@
             }]
         });
 
-        // Highlight
+        /*************
+         * Highlight *
+         ************/
         fluid.defaults("gpii.chrome.tests.prefs.panel.highlight", {
             gradeNames: ["gpii.chrome.prefs.panel.highlight", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             messageBase: {
@@ -522,8 +534,10 @@
                 }]
             }]
         });
-        // Switch Adjuster Sequences
 
+        /*****************************
+         * Switch Adjuster Sequences *
+         ****************************/
         fluid.defaults("gppi.tests.sequence.switchAdjusterRendering", {
             gradeNames: "fluid.test.sequenceElement",
             sequence: [{
@@ -575,7 +589,9 @@
             }
         });
 
-        // Simplify
+        /************
+         * Simplify *
+         **********/
         fluid.defaults("fluid.tests.prefs.panel.simplify", {
             gradeNames: ["gpii.chrome.prefs.panel.simplify", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             model: {
@@ -624,7 +640,60 @@
             }]
         });
 
-        // Click to Select
+        /*******************
+         * Syllabification *
+         ******************/
+        fluid.defaults("fluid.tests.prefs.panel.syllabification", {
+            gradeNames: ["fluid.prefs.panel.syllabification", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
+            model: {
+                value: false
+            },
+            messageBase: {
+                "label": "Syllabification",
+                "description": "Separate words into their phonetic parts.",
+                "switchOn": "ON",
+                "switchOff": "OFF"
+            },
+            resources: {
+                template: {
+                    href: "../../../build/templates/PrefsEditorTemplate-syllabification.html"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.syllabificationAdjusterTests", {
+            gradeNames: ["fluid.test.testEnvironment"],
+            components: {
+                syllabification: {
+                    type: "fluid.tests.prefs.panel.syllabification",
+                    container: ".gpiic-syllabification",
+                    createOnEvent: "{syllabificationTester}.events.onTestCaseStart"
+                },
+                syllabificationTester: {
+                    type: "gpii.tests.syllabificationTester"
+                }
+            }
+        });
+
+        fluid.defaults("gpii.tests.syllabificationTester", {
+            gradeNames: ["fluid.test.testCaseHolder"],
+            testOptions: {
+                defaultInputStatus: false,
+                newValue: true
+            },
+            modules: [{
+                name: "Syllabification Adjuster",
+                tests: [{
+                    expect: 8,
+                    name: "rendering and input change",
+                    sequenceGrade: "fluid.tests.switchAdjusterSequences"
+                }]
+            }]
+        });
+
+        /*******************
+         * Click to Select *
+         ******************/
         fluid.defaults("fluid.tests.prefs.panel.clickToSelect", {
             gradeNames: ["gpii.chrome.prefs.panel.clickToSelect", "fluid.tests.panels.utils.defaultTestPanel", "fluid.tests.panels.utils.injectTemplates"],
             model: {
@@ -673,9 +742,9 @@
             }]
         });
 
-        /*********************
+        /*********************************************************************************************************
          * PrefsEditor Tests *
-         *********************/
+         *********************************************************************************************************/
 
         // TODO: Added "integration" tests for the prefs editor using the gpii.chrome.prefs.auxSchema schema.
         //       Ensure that adjuster models are updated in both directions, and that the store is triggered.
@@ -786,6 +855,7 @@
                         fluid_prefs_enhanceInputs: false,
                         fluid_prefs_letterSpace: 1,
                         fluid_prefs_speak: false,
+                        fluid_prefs_syllabification: false,
                         fluid_prefs_tableOfContents: false,
                         gpii_chrome_prefs_clickToSelect: false,
                         gpii_chrome_prefs_contrast: "default",
@@ -802,6 +872,7 @@
                         fluid_prefs_enhanceInputs: true,
                         fluid_prefs_letterSpace: 1.2,
                         fluid_prefs_speak: true,
+                        fluid_prefs_syllabification: true,
                         fluid_prefs_tableOfContents: true,
                         gpii_chrome_prefs_clickToSelect: true,
                         gpii_chrome_prefs_contrast: "yb",
@@ -818,6 +889,7 @@
                     "fluid_prefs_panel_layoutControls",
                     "fluid_prefs_panel_letterSpace",
                     "fluid_prefs_panel_speak",
+                    "fluid_prefs_panel_syllabification",
                     "gpii_chrome_prefs_panel_clickToSelect",
                     "gpii_chrome_prefs_panel_contrast",
                     "gpii_chrome_prefs_panel_highlight",
@@ -831,7 +903,7 @@
                 name: "Prefs Editor Tests",
                 tests: [{
                     name: "Instantiation",
-                    expect:22,
+                    expect:23,
                     sequence: [{
                         event: "{testEnvironment prefsEditorStack prefsEditorLoader}.events.onReady",
                         listener: "gpii.tests.prefsEditorTests.assertInit",
@@ -840,7 +912,7 @@
                     }]
                 }, {
                     name: "Model Changes",
-                    expect:12,
+                    expect:13,
                     sequence: [{
                         // captions model change
                         jQueryTrigger: "click",
@@ -923,6 +995,15 @@
                         spec: {path: "preferences.fluid_prefs_speak", priority: "last:testing"},
                         changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
                     }, {
+                        // syllabification model change
+                        jQueryTrigger: "click",
+                        element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_syllabification.switchUI.dom.control"
+                    }, {
+                        listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
+                        args: ["{prefsEditorStack}", ["preferences", "fluid_prefs_syllabification"], "{that}.options.testOpts.newModel"],
+                        spec: {path: "preferences.fluid_prefs_syllabification", priority: "last:testing"},
+                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
+                    }, {
                         // table of contents model change
                         jQueryTrigger: "click",
                         element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_layoutControls.switchUI.dom.control"
@@ -962,6 +1043,7 @@
             "gpii.tests.contrastAdjusterTests",
             "gpii.tests.highlightAdjusterTests",
             "gpii.tests.simplifyAdjusterTests",
+            "gpii.tests.syllabificationAdjusterTests",
             "gpii.tests.clickToSelectAdjusterTests",
             "gpii.tests.prefsEditorTests"
         ]);

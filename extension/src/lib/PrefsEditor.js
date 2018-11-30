@@ -26,6 +26,7 @@
             "preferences.fluid_prefs_enhanceInputs": "settings.inputsLargerEnabled",
             "preferences.fluid_prefs_letterSpace": "settings.characterSpace",
             "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
+            "preferences.fluid_prefs_syllabification": "settings.syllabificationEnabled",
             "preferences.fluid_prefs_tableOfContents": "settings.tableOfContentsEnabled",
             "preferences.gpii_chrome_prefs_contrast": "settings.contrastTheme",
             "preferences.gpii_chrome_prefs_clickToSelect": "settings.clickToSelectEnabled",
@@ -363,6 +364,15 @@
                     "container": ".flc-prefsEditor-simplify",
                     "template": "%templatePrefix/SimplifyPanelTemplate.html",
                     "message": "%messagePrefix/simplify.json"
+                }
+            },
+            "syllabification": {
+                "type": "fluid.prefs.syllabification",
+                "panel": {
+                    "type": "fluid.prefs.panel.syllabification",
+                    "container": ".flc-prefsEditor-syllabification",
+                    "template": "%templatePrefix/PrefsEditorTemplate-syllabification.html",
+                    "message": "%messagePrefix/syllabification.json"
                 }
             },
             "tableOfContents": {

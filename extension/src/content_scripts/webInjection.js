@@ -19,10 +19,7 @@
 
     gpii.chrome.webInjection.fonts = [{
         fontFamily: "Orator-Icons",
-        urls: [
-            chrome.runtime.getURL("fonts/Orator-Icons.ttf"),
-            chrome.runtime.getURL("fonts/Orator-Icons.eot")
-        ]
+        urls: [chrome.runtime.getURL("fonts/Orator-Icons.woff")]
     }];
 
     // Listed in the order the scripts will be injected into the page

@@ -36,8 +36,8 @@
         "posttest": "node node_modules/nyc/bin/nyc.js report --reporter text-summary --reporter html"
     },
     "dependencies": {
-        "infusion": "3.0.0-dev.20181030T133624Z.f977b0fa9",
-        "ws": "6.1.0"
+        "infusion": "3.0.0-dev.20181129T191659Z.507a1a8eb",
+        "ws": "6.1.2"
     },
     "devDependencies": {
         "eslint-config-fluid": "1.3.0",
@@ -51,8 +51,8 @@
         "grunt-shell": "2.1.0",
         "node-jqunit": "1.1.8",
         "sinon-chrome": "2.3.2",
-        "sinon": "7.0.0",
-        "gpii-testem": "2.1.5",
+        "sinon": "7.1.1",
+        "gpii-testem": "2.1.6",
         "ncp": "2.0.0",
         "nyc": "13.1.0",
         "rimraf": "2.6.2",

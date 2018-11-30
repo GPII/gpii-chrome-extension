@@ -54,8 +54,20 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
                 port: "{arguments}.0"
             }
         }
+    },
+    components: {
+        contentScriptInjector: {
+            type: "gpii.chrome.contentScriptInjector"
+        }
     }
 });
+
+/*******************************************************************************************
+ * gpii.chrome.portConnection manages a port a connection
+ *
+ * Typically this is used as a dynamic component with an instance created for each
+ * port.
+ *******************************************************************************************/
 
 fluid.defaults("gpii.chrome.portConnection", {
     gradeNames: ["gpii.chrome.portBinding", "fluid.modelComponent"],
@@ -93,4 +105,60 @@ gpii.chrome.portConnection.updateModel = function (that, model) {
     transaction.change("", model);
     transaction.commit();
     return that.model;
+};
+
+/*******************************************************************************************
+ * gpii.chrome.contentScriptInjector handles dynamically injecting content scripts
+ *******************************************************************************************/
+
+fluid.defaults("gpii.chrome.contentScriptInjector", {
+    gradeNames: ["fluid.component", "gpii.chrome.eventedComponent"],
+    requestType: "gpii.chrome.contentScriptInjectionRequest",
+    listeners: {
+        "onCreate.bindEvents": {
+            listener: "gpii.chrome.contentScriptInjector.bindEvents",
+            args: ["{that}"]
+        },
+        "onDestroy.unbindEvents": {
+            listener: "gpii.chrome.contentScriptInjector.bindEvents",
+            args: ["{that}", true]
+        }
+    },
+    invokers: {
+        injectContentScript: "gpii.chrome.contentScriptInjector.injectContentScript",
+        handleRequest: {
+            funcName: "gpii.chrome.contentScriptInjector.handleRequest",
+            args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+        }
+    }
+});
+
+gpii.chrome.contentScriptInjector.bindEvents = function (that, unbind) {
+    // The onMessage event is bound manually and doesn't make use of `gpii.chrome.eventedComponent` because the handler
+    // is required to return `true` in order to indicate that the `sendResponse` will be communicated asynchronously.
+    // When using `gpii.chrome.eventedComponent` the return value of the handler is lost.
+    // (See: https://developer.chrome.com/extensions/messaging#simple)
+    var eventFuncName = [unbind ? "removeListener" : "addListener"];
+    chrome.runtime.onMessage[eventFuncName](function (request, sender, sendResponse) {
+        // Not relaying through an infusion event because only one sendResponse will be accepted.
+        that.handleRequest(request, sender, sendResponse);
+        return true;
+    });
+};
+
+gpii.chrome.contentScriptInjector.handleRequest = function (that, request, sender, sendResponse) {
+    var tabID = fluid.get(sender, ["tab", "id"]);
+    if (request.type === that.options.requestType && tabID) {
+        var promise = that.injectContentScript(tabID, request.src);
+        promise.then(sendResponse);
+    }
+};
+
+gpii.chrome.contentScriptInjector.injectContentScript = function (tabID, src) {
+    var promise = fluid.promise();
+    chrome.tabs.executeScript(tabID, {
+        file: src,
+        runAt: "document_start"
+    }, promise.resolve);
+    return promise;
 };

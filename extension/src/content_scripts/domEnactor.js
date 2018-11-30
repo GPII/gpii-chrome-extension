@@ -10,7 +10,7 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid */
+/* global fluid, chrome */
 "use strict";
 
 (function ($, fluid) {
@@ -23,15 +23,16 @@
         gradeNames: ["fluid.contextAware", "fluid.viewComponent"],
         model: {
             // Accepted model values:
-            // contrastTheme: String,
-            // lineSpace: Number,    // the multiplier to the current line space
+            // captionsEnabled: Boolean,
             // characterSpace: Number,
+            // contrastTheme: String,
             // inputsLargerEnabled: Boolean,
+            // lineSpace: Number,    // the multiplier to the current line space
             // selectionTheme: String,
-            // simplifiedUiEnabled: Boolean,
-            // tableOfContentsEnabled: Boolean,
             // selfVoicingEnabled: Boolean,
-            // captionsEnabled: Boolean
+            // simplifiedUiEnabled: Boolean,
+            // syllabificationEnabled: Boolean,
+            // tableOfContentsEnabled: Boolean
         },
         events: {
             onIncomingSettings: null
@@ -82,7 +83,8 @@
                     portName: "contentScript",
                     listeners: {
                         "onIncomingRead.handle": {
-                            listener: "{that}.rejectMessage"
+                            listener: "{that}.rejectMessage",
+                            args: ["{that}.options.messageTypes.readReceipt", "{arguments}.0"]
                         }
                     },
                     invokers: {
@@ -155,13 +157,21 @@
                                     selectionReader: {
                                         options: {
                                             markup: {
-                                                playButton: "<button class=\"flc-orator-selectionReader-play gpiic-simplify-visible fl-orator-selectionReader-play\"><span class=\"fl-icon-orator\"></span><span>%playButton</span></button>"
+                                                control: "<button class=\"flc-orator-selectionReader-control gpiic-simplify-visible \"><span class=\"fl-icon-orator\"></span><span class=\"flc-orator-selectionReader-controlLabel\"></span></button>"
                                             }
                                         }
                                     }
                                 }
                             }
                         }
+                    }
+                }
+            },
+            syllabification: {
+                type: "gpii.chrome.enactor.syllabification",
+                options: {
+                    model: {
+                        enabled: "{domEnactor}.model.syllabificationEnabled"
                     }
                 }
             },
@@ -341,6 +351,31 @@
         gradeNames: ["fluid.prefs.enactor", "gpii.simplify"],
         injectNavToggle: false
     });
+
+    // Syllabification
+    fluid.defaults("gpii.chrome.enactor.syllabification", {
+        gradeNames: ["fluid.prefs.enactor.syllabification"],
+        terms: {
+            patternPrefix: "syllablePatterns"
+        },
+        markup: {
+            separator: "<span class=\"flc-syllabification-separator gpii-ext-syllabification-separator\"></span>"
+        },
+        invokers: {
+            injectScript: "gpii.chrome.enactor.syllabification.injectScript"
+        }
+    });
+
+    gpii.chrome.enactor.syllabification.injectScript = function (src) {
+        var promise = fluid.promise();
+
+        chrome.runtime.sendMessage({
+            type: "gpii.chrome.contentScriptInjectionRequest",
+            src: src
+        }, promise.resolve);
+
+        return promise;
+    };
 
     // Table of contents
     fluid.defaults("gpii.chrome.enactor.tableOfContents", {
