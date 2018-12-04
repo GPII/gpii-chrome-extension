@@ -45,7 +45,8 @@ npm install
 
 ### Build
 
-This is the primary build type and used when creating a published version. However, the build can also be run as an an unpacked extension. The generated build is output to the "build" directory at the root of the project.
+This is the primary build type and used when creating a published version. However, the build can also be run as an an
+unpacked extension. The generated build is output to the "build" directory at the root of the project.
 
 ```bash
 grunt build
@@ -53,7 +54,9 @@ grunt build
 
 ### Development Build
 
-Development build's create a version that can be run as an unpacked extension and includes source maps for debugging purposes. Due to the extra resources for debugging, this build type should not be used for publishing. The generated build is output to the "build" directory at the root of the project.
+Development build's create a version that can be run as an unpacked extension and includes source maps for debugging
+purposes. Due to the extra resources for debugging, this build type should not be used for publishing. The generated
+build is output to the "build" directory at the root of the project.
 
 ```bash
 grunt buildDev
@@ -61,7 +64,9 @@ grunt buildDev
 
 ### CRX Build
 
-[CRX](https://developer.chrome.com/extensions/crx) builds, allow for packaging the extension into a format that can be more easily shared and distributed for testing. However, this type of package cannot be uploaded to the Chrome Web Store. The generated build is output to the "build" directory at the root of the project.
+[CRX](https://developer.chrome.com/extensions/crx) builds, allow for packaging the extension into a format that can be
+more easily shared and distributed for testing. However, this type of package cannot be uploaded to the Chrome Web
+Store. The generated build is output to the "build" directory at the root of the project.
 
 ```bash
 grunt buildPkg
