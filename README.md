@@ -29,6 +29,8 @@ Community Living under grant #90RE5027.
 
 ## Building the extension
 
+### Dependencies
+
 Install *grunt-cli* globally:
 
 ```bash
@@ -41,19 +43,25 @@ Install required dependencies:
 npm install
 ```
 
-Perform a build so you can run an unpacked version of the extension on your browser.
+### Build
+
+This is the primary build type and used when creating a published version. However, the build can also be run as an an unpacked extension. The generated build is output to the "build" directory at the root of the project.
 
 ```bash
 grunt build
 ```
 
-You can also create a development build which creates an unpacked version that includes source maps.
+### Development Build
+
+Development build's create a version that can be run as an unpacked extension and includes source maps for debugging purposes. Due to the extra resources for debugging, this build type should not be used for publishing. The generated build is output to the "build" directory at the root of the project.
 
 ```bash
 grunt buildDev
 ```
 
-If you want to create a [crx](https://developer.chrome.com/extensions/crx) package to be distributed, run:
+### CRX Build
+
+[CRX](https://developer.chrome.com/extensions/crx) builds, allow for packaging the extension into a format that can be more easily shared and distributed for testing. However, this type of package cannot be uploaded to the Chrome Web Store. The generated build is output to the "build" directory at the root of the project.
 
 ```bash
 grunt buildPkg
@@ -64,11 +72,15 @@ with. This file needs to be called "key.pem" and must be placed in the top level
 
 ## Testing
 
+### Node
+
 Run the node based tests:
 
 ```bash
 node tests/node/all-tests.js
 ```
+
+### Browser
 
 Run the browser based tests:
 
@@ -76,7 +88,9 @@ Run the browser based tests:
 
 _**NOTE:** Browser tests should be served through a web server. The exact URL may vary._
 
-Run all the tests through testem:
+### All tests with reports
+
+Run all the tests and generate reports which can be viewed in the browser from the "reports" directory:
 
 ```bash
 # run on the host machine
