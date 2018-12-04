@@ -14,10 +14,9 @@ The following adaptations are supported:
 * Reading Mode
 * Right-Click to Select
 * Selection Highlight
-* Text-to-Speech (only for selected text)
-* Reading Mode
+* Syllables
 * Table of Contents
-* Text-to-Speech
+* Text-to-Speech (only for selected text)
 * Word Space
 * Zoom
 
@@ -83,6 +82,10 @@ Follow these steps if you want to use the unpacked version of the extension:
 Published versions can be installed from the Chrome Web Store.
 
 ## 3rd Party Software
+
+### BSD (3-Clause)
+
+* [Infusion v3.0.0-dev](https://fluidproject.org/infusion.html)
 
 ### MIT License
 
