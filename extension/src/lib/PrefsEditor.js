@@ -210,6 +210,21 @@
                 "model.value": "value",
                 "controlValues.theme": "enum"
             }
+        },
+        stringArrayIndex: {
+            theme: [
+                "contrast-default",
+                "contrast-bw",
+                "contrast-wb",
+                "contrast-by",
+                "contrast-yb",
+                "contrast-gw",
+                "contrast-gd",
+                "contrast-bbr"
+            ]
+        },
+        controlValues: {
+            theme: ["default", "bw", "wb", "by", "yb", "gw", "gd", "bbr"]
         }
     });
 
