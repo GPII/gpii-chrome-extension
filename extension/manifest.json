@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "UI Options Plus (UIO+)",
     "short_name": "UIO+",
-    "version": "0.1.0.9",
+    "version": "0.1.0.10",
     "description": "User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.",
     "author": "Fluid Project",
     "permissions": [
