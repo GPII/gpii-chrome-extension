@@ -6,12 +6,8 @@
     "description": "User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.",
     "author": "Fluid Project",
     "permissions": [
-        "activeTab",
-        "management",
-        "notifications",
         "tabs",
-        "http://*/",
-        "https://*/"
+        "*://*/"
     ],
     "browser_action": {
         "default_title": "UIO+",
