@@ -1,8 +1,8 @@
 # UI Options Plus (UIO+)
 
 User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.
-Settings for the adaptations can be set via the UIO+ adjuster panel or, if on a GPII (Global Public Inclusive
-Infrastructure) enable machine, from a keyed in preference set.
+Settings for the adaptations can be set via the UIO+ adjuster panel or, if on a [Morphic](https://morphic.world) enabled
+machine, from a keyed in preference set.
 
 The following adaptations are supported:
 
