@@ -158,6 +158,8 @@ gpii.chrome.contentScriptInjector.injectContentScript = function (tabID, src) {
     var promise = fluid.promise();
     chrome.tabs.executeScript(tabID, {
         file: src,
+        allFrames: true,
+        matchAboutBlank: true,
         runAt: "document_start"
     }, promise.resolve);
     return promise;

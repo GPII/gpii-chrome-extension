@@ -60,6 +60,8 @@ fluid.defaults("gpii.tests.contentScriptInjectorTester", {
             tabID: 123,
             message: {
                 file: "patterns/en-us.js",
+                allFrames: true,
+                matchAboutBlank: true,
                 runAt: "document_start"
             }
         }
