@@ -387,6 +387,13 @@
                 args: ["templates/TableOfContents.html"]
             }
         },
+        tocMessage: {
+            // Converts the relative path to a fully-qualified URL in the extension.
+            expander: {
+                funcName: "chrome.runtime.getURL",
+                args: ["messages/tableOfContents-enactor.json"]
+            }
+        },
         selectors: {
             tocContainer: ".flc-toc-tocContainer",
             article: "article, [role~='article'], .article, #article",
