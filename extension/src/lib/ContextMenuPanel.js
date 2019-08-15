@@ -20,6 +20,85 @@ var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
 fluid.defaults("gpii.chrome.contextMenuPanel", {
     gradeNames: ["fluid.modelComponent"],
+    components: {
+        "captions": {
+            type: "gpii.chrome.contextItem",
+            options: {
+                contextProps: {
+                    title: "youtube captions"
+                },
+                model: {
+                    value: "{contextMenuPanel}.model.captionsEnabled"
+                }
+            }
+        },
+        "inputsLarger": {
+            type: "gpii.chrome.contextItem",
+            options: {
+                contextProps: {
+                    title: "enhance inputs"
+                },
+                model: {
+                    value: "{contextMenuPanel}.model.inputsLargerEnabled"
+                }
+            }
+        },
+        "rightClickToSelect": {
+            type: "gpii.chrome.contextItem",
+            options: {
+                contextProps: {
+                    title: "right-click to select"
+                },
+                model: {
+                    value: "{contextMenuPanel}.model.clickToSelectEnabled"
+                }
+            }
+        },
+        "selfVoicing": {
+            type: "gpii.chrome.contextItem",
+            options: {
+                contextProps: {
+                    title: "text-to-speech"
+                },
+                model: {
+                    value: "{contextMenuPanel}.model.selfVoicingEnabled"
+                }
+            }
+        },
+        "simplifiedUI": {
+            type: "gpii.chrome.contextItem",
+            options: {
+                contextProps: {
+                    title: "reading mode"
+                },
+                model: {
+                    value: "{contextMenuPanel}.model.simplifiedUIEnabled"
+                }
+            }
+        },
+        "syllabification": {
+            type: "gpii.chrome.contextItem",
+            options: {
+                contextProps: {
+                    title: "syllables"
+                },
+                model: {
+                    value: "{contextMenuPanel}.model.syllabificationEnabled"
+                }
+            }
+        },
+        "tableOfContents": {
+            type: "gpii.chrome.contextItem",
+            options: {
+                contextProps: {
+                    title: "table of contents"
+                },
+                model: {
+                    value: "{contextMenuPanel}.model.tableOfContentsEnabled"
+                }
+            }
+        }
+    }
 
 });
 
@@ -31,7 +110,7 @@ fluid.defaults("gpii.chrome.contextItem", {
         title: "", // text to display in the menu
         checked: "{that}.model.value",
         contexts: ["browser_action"],
-        onClick: "{that}.events.onClick.fire"
+        onclick: "{that}.events.onClick.fire"
     },
     model: {
         value: null
@@ -50,21 +129,25 @@ fluid.defaults("gpii.chrome.contextItem", {
             "this": "chrome.contextMenus",
             method: "remove",
             args: ["{that}.options.contextProps.id"]
+        },
+        "onClick.updateModel": {
+            changePath: "value",
+            value: "{arguments}.0.checked"
         }
     },
     modelListeners: {
         "value": {
-            "this": "chrome.contextMenus",
-            method: "udpate",
-            args: [],
+            funcName: "{that}.update",
+            args: ["{change}.value"],
             excludeSource: ["init"],
             namespace: "upateContextMenuItem"
         }
+    },
+    invokers: {
+        update: {
+            "this": "chrome.contextMenus",
+            method: "update",
+            args: ["{that}.id", {checked: "{arguments}.0"}]
+        }
     }
 });
-
-gpii.chrome.contextItem.create = function (that) {
-    chrome.contextMenus.create(that.options.contextProps, that.events.onContextItemCreated.fire);
-};
-
-gpii.chrome.contextItem.update = function () {};

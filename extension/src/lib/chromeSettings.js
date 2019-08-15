@@ -35,6 +35,12 @@ fluid.defaults("gpii.chrome.settings", {
         wordSpace: 1 // from wordSpace
     },
     components: {
+        contextMenuPanel: {
+            type: "gpii.chrome.contextMenuPanel",
+            options: {
+                model: "{settings}.model.settings"
+            }
+        },
         domSettingsApplier: {
             type: "gpii.chrome.domSettingsApplier",
             options: {
