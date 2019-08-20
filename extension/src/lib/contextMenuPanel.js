@@ -18,127 +18,29 @@
 var gpii = fluid.registerNamespace("gpii");
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
+
+
 fluid.defaults("gpii.chrome.contextMenuPanel", {
     gradeNames: ["fluid.modelComponent"],
-    events: {
-        onParentItemReady: null
+    strings: {
+        parent: "Preferences Quick Panel",
+        reset: "Reset"
     },
     components: {
         "parent": {
-            type: "gpii.chrome.contextItem",
+            type: "gpii.chrome.contextItem.parent",
             options: {
                 contextProps: {
-                    title: "Preferences Quick Panel",
-                },
-                events: {
-                    onContextItemCreated: "{contextMenuPanel}.events.onParentItemReady"
+                    title: "{contextMenuPanel}.options.strings.parent"
                 }
             }
         },
         "reset": {
             type: "gpii.chrome.contextItem",
-            createOnEvent: "onParentItemReady",
+            createOnEvent: "{parent}.events.onContextItemCreated",
             options: {
                 contextProps: {
-                    title: "Reset",
-                }
-            }
-        },
-        "subMenu": {
-            type: "fluid.component",
-            createOnEvent: "onParentItemReady",
-            options: {
-                parentId: "{parent}.options.contextProps.id",
-                distributeOptions: {
-                    "parentID": {
-                        source: "{that}.options.parentId",
-                        target: "{that > gpii.chrome.contextItem}.options.contextProps.parentId"
-                    }
-                },
-                components: {
-                    "syllabification": {
-                        type: "gpii.chrome.contextItem.checkbox",
-                        options: {
-                            contextProps: {
-                                title: "syllables"
-                            },
-                            model: {
-                                value: "{contextMenuPanel}.model.syllabificationEnabled"
-                            }
-                        }
-                    },
-                    "rightClickToSelect": {
-                        type: "gpii.chrome.contextItem.checkbox",
-                        priority: "after:syllabification",
-                        options: {
-                            contextProps: {
-                                title: "right-click to select"
-                            },
-                            model: {
-                                value: "{contextMenuPanel}.model.clickToSelectEnabled"
-                            }
-                        }
-                    },
-                    "selfVoicing": {
-                        type: "gpii.chrome.contextItem.checkbox",
-                        priority: "after:rightClickToSelect",
-                        options: {
-                            contextProps: {
-                                title: "text-to-speech"
-                            },
-                            model: {
-                                value: "{contextMenuPanel}.model.selfVoicingEnabled"
-                            }
-                        }
-                    },
-                    "simplifiedUI": {
-                        type: "gpii.chrome.contextItem.checkbox",
-                        priority: "after:selfVoicing",
-                        options: {
-                            contextProps: {
-                                title: "reading mode"
-                            },
-                            model: {
-                                value: "{contextMenuPanel}.model.simplifiedUIEnabled"
-                            }
-                        }
-                    },
-                    "tableOfContents": {
-                        type: "gpii.chrome.contextItem.checkbox",
-                        priority: "after:simplifiedUI",
-                        options: {
-                            contextProps: {
-                                title: "table of contents"
-                            },
-                            model: {
-                                value: "{contextMenuPanel}.model.tableOfContentsEnabled"
-                            }
-                        }
-                    },
-                    "inputsLarger": {
-                        type: "gpii.chrome.contextItem.checkbox",
-                        priority: "after:tableOfContents",
-                        options: {
-                            contextProps: {
-                                title: "enhance inputs"
-                            },
-                            model: {
-                                value: "{contextMenuPanel}.model.inputsLargerEnabled"
-                            }
-                        }
-                    },
-                    "captions": {
-                        type: "gpii.chrome.contextItem.checkbox",
-                        priority: "after:inputsLarger",
-                        options: {
-                            contextProps: {
-                                title: "youtube captions"
-                            },
-                            model: {
-                                value: "{contextMenuPanel}.model.captionsEnabled"
-                            }
-                        }
-                    }
+                    title: "{contextMenuPanel}.options.strings.reset"
                 }
             }
         }
@@ -201,6 +103,30 @@ fluid.defaults("gpii.chrome.contextItem.checkbox", {
             args: [{checked: "{change}.value"}],
             excludeSource: ["init"],
             namespace: "updateContextMenuItem"
+        }
+    }
+});
+
+fluid.defaults("gpii.chrome.contextItem.parent", {
+    gradeNames: ["gpii.chrome.contextItem"],
+    components: {
+        "subMenuItems": {
+            type: "gpii.chrome.contextItem.subMenu",
+            createOnEvent: "onContextItemCreated",
+            options: {
+                parentId: "{parent}.options.contextProps.id"
+            }
+        }
+    }
+});
+
+fluid.defaults("gpii.chrome.contextItem.subMenu", {
+    gradeNames: ["fluid.component"],
+    parentId: "", // to be set in parent grade or by integrator
+    distributeOptions: {
+        "parentId": {
+            source: "{that}.options.parentId",
+            target: "{that > gpii.chrome.contextItem}.options.contextProps.parentId"
         }
     }
 });
