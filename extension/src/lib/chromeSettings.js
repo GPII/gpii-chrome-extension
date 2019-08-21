@@ -16,7 +16,7 @@
 
 "use strict";
 
-// fluid.relayRecursionBailout = 1000;
+fluid.relayRecursionBailout = 1000;
 
 fluid.defaults("gpii.chrome.settings", {
     gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent"],
@@ -61,10 +61,7 @@ fluid.defaults("gpii.chrome.settings", {
         domSettingsApplier: {
             type: "gpii.chrome.domSettingsApplier",
             options: {
-                model: {
-                    settings: "{settings}.model.settings"
-                }
-                // model: "{settings}.model"
+                model: "{settings}.model"
             }
         },
         zoom: {
@@ -84,111 +81,118 @@ fluid.defaults("gpii.chrome.settings", {
                 retryTime: 10
             }
         },
-        // contextMenuPanel: {
-        //     type: "gpii.chrome.contextMenuPanel",
-        //     options: {
-        //         model: "{settings}.model",
-        //         strings: {
-        //             captions: "youtube captions",
-        //             inputsLarger: "enhance inputs",
-        //             rightClickToSelect: "right-click to select",
-        //             selfVoicing: "text-to-speech",
-        //             simplifiedUI: "reading mode",
-        //             syllabification: "syllables",
-        //             tableOfContents: "table of contents"
-        //         },
-        //         distributeOptions: {
-        //             preferences: {
-        //                 target: "{that subMenu}.options.components",
-        //                 record: {
-        //                     "syllabification": {
-        //                         type: "gpii.chrome.contextItem.checkbox",
-        //                         options: {
-        //                             contextProps: {
-        //                                 title: "{contextMenuPanel}.options.strings.syllabification"
-        //                             },
-        //                             model: {
-        //                                 value: "{contextMenuPanel}.model.settings.syllabificationEnabled"
-        //                             }
-        //                         }
-        //                     },
-        //                     "rightClickToSelect": {
-        //                         type: "gpii.chrome.contextItem.checkbox",
-        //                         priority: "after:syllabification",
-        //                         options: {
-        //                             contextProps: {
-        //                                 title: "{contextMenuPanel}.options.strings.rightClickToSelect"
-        //                             },
-        //                             model: {
-        //                                 value: "{contextMenuPanel}.model.settings.clickToSelectEnabled"
-        //                             }
-        //                         }
-        //                     },
-        //                     "selfVoicing": {
-        //                         type: "gpii.chrome.contextItem.checkbox",
-        //                         priority: "after:rightClickToSelect",
-        //                         options: {
-        //                             contextProps: {
-        //                                 title: "{contextMenuPanel}.options.strings.selfVoicing"
-        //                             },
-        //                             model: {
-        //                                 value: "{contextMenuPanel}.model.settings.selfVoicingEnabled"
-        //                             }
-        //                         }
-        //                     },
-        //                     "simplifiedUI": {
-        //                         type: "gpii.chrome.contextItem.checkbox",
-        //                         priority: "after:selfVoicing",
-        //                         options: {
-        //                             contextProps: {
-        //                                 title: "{contextMenuPanel}.options.strings.simplifiedUI"
-        //                             },
-        //                             model: {
-        //                                 value: "{contextMenuPanel}.model.settings.simplifiedUiEnabled"
-        //                             }
-        //                         }
-        //                     },
-        //                     "tableOfContents": {
-        //                         type: "gpii.chrome.contextItem.checkbox",
-        //                         priority: "after:simplifiedUI",
-        //                         options: {
-        //                             contextProps: {
-        //                                 title: "{contextMenuPanel}.options.strings.tableOfContents"
-        //                             },
-        //                             model: {
-        //                                 value: "{contextMenuPanel}.model.settings.tableOfContentsEnabled"
-        //                             }
-        //                         }
-        //                     },
-        //                     "inputsLarger": {
-        //                         type: "gpii.chrome.contextItem.checkbox",
-        //                         priority: "after:tableOfContents",
-        //                         options: {
-        //                             contextProps: {
-        //                                 title: "{contextMenuPanel}.options.strings.inputsLarger"
-        //                             },
-        //                             model: {
-        //                                 value: "{contextMenuPanel}.model.settings.inputsLargerEnabled"
-        //                             }
-        //                         }
-        //                     },
-        //                     "captions": {
-        //                         type: "gpii.chrome.contextItem.checkbox",
-        //                         priority: "after:inputsLarger",
-        //                         options: {
-        //                             contextProps: {
-        //                                 title: "{contextMenuPanel}.options.strings.captions"
-        //                             },
-        //                             model: {
-        //                                 value: "{contextMenuPanel}.model.settings.captionsEnabled"
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        contextMenuPanel: {
+            type: "gpii.chrome.contextMenuPanel",
+            options: {
+                model: "{settings}.model",
+                strings: {
+                    captions: "youtube captions",
+                    inputsLarger: "enhance inputs",
+                    rightClickToSelect: "right-click to select",
+                    selfVoicing: "text-to-speech",
+                    simplifiedUI: "reading mode",
+                    syllabification: "syllables",
+                    tableOfContents: "table of contents"
+                },
+                distributeOptions: {
+                    reset: {
+                        target: "{that reset}.options.invokers.click",
+                        record: {
+                            func: "{settings}.updateSettings",
+                            args: ["{settings}.options.defaultSettings"]
+                        }
+                    },
+                    preferences: {
+                        target: "{that subMenu}.options.components",
+                        record: {
+                            "syllabification": {
+                                type: "gpii.chrome.contextItem.checkbox",
+                                options: {
+                                    contextProps: {
+                                        title: "{contextMenuPanel}.options.strings.syllabification"
+                                    },
+                                    model: {
+                                        value: "{contextMenuPanel}.model.settings.syllabificationEnabled"
+                                    }
+                                }
+                            },
+                            "rightClickToSelect": {
+                                type: "gpii.chrome.contextItem.checkbox",
+                                priority: "after:syllabification",
+                                options: {
+                                    contextProps: {
+                                        title: "{contextMenuPanel}.options.strings.rightClickToSelect"
+                                    },
+                                    model: {
+                                        value: "{contextMenuPanel}.model.settings.clickToSelectEnabled"
+                                    }
+                                }
+                            },
+                            "selfVoicing": {
+                                type: "gpii.chrome.contextItem.checkbox",
+                                priority: "after:rightClickToSelect",
+                                options: {
+                                    contextProps: {
+                                        title: "{contextMenuPanel}.options.strings.selfVoicing"
+                                    },
+                                    model: {
+                                        value: "{contextMenuPanel}.model.settings.selfVoicingEnabled"
+                                    }
+                                }
+                            },
+                            "simplifiedUI": {
+                                type: "gpii.chrome.contextItem.checkbox",
+                                priority: "after:selfVoicing",
+                                options: {
+                                    contextProps: {
+                                        title: "{contextMenuPanel}.options.strings.simplifiedUI"
+                                    },
+                                    model: {
+                                        value: "{contextMenuPanel}.model.settings.simplifiedUiEnabled"
+                                    }
+                                }
+                            },
+                            "tableOfContents": {
+                                type: "gpii.chrome.contextItem.checkbox",
+                                priority: "after:simplifiedUI",
+                                options: {
+                                    contextProps: {
+                                        title: "{contextMenuPanel}.options.strings.tableOfContents"
+                                    },
+                                    model: {
+                                        value: "{contextMenuPanel}.model.settings.tableOfContentsEnabled"
+                                    }
+                                }
+                            },
+                            "inputsLarger": {
+                                type: "gpii.chrome.contextItem.checkbox",
+                                priority: "after:tableOfContents",
+                                options: {
+                                    contextProps: {
+                                        title: "{contextMenuPanel}.options.strings.inputsLarger"
+                                    },
+                                    model: {
+                                        value: "{contextMenuPanel}.model.settings.inputsLargerEnabled"
+                                    }
+                                }
+                            },
+                            "captions": {
+                                type: "gpii.chrome.contextItem.checkbox",
+                                priority: "after:inputsLarger",
+                                options: {
+                                    contextProps: {
+                                        title: "{contextMenuPanel}.options.strings.captions"
+                                    },
+                                    model: {
+                                        value: "{contextMenuPanel}.model.settings.captionsEnabled"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 });
 

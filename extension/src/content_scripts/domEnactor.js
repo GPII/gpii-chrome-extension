@@ -85,6 +85,11 @@
                         "onIncomingRead.handle": {
                             listener: "{that}.rejectMessage",
                             args: ["{that}.options.messageTypes.readReceipt", "{arguments}.0"]
+                        },
+                        "onCreate.log": {
+                            func: function () {
+                                console.log("Port binding created for:", document.location.href);
+                            }
                         }
                     },
                     invokers: {

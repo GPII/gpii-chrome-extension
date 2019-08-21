@@ -50,8 +50,25 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
             type: "gpii.chrome.portConnection",
             createOnEvent: "onConnect",
             options: {
-                model: "{domSettingsApplier}.model",
-                port: "{arguments}.0"
+                // model: "{domSettingsApplier}.model",
+                modelRelay: {
+                    source: "{domSettingsApplier}.model.settings",
+                    target: "settings",
+                    backward: "never",
+                    singleTransform: {
+                        type: "fluid.transforms.identity"
+                    }
+                },
+                port: "{arguments}.0",
+                listeners: {
+                    "onCreate.testLog": {
+                        func: function (that) {
+                            console.log("DomSettingsApplier:", that);
+                        },
+                        args: ["{domSettingsApplier}"]
+                    },
+                    "onDisconnect.destroy": "{that}.destroy"
+                }
             }
         }
     },
