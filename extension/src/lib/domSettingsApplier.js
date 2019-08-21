@@ -55,6 +55,15 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
             }
         }
     },
+    modelListeners: {
+        "": {
+            func: function (change) {
+                console.log("domSettingsApplier model change:", change);
+            },
+            args: ["{change}"],
+            priority: "first"
+        }
+    },
     components: {
         contentScriptInjector: {
             type: "gpii.chrome.contentScriptInjector"
@@ -92,18 +101,25 @@ fluid.defaults("gpii.chrome.portConnection", {
         "onDisconnect.destroy": "{that}.destroy"
     },
     modelListeners: {
-        "": {
+        "": [{
+            func: function (change) {
+                console.log("portConnection model change:", change);
+            },
+            args: ["{change}"]
+        }, {
             func: "{that}.write",
             args: ["{that}.model"]
-        }
+        }]
     }
 });
 
 gpii.chrome.portConnection.updateModel = function (that, model) {
+    console.log("handling model write - requested model:", model);
     var transaction = that.applier.initiate();
     transaction.fireChangeRequest({path: "", type: "DELETE"});
     transaction.change("", model);
     transaction.commit();
+    console.log("handling model write - written model:", that.model);
     return that.model;
 };
 

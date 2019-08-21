@@ -36,7 +36,7 @@ fluid.defaults("gpii.chrome.contextMenuPanel", {
             }
         },
         "reset": {
-            type: "gpii.chrome.contextItem",
+            type: "gpii.chrome.contextItem.button",
             createOnEvent: "{parent}.events.onContextItemCreated",
             options: {
                 contextProps: {
@@ -104,6 +104,17 @@ fluid.defaults("gpii.chrome.contextItem.checkbox", {
             excludeSource: ["init"],
             namespace: "updateContextMenuItem"
         }
+    }
+});
+
+fluid.defaults("gpii.chrome.contextItem.button", {
+    gradeNames: ["gpii.chrome.contextItem"],
+    contextProps: {
+        onclick: "{that}.click"
+    },
+    invokers: {
+        // must be supplied in a concrete implementation
+        click: "fluid.notImplemented"
     }
 });
 
