@@ -16,8 +16,6 @@
 
 "use strict";
 
-fluid.relayRecursionBailout = 1000;
-
 fluid.defaults("gpii.chrome.settings", {
     gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent"],
     defaultSettings: {
@@ -47,15 +45,6 @@ fluid.defaults("gpii.chrome.settings", {
     },
     listeners: {
         "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings"
-    },
-    modelListeners: {
-        "": {
-            func: function (change) {
-                console.log("gpii.chrome.settings model change:", change);
-            },
-            args: ["{change}"],
-            priority: "first"
-        }
     },
     components: {
         domSettingsApplier: {

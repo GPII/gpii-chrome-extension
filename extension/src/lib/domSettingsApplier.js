@@ -50,35 +50,8 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
             type: "gpii.chrome.portConnection",
             createOnEvent: "onConnect",
             options: {
-                // model: "{domSettingsApplier}.model",
-                modelRelay: {
-                    source: "{domSettingsApplier}.model.settings",
-                    target: "settings",
-                    backward: "never",
-                    singleTransform: {
-                        type: "fluid.transforms.identity"
-                    }
-                },
-                port: "{arguments}.0",
-                listeners: {
-                    "onCreate.testLog": {
-                        func: function (that) {
-                            console.log("DomSettingsApplier:", that);
-                        },
-                        args: ["{domSettingsApplier}"]
-                    },
-                    "onDisconnect.destroy": "{that}.destroy"
-                }
+                port: "{arguments}.0"
             }
-        }
-    },
-    modelListeners: {
-        "": {
-            func: function (change) {
-                console.log("domSettingsApplier model change:", change);
-            },
-            args: ["{change}"],
-            priority: "first"
         }
     },
     components: {
@@ -95,6 +68,10 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
  * port.
  *******************************************************************************************/
 
+//TODO: This component interacts with the parent's (domSettingsApplier) model rather than using a model relay to
+//      modify it's own model and share with the parent. This is because ports are created for every window/page/iframe
+//      and even the browser action. If there are too many of these connections, which may occur even on a single page
+//      with many iframes, the model relay will abort and throw an error because of too many relays.
 fluid.defaults("gpii.chrome.portConnection", {
     gradeNames: ["gpii.chrome.portBinding", "fluid.modelComponent"],
     // TODO: When FLUID-5912 is fixed, move port to the members block.
@@ -105,38 +82,33 @@ fluid.defaults("gpii.chrome.portConnection", {
             funcName: "fluid.identity",
             args: ["{that}.options.port"]
         },
+        // model writes will be triggered by the browser_action (UIO+ panel) and any enactor that also provides a
+        // settings UI to the user.
         handleWrite: {
             funcName: "gpii.chrome.portConnection.updateModel",
-            args: ["{that}", "{arguments}.0.payload"]
+            args: ["{domSettingsApplier}", "{arguments}.0.payload"]
         },
         handleRead: {
             funcName: "fluid.identity",
-            args: ["{that}.model"]
+            args: ["{domSettingsApplier}.model"]
         }
     },
     listeners: {
         "onDisconnect.destroy": "{that}.destroy"
     },
     modelListeners: {
-        "": [{
-            func: function (change) {
-                console.log("portConnection model change:", change);
-            },
-            args: ["{change}"]
-        }, {
+        "{domSettingsApplier}.model": {
             func: "{that}.write",
-            args: ["{that}.model"]
-        }]
+            args: ["{domSettingsApplier}.model"]
+        }
     }
 });
 
 gpii.chrome.portConnection.updateModel = function (that, model) {
-    console.log("handling model write - requested model:", model);
     var transaction = that.applier.initiate();
     transaction.fireChangeRequest({path: "", type: "DELETE"});
     transaction.change("", model);
     transaction.commit();
-    console.log("handling model write - written model:", that.model);
     return that.model;
 };
 

@@ -220,8 +220,6 @@
         var id = type + "-" + fluid.allocateGuid();
         that.openRequests[id] = promise;
 
-        console.log("Post Request:", id, type, payload);
-
         try {
             that.port.postMessage({
                 id: id,
@@ -232,12 +230,6 @@
             delete that.openRequests[id];
             promise.reject(error);
         }
-
-        promise.then(function (val) {
-            console.log("Post Request Resolved:", id, val);
-        }, function (e) {
-            console.log("Post Request Error:", id, e);
-        });
 
         return promise;
     };
