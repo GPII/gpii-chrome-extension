@@ -23,16 +23,20 @@ fluid.registerNamespace("gpii.tests.utils");
 
 fluid.defaults("gpii.tests.testEnvironmentWithSetup", {
     gradeNames: ["fluid.test.testEnvironment"],
-    events: {
-        afterSetup: null
-    },
     invokers: {
         setup: "fluid.identity",
-        tearDown: "fluid.identity"
+        teardown: "fluid.identity"
     },
     listeners: {
-        "onCreate.setup": "{that}.setup",
-        "onDestroy.tearDown": "{that}.tearDown"
+        "onCreate.setup": {
+            listener: "{that}.setup",
+            priority: "first"
+        },
+        "onDestroy.teardown": "{that}.teardown"
+    },
+    invokers: {
+        setup: "gpii.tests.contextItemTester.setup",
+        teardown: "gpii.tests.contextItemTester.teardown"
     }
 });
 

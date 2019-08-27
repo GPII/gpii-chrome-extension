@@ -26,10 +26,23 @@ fluid.defaults("gpii.chrome.contextMenuPanel", {
         parent: "Preferences Quick Panel",
         reset: "Reset"
     },
+    listeners: {
+        "onCreate.log": function (that) {
+            console.log("contextMenuPanel created", that);
+        }
+    },
     components: {
         "parent": {
             type: "gpii.chrome.contextItem.parent",
             options: {
+                listeners: {
+                    "onCreate.log": function () {
+                        console.log("parent created");
+                    },
+                    "onContextItemCreated.log": function () {
+                        console.log("parent onContextItemCreated");
+                    }
+                },
                 contextProps: {
                     title: "{contextMenuPanel}.options.strings.parent"
                 }
@@ -39,6 +52,14 @@ fluid.defaults("gpii.chrome.contextMenuPanel", {
             type: "gpii.chrome.contextItem.button",
             createOnEvent: "{parent}.events.onContextItemCreated",
             options: {
+                listeners: {
+                    "onCreate.log": function () {
+                        console.log("reset created");
+                    },
+                    "onContextItemCreated.log": function () {
+                        console.log("reset onContextItemCreated");
+                    }
+                },
                 contextProps: {
                     title: "{contextMenuPanel}.options.strings.reset"
                 }
@@ -55,7 +76,8 @@ fluid.defaults("gpii.chrome.contextItem", {
         contexts: ["browser_action"]
     },
     events: {
-        onContextItemCreated: null
+        onContextItemCreated: null,
+        onContextItemUpdated: null
     },
     listeners: {
         "onCreate.createContextMenuItem": {
@@ -73,7 +95,7 @@ fluid.defaults("gpii.chrome.contextItem", {
         update: {
             "this": "chrome.contextMenus",
             method: "update",
-            args: ["{that}.options.contextProps.id", "{arguments}.0"]
+            args: ["{that}.options.contextProps.id", "{arguments}.0", "{that}.events.onContextItemUpdated.fire"]
         }
     }
 });
@@ -94,14 +116,15 @@ fluid.defaults("gpii.chrome.contextItem.checkbox", {
     listeners: {
         "onClick.updateModel": {
             changePath: "value",
-            value: "{arguments}.0.checked"
+            value: "{arguments}.0.checked",
+            source: "onClick"
         }
     },
     modelListeners: {
         "value": {
             funcName: "{that}.update",
             args: [{checked: "{change}.value"}],
-            excludeSource: ["init"],
+            excludeSource: ["init", "onClick"],
             namespace: "updateContextMenuItem"
         }
     }
