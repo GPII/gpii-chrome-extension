@@ -40,8 +40,9 @@ fluid.defaults("gpii.tests.testEnvironmentWithSetup", {
     }
 });
 
-gpii.tests.utils.triggerCallback = function (method, callbackIndex, args) {
-    method.callArgWith(callbackIndex, args);
+gpii.tests.dispatchChromeEvent = function (chromeEvent, args) {
+    args = fluid.makeArray(args);
+    chromeEvent.dispatch.apply(chromeEvent, args);
 };
 
 gpii.tests.utils.assertEventRelayBound = function (that, eventRelayMap) {
