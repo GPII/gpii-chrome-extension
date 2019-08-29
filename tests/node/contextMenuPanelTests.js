@@ -368,38 +368,23 @@ fluid.defaults("gpii.tests.contextItemParentTester", {
  * gpii.chrome.contextMenuPanel tests
  ***********************************************************/
 
-// fluid.defaults("gpii.chrome.contextMenuPanel", {
-//     gradeNames: ["fluid.modelComponent"],
-//     strings: {
-//         parent: "Preferences Quick Panel",
-//         reset: "Reset"
-//     },
-//     components: {
-//         "parent": {
-//             type: "gpii.chrome.contextItem.parent",
-//             options: {
-//                 contextProps: {
-//                     title: "{contextMenuPanel}.options.strings.parent"
-//                 }
-//             }
-//         },
-//         "reset": {
-//             type: "gpii.chrome.contextItem.button",
-//             createOnEvent: "{parent}.events.onContextItemCreated",
-//             options: {
-//                 contextProps: {
-//                     title: "{contextMenuPanel}.options.strings.reset"
-//                 }
-//             }
-//         }
-//     }
-// });
+fluid.defaults("gpii.tests.chrome.contextMenuPanel", {
+    gradeNames: ["gpii.chrome.contextMenuPanel"],
+    distributeOptions: {
+        reset: {
+            target: "{that reset}.options.invokers.click",
+            record: {
+                funcName: "fluid.identity"
+            }
+        }
+    }
+});
 
 fluid.defaults("gpii.tests.contextMenuPanelTests", {
     gradeNames: ["gpii.tests.contextMenuTestEnvironment"],
     components: {
         contextMenuPanel: {
-            type: "gpii.chrome.contextMenuPanel",
+            type: "gpii.tests.chrome.contextMenuPanel",
             createOnEvent: "{contextMenuPanelTester}.events.onTestCaseStart"
         },
         contextMenuPanelTester: {
@@ -416,7 +401,7 @@ fluid.defaults("gpii.tests.contextMenuPanelTester", {
             name: "contextMenuPanel",
             expect: 3,
             sequence: [{
-                event: "{contextMenuTestEnvironment > contextMenuPanel > reset}.events.onContextItemCreated",
+                event: "{contextMenuTestEnvironment contextMenuPanel reset}.events.onContextItemCreated",
                 priority: "last:testing",
                 listener: "jqUnit.assert",
                 args: ["The contextMenuPanel was created"]

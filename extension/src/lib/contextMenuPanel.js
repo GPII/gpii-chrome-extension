@@ -18,31 +18,16 @@
 var gpii = fluid.registerNamespace("gpii");
 var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 
-
-
 fluid.defaults("gpii.chrome.contextMenuPanel", {
     gradeNames: ["fluid.modelComponent"],
     strings: {
         parent: "Preferences Quick Panel",
         reset: "Reset"
     },
-    listeners: {
-        "onCreate.log": function (that) {
-            console.log("contextMenuPanel created", that);
-        }
-    },
     components: {
         "parent": {
             type: "gpii.chrome.contextItem.parent",
             options: {
-                listeners: {
-                    "onCreate.log": function () {
-                        console.log("parent created");
-                    },
-                    "onContextItemCreated.log": function () {
-                        console.log("parent onContextItemCreated");
-                    }
-                },
                 contextProps: {
                     title: "{contextMenuPanel}.options.strings.parent"
                 }
@@ -50,16 +35,8 @@ fluid.defaults("gpii.chrome.contextMenuPanel", {
         },
         "reset": {
             type: "gpii.chrome.contextItem.button",
-            createOnEvent: "{parent}.events.onContextItemCreated",
+            priority: "after:parent",
             options: {
-                listeners: {
-                    "onCreate.log": function () {
-                        console.log("reset created");
-                    },
-                    "onContextItemCreated.log": function () {
-                        console.log("reset onContextItemCreated");
-                    }
-                },
                 contextProps: {
                     title: "{contextMenuPanel}.options.strings.reset"
                 }

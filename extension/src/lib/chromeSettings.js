@@ -23,6 +23,7 @@ fluid.defaults("gpii.chrome.settings", {
         // and may need to be updated once they are added there.
         captionsEnabled: false, // from captionsEnabled
         characterSpace: 1, // from characterSpace
+        clickToSelectEnabled: false,
         contrastTheme: "default", // from highContrastEnabled and highContrastTheme
         fontSize: 1, // from fontSize
         inputsLargerEnabled: false, // from inputsLargerEnabled
