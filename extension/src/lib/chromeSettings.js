@@ -72,112 +72,15 @@ fluid.defaults("gpii.chrome.settings", {
             }
         },
         contextMenuPanel: {
-            type: "gpii.chrome.contextMenuPanel",
+            type: "gpii.chrome.settingsContextPanel",
             options: {
                 model: "{settings}.model",
-                strings: {
-                    captions: "youtube captions",
-                    inputsLarger: "enhance inputs",
-                    rightClickToSelect: "right-click to select",
-                    selfVoicing: "text-to-speech",
-                    simplifiedUI: "reading mode",
-                    syllabification: "syllables",
-                    tableOfContents: "table of contents"
-                },
                 distributeOptions: {
                     reset: {
                         target: "{that reset}.options.invokers.click",
                         record: {
                             func: "{settings}.updateSettings",
                             args: ["{settings}.options.defaultSettings"]
-                        }
-                    },
-                    preferences: {
-                        target: "{that subMenu}.options.components",
-                        record: {
-                            "syllabification": {
-                                type: "gpii.chrome.contextItem.checkbox",
-                                options: {
-                                    contextProps: {
-                                        title: "{contextMenuPanel}.options.strings.syllabification"
-                                    },
-                                    model: {
-                                        value: "{contextMenuPanel}.model.settings.syllabificationEnabled"
-                                    }
-                                }
-                            },
-                            "rightClickToSelect": {
-                                type: "gpii.chrome.contextItem.checkbox",
-                                priority: "after:syllabification",
-                                options: {
-                                    contextProps: {
-                                        title: "{contextMenuPanel}.options.strings.rightClickToSelect"
-                                    },
-                                    model: {
-                                        value: "{contextMenuPanel}.model.settings.clickToSelectEnabled"
-                                    }
-                                }
-                            },
-                            "selfVoicing": {
-                                type: "gpii.chrome.contextItem.checkbox",
-                                priority: "after:rightClickToSelect",
-                                options: {
-                                    contextProps: {
-                                        title: "{contextMenuPanel}.options.strings.selfVoicing"
-                                    },
-                                    model: {
-                                        value: "{contextMenuPanel}.model.settings.selfVoicingEnabled"
-                                    }
-                                }
-                            },
-                            "simplifiedUI": {
-                                type: "gpii.chrome.contextItem.checkbox",
-                                priority: "after:selfVoicing",
-                                options: {
-                                    contextProps: {
-                                        title: "{contextMenuPanel}.options.strings.simplifiedUI"
-                                    },
-                                    model: {
-                                        value: "{contextMenuPanel}.model.settings.simplifiedUiEnabled"
-                                    }
-                                }
-                            },
-                            "tableOfContents": {
-                                type: "gpii.chrome.contextItem.checkbox",
-                                priority: "after:simplifiedUI",
-                                options: {
-                                    contextProps: {
-                                        title: "{contextMenuPanel}.options.strings.tableOfContents"
-                                    },
-                                    model: {
-                                        value: "{contextMenuPanel}.model.settings.tableOfContentsEnabled"
-                                    }
-                                }
-                            },
-                            "inputsLarger": {
-                                type: "gpii.chrome.contextItem.checkbox",
-                                priority: "after:tableOfContents",
-                                options: {
-                                    contextProps: {
-                                        title: "{contextMenuPanel}.options.strings.inputsLarger"
-                                    },
-                                    model: {
-                                        value: "{contextMenuPanel}.model.settings.inputsLargerEnabled"
-                                    }
-                                }
-                            },
-                            "captions": {
-                                type: "gpii.chrome.contextItem.checkbox",
-                                priority: "after:inputsLarger",
-                                options: {
-                                    contextProps: {
-                                        title: "{contextMenuPanel}.options.strings.captions"
-                                    },
-                                    model: {
-                                        value: "{contextMenuPanel}.model.settings.captionsEnabled"
-                                    }
-                                }
-                            }
                         }
                     }
                 }
@@ -189,3 +92,123 @@ fluid.defaults("gpii.chrome.settings", {
 gpii.chrome.settings.updateSettings = function (that, settings) {
     that.applier.change("settings", settings || that.options.defaultSettings);
 };
+
+fluid.defaults("gpii.chrome.settingsContextPanel", {
+    gradeNames: ["gpii.chrome.contextMenuPanel"],
+    strings: {
+        captions: "youtube captions",
+        inputsLarger: "enhance inputs",
+        rightClickToSelect: "right-click to select",
+        selfVoicing: "text-to-speech",
+        simplifiedUI: "reading mode",
+        syllabification: "syllables",
+        tableOfContents: "table of contents"
+    },
+    events: {
+        afterContextMenuItemsCreated: null
+    },
+    listeners: {
+        "onCreate.createContextMenuItems": "gpii.chrome.contextMenuPanel.createContextMenuItems"
+    },
+    members: {
+        order: {
+            expander: {
+                funcName: "gpii.chrome.contextMenuPanel.getOrder",
+                args: ["{that}.options.components"]
+            }
+        }
+    },
+    components: {
+        "syllabification": {
+            type: "gpii.chrome.contextItem.checkbox",
+            options: {
+                priority: "after:parent",
+                contextProps: {
+                    title: "{settingsContextPanel}.options.strings.syllabification",
+                    parentId: "{parent}.options.contextProps.id"
+                },
+                model: {
+                    value: "{settingsContextPanel}.model.settings.syllabificationEnabled"
+                }
+            }
+        },
+        "rightClickToSelect": {
+            type: "gpii.chrome.contextItem.checkbox",
+            options: {
+                priority: "after:syllabification",
+                contextProps: {
+                    title: "{settingsContextPanel}.options.strings.rightClickToSelect",
+                    parentId: "{parent}.options.contextProps.id"
+                },
+                model: {
+                    value: "{settingsContextPanel}.model.settings.clickToSelectEnabled"
+                }
+            }
+        },
+        "selfVoicing": {
+            type: "gpii.chrome.contextItem.checkbox",
+            options: {
+                priority: "after:rightClickToSelect",
+                contextProps: {
+                    title: "{settingsContextPanel}.options.strings.selfVoicing",
+                    parentId: "{parent}.options.contextProps.id"
+                },
+                model: {
+                    value: "{settingsContextPanel}.model.settings.selfVoicingEnabled"
+                }
+            }
+        },
+        "simplifiedUI": {
+            type: "gpii.chrome.contextItem.checkbox",
+            options: {
+                priority: "after:selfVoicing",
+                contextProps: {
+                    title: "{settingsContextPanel}.options.strings.simplifiedUI",
+                    parentId: "{parent}.options.contextProps.id"
+                },
+                model: {
+                    value: "{settingsContextPanel}.model.settings.simplifiedUiEnabled"
+                }
+            }
+        },
+        "tableOfContents": {
+            type: "gpii.chrome.contextItem.checkbox",
+            options: {
+                priority: "after:simplifiedUI",
+                contextProps: {
+                    title: "{settingsContextPanel}.options.strings.tableOfContents",
+                    parentId: "{parent}.options.contextProps.id"
+                },
+                model: {
+                    value: "{settingsContextPanel}.model.settings.tableOfContentsEnabled"
+                }
+            }
+        },
+        "inputsLarger": {
+            type: "gpii.chrome.contextItem.checkbox",
+            options: {
+                priority: "after:tableOfContents",
+                contextProps: {
+                    title: "{settingsContextPanel}.options.strings.inputsLarger",
+                    parentId: "{parent}.options.contextProps.id"
+                },
+                model: {
+                    value: "{settingsContextPanel}.model.settings.inputsLargerEnabled"
+                }
+            }
+        },
+        "captions": {
+            type: "gpii.chrome.contextItem.checkbox",
+            options: {
+                priority: "after:inputsLarger",
+                contextProps: {
+                    title: "{settingsContextPanel}.options.strings.captions",
+                    parentId: "{parent}.options.contextProps.id"
+                },
+                model: {
+                    value: "{settingsContextPanel}.model.settings.captionsEnabled"
+                }
+            }
+        }
+    }
+});

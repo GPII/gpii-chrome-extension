@@ -67,7 +67,7 @@ gpii.tests.contextMenuTestEnvironment.dispatchClick = function (arg) {
 
 gpii.tests.contextMenuTestEnvironment.assertCreate = function (properties, callNum = 0) {
     var callArgs = chrome.contextMenus.create.args[callNum];
-    jqUnit.assertDeepEq("The contextMenu was created with the correct properties", properties, callArgs[0]);
+    jqUnit.assertDeepEq("The context menu item was created with the correct properties", properties, callArgs[0]);
 };
 
 gpii.tests.contextMenuTestEnvironment.assertUpdate = function (id, properties, callNum = 0) {
@@ -84,14 +84,19 @@ gpii.tests.contextMenuTestEnvironment.assertRemove = function (id, callNum = 0) 
 fluid.defaults("gpii.tests.contextMenuTestEnvironment.sequence.create", {
     gradeNames: "fluid.test.sequenceElement",
     sequence: [{
-        event: "{contextMenuTestEnvironment contextItem}.events.onContextItemCreated",
+        event: "{contextMenuTestEnvironment contextItem}.events.onCreate",
         priority: "last:testing",
-        listener: "gpii.tests.contextMenuTestEnvironment.assertCreate",
-        args: ["{contextItem}.options.contextProps"]
+        listener: "jqUnit.assert",
+        args: ["The context item component was created"]
     }, {
         // Assert context props id is the same as the components id
         func: "jqUnit.assertEquals",
         args: ["The context props id should be set correctly", "{contextItem}.id", "{contextItem}.options.contextProps.id"]
+    }, {
+        // Trigger context menu item creation
+        task: "{contextItem}.create",
+        resolve: "gpii.tests.contextMenuTestEnvironment.assertCreate",
+        resolveArgs: ["{contextItem}.options.contextProps"]
     }]
 });
 
@@ -99,14 +104,10 @@ fluid.defaults("gpii.tests.contextMenuTestEnvironment.sequence.update", {
     gradeNames: "fluid.test.sequenceElement",
     sequence: [{
         // update menu item
-        func: "{contextItem}.update",
-        args: ["{that}.options.testOpts.updatedContextProps"]
-    }, {
-        // Assert menu item is updated
-        event: "{contextItem}.events.onContextItemUpdated",
-        priority: "last:testing",
-        listener: "gpii.tests.contextMenuTestEnvironment.assertUpdate",
-        args: ["{contextItem}.id", "{that}.options.testOpts.updatedContextProps"]
+        task: "{contextItem}.update",
+        args: ["{that}.options.testOpts.updatedContextProps"],
+        resolve: "gpii.tests.contextMenuTestEnvironment.assertUpdate",
+        resolveArgs: ["{contextItem}.id", "{that}.options.testOpts.updatedContextProps"]
     }]
 });
 
@@ -120,8 +121,7 @@ fluid.defaults("gpii.tests.contextMenuTestEnvironment.sequence.destroy", {
         // destroy contextMenuItem
         func: "{contextItem}.destroy"
     }, {
-        // Assert contextMenu remove is called
-        func: "gpii.tests.contextMenuTestEnvironment.assertRemove",
+        funcName: "gpii.tests.contextMenuTestEnvironment.assertRemove",
         args: ["{that}.contextItemId"]
     }]
 });
@@ -179,7 +179,7 @@ fluid.defaults("gpii.tests.contextItemTester", {
         name: "GPII Chrome Extension contextMenu unit tests",
         tests: [{
             name: "contextItem",
-            expect: 5,
+            expect: 6,
             sequenceGrade: "gpii.tests.contextMenuTestEnvironment.sequence"
         }]
     }]
@@ -226,7 +226,7 @@ fluid.defaults("gpii.tests.contextItemCheckboxTester", {
         name: "GPII Chrome Extension contextMenu unit tests",
         tests: [{
             name: "contextItem - Checkbox",
-            expect: 8,
+            expect: 9,
             sequenceGrade: "gpii.tests.contextMenuTestEnvironment.sequence",
             sequence: [{
                 // mock click
@@ -247,9 +247,7 @@ fluid.defaults("gpii.tests.contextItemCheckboxTester", {
                 args: ["value", "{that}.options.testOpts.modelChange.checked"]
             }, {
                 // Assert menu item is updated
-                event: "{contextItem}.events.onContextItemUpdated",
-                priority: "last:testing",
-                listener: "gpii.tests.contextMenuTestEnvironment.assertUpdate",
+                funcName: "gpii.tests.contextMenuTestEnvironment.assertUpdate",
                 args: ["{contextItem}.id", "{that}.options.testOpts.modelChange", 1]
             }]
         }]
@@ -297,7 +295,7 @@ fluid.defaults("gpii.tests.contextItemButtonTester", {
         name: "GPII Chrome Extension contextMenu unit tests",
         tests: [{
             name: "contextItem - Button",
-            expect: 6,
+            expect: 7,
             sequenceGrade: "gpii.tests.contextMenuTestEnvironment.sequence",
             sequence: [{
                 // mock click
@@ -314,55 +312,6 @@ fluid.defaults("gpii.tests.contextItemButtonTester", {
     }]
 });
 
-/***********************************************************
- * gpii.chrome.contextItem.parent tests
- ***********************************************************/
-
-fluid.defaults("gpii.tests.chrome.contextItem.parent", {
-    gradeNames: ["gpii.chrome.contextItem.parent"],
-    contextProps: {
-        title: "sub menu"
-    },
-    parentId: "parent"
-});
-
-fluid.defaults("gpii.tests.contextItemParentTests", {
-    gradeNames: ["gpii.tests.contextMenuTestEnvironment"],
-    components: {
-        contextItem: {
-            type: "gpii.tests.chrome.contextItem.parent",
-            createOnEvent: "{contextItemTester}.events.onTestCaseStart"
-        },
-        contextItemTester: {
-            type: "gpii.tests.contextItemParentTester"
-        }
-    }
-});
-
-fluid.defaults("gpii.tests.contextItemParentTester", {
-    gradeNames: ["fluid.test.testCaseHolder"],
-    testOpts: {
-        updatedContextProps: {
-            title: "new parent item title"
-        }
-    },
-    modules: [{
-        name: "GPII Chrome Extension contextMenu unit tests",
-        tests: [{
-            name: "contextItem - parent",
-            expect: 6,
-            sequenceGrade: "gpii.tests.contextMenuTestEnvironment.sequence",
-            sequence: [{
-                funcName: "jqUnit.assertEquals",
-                args: [
-                    "The parent ID should have been set correctly in the subMenu",
-                    "{contextItem}.options.contextProps.id",
-                    "{contextItem}.subMenuItems.options.parentId"
-                ]
-            }]
-        }]
-    }]
-});
 
 /***********************************************************
  * gpii.chrome.contextMenuPanel tests
@@ -370,11 +319,26 @@ fluid.defaults("gpii.tests.contextItemParentTester", {
 
 fluid.defaults("gpii.tests.chrome.contextMenuPanel", {
     gradeNames: ["gpii.chrome.contextMenuPanel"],
+    strings: {
+        subMenuItem: "sub menu item"
+    },
     distributeOptions: {
         reset: {
             target: "{that reset}.options.invokers.click",
             record: {
                 funcName: "fluid.identity"
+            }
+        }
+    },
+    components: {
+        "subMenuItem": {
+            type: "gpii.chrome.contextItem",
+            options: {
+                priority: "after:parent",
+                contextProps: {
+                    parentId: "{parent}.options.contextProps.id",
+                    title: "{contextMenuPanel}.options.strings.subMenuItem"
+                }
             }
         }
     }
@@ -399,9 +363,9 @@ fluid.defaults("gpii.tests.contextMenuPanelTester", {
         name: "GPII Chrome Extension contextMenu unit tests",
         tests: [{
             name: "contextMenuPanel",
-            expect: 3,
+            expect: 5,
             sequence: [{
-                event: "{contextMenuTestEnvironment contextMenuPanel reset}.events.onContextItemCreated",
+                event: "{contextMenuTestEnvironment contextMenuPanel}.events.afterContextMenuItemsCreated",
                 priority: "last:testing",
                 listener: "jqUnit.assert",
                 args: ["The contextMenuPanel was created"]
@@ -410,13 +374,29 @@ fluid.defaults("gpii.tests.contextMenuPanelTester", {
                 args: [
                     "The parent menu item title is set correctly",
                     "{contextMenuPanel}.options.strings.parent",
-                    "{contextMenuPanel}.parent.options.contextProps.title"]
+                    "{contextMenuPanel}.parent.options.contextProps.title"
+                ]
             }, {
                 func: "jqUnit.assertEquals",
                 args: [
                     "The reset menu item title is set correctly",
                     "{contextMenuPanel}.options.strings.reset",
-                    "{contextMenuPanel}.reset.options.contextProps.title"]
+                    "{contextMenuPanel}.reset.options.contextProps.title"
+                ]
+            }, {
+                func: "jqUnit.assertEquals",
+                args: [
+                    "The sub menu item title is set correctly",
+                    "{contextMenuPanel}.options.strings.subMenuItem",
+                    "{contextMenuPanel}.subMenuItem.options.contextProps.title"
+                ]
+            }, {
+                func: "jqUnit.assertEquals",
+                args: [
+                    "The sub menu item parent id is set correctly",
+                    "{contextMenuPanel}.parent.options.contextProps.id",
+                    "{contextMenuPanel}.subMenuItem.options.contextProps.parentId"
+                ]
             }]
         }]
     }]
@@ -427,6 +407,5 @@ fluid.test.runTests([
     "gpii.tests.contextItemTests",
     "gpii.tests.contextItemCheckboxTests",
     "gpii.tests.contextItemButtonTests",
-    "gpii.tests.contextItemParentTests",
     "gpii.tests.contextMenuPanelTests"
 ]);
