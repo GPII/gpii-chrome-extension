@@ -33,10 +33,6 @@ fluid.defaults("gpii.tests.testEnvironmentWithSetup", {
             priority: "first"
         },
         "onDestroy.teardown": "{that}.teardown"
-    },
-    invokers: {
-        setup: "gpii.tests.contextItemTester.setup",
-        teardown: "gpii.tests.contextItemTester.teardown"
     }
 });
 

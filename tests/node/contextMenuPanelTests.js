@@ -65,19 +65,19 @@ gpii.tests.contextMenuTestEnvironment.dispatchClick = function (arg) {
     chrome.contextMenus.onClicked.dispatch(arg);
 };
 
-gpii.tests.contextMenuTestEnvironment.assertCreate = function (properties, callNum = 0) {
-    var callArgs = chrome.contextMenus.create.args[callNum];
+gpii.tests.contextMenuTestEnvironment.assertCreate = function (properties, callNum) {
+    var callArgs = chrome.contextMenus.create.args[callNum || 0];
     jqUnit.assertDeepEq("The context menu item was created with the correct properties", properties, callArgs[0]);
 };
 
-gpii.tests.contextMenuTestEnvironment.assertUpdate = function (id, properties, callNum = 0) {
-    var callArgs = chrome.contextMenus.update.args[callNum];
+gpii.tests.contextMenuTestEnvironment.assertUpdate = function (id, properties, callNum) {
+    var callArgs = chrome.contextMenus.update.args[callNum || 0];
     jqUnit.assertEquals("The update was called for the correct context menu item", id, callArgs[0]);
     jqUnit.assertDeepEq("The contextMenu was updated with the correct properties", properties, callArgs[1]);
 };
 
-gpii.tests.contextMenuTestEnvironment.assertRemove = function (id, callNum = 0) {
-    var callArgs = chrome.contextMenus.remove.args[callNum];
+gpii.tests.contextMenuTestEnvironment.assertRemove = function (id, callNum) {
+    var callArgs = chrome.contextMenus.remove.args[callNum || 0];
     jqUnit.assertEquals("The removal was called for the correct context menu item", id, callArgs[0]);
 };
 
@@ -231,10 +231,10 @@ fluid.defaults("gpii.tests.contextItemCheckboxTester", {
             sequence: [{
                 // mock click
                 funcName: "gpii.tests.contextMenuTestEnvironment.relayClickEvent",
-                args: ["{contextItem}.options.contextProps"],
+                args: ["{contextItem}.options.contextProps"]
             }, {
                 funcName: "gpii.tests.contextMenuTestEnvironment.dispatchClick",
-                args: ["{that}.options.testOpts.clickPayload"],
+                args: ["{that}.options.testOpts.clickPayload"]
             }, {
                 // assert click event handling
                 changeEvent: "{contextItem}.applier.modelChanged",
@@ -300,13 +300,13 @@ fluid.defaults("gpii.tests.contextItemButtonTester", {
             sequence: [{
                 // mock click
                 funcName: "gpii.tests.contextMenuTestEnvironment.relayClickEvent",
-                args: ["{contextItem}.options.contextProps"],
+                args: ["{contextItem}.options.contextProps"]
             }, {
                 funcName: "gpii.tests.contextMenuTestEnvironment.dispatchClick",
-                args: ["{that}.options.testOpts.clickPayload"],
+                args: ["{that}.options.testOpts.clickPayload"]
             }, {
                 funcName: "jqUnit.assertTrue",
-                args: ["The click invoker should have fired", "{contextItem}.clicked"],
+                args: ["The click invoker should have fired", "{contextItem}.clicked"]
             }]
         }]
     }]
