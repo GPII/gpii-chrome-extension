@@ -39,6 +39,9 @@ fluid.defaults("gpii.chrome.settings", {
         settings: "{settings}.options.defaultSettings"
     },
     invokers: {
+        // A dedicated invoker instead of declaratively setting up the model change is required to provide a default
+        // value for the `settings` to set. Specifically this is necessary for the web socket connection so that the
+        // `settings` can be "reset" by Morphic when a user is keyed out.
         updateSettings: {
             funcName: "gpii.chrome.settings.updateSettings",
             args: ["{that}",  "{arguments}.0"]
