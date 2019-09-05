@@ -110,14 +110,6 @@ fluid.defaults("gpii.chrome.settingsContextPanel", {
     listeners: {
         "onCreate.createContextMenuItems": "gpii.chrome.contextMenuPanel.createContextMenuItems"
     },
-    members: {
-        order: {
-            expander: {
-                funcName: "gpii.chrome.contextMenuPanel.getOrder",
-                args: ["{that}.options.components"]
-            }
-        }
-    },
     components: {
         "syllabification": {
             type: "gpii.chrome.contextItem.checkbox",

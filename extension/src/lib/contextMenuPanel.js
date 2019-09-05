@@ -30,12 +30,10 @@ fluid.defaults("gpii.chrome.contextMenuPanel", {
     listeners: {
         "onCreate.createContextMenuItems": "gpii.chrome.contextMenuPanel.createContextMenuItems"
     },
-    members: {
-        order: {
-            expander: {
-                funcName: "gpii.chrome.contextMenuPanel.getOrder",
-                args: ["{that}.options.components"]
-            }
+    invokers: {
+        getOrder: {
+            funcName: "gpii.chrome.contextMenuPanel.getOrder",
+            args: ["{that}"]
         }
     },
     components: {
@@ -59,8 +57,14 @@ fluid.defaults("gpii.chrome.contextMenuPanel", {
     }
 });
 
-gpii.chrome.contextMenuPanel.getOrder = function (componentsConfig) {
-    var priorities = fluid.getMembers(componentsConfig, "options");
+gpii.chrome.contextMenuPanel.getOrder = function (that, contextItemBaseGrade) {
+    var contextMenuItemComponents = fluid.queryIoCSelector(that, contextItemBaseGrade || "gpii.chrome.contextItem", true);
+    var priorities = {};
+    fluid.each(contextMenuItemComponents, function (component) {
+        var namespace = fluid.pathForComponent(component).pop();
+        priorities[namespace] = component.options || {};
+    });
+
     var sorted = fluid.transform(fluid.parsePriorityRecords(priorities, "contextMenuItems"), function (record) {
         return record.namespace;
     });
@@ -68,7 +72,7 @@ gpii.chrome.contextMenuPanel.getOrder = function (componentsConfig) {
 };
 
 gpii.chrome.contextMenuPanel.createContextMenuItems = function (that) {
-    var sequence = fluid.transform(that.order, function (member) {
+    var sequence = fluid.transform(that.getOrder(), function (member) {
         return that[member].create;
     });
 
