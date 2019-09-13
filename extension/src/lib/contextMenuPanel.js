@@ -31,8 +31,8 @@ fluid.defaults("gpii.chrome.contextMenuPanel", {
         "onCreate.createContextMenuItems": "gpii.chrome.contextMenuPanel.createContextMenuItems"
     },
     invokers: {
-        getOrder: {
-            funcName: "gpii.chrome.contextMenuPanel.getOrder",
+        getSortedContextItems: {
+            funcName: "gpii.chrome.contextMenuPanel.getSortedContextItems",
             args: ["{that}"]
         }
     },
@@ -57,24 +57,24 @@ fluid.defaults("gpii.chrome.contextMenuPanel", {
     }
 });
 
-gpii.chrome.contextMenuPanel.getOrder = function (that, contextItemBaseGrade) {
+gpii.chrome.contextMenuPanel.getSortedContextItems = function (that, contextItemBaseGrade) {
     var contextMenuItemComponents = fluid.queryIoCSelector(that, contextItemBaseGrade || "gpii.chrome.contextItem", true);
-    var priorities = {};
+
+    var components = {};
     fluid.each(contextMenuItemComponents, function (component) {
         var namespace = fluid.pathForComponent(component).pop();
-        priorities[namespace] = component.options || {};
+        components[namespace] = {
+            priority: fluid.get(component, ["options", "priority"]),
+            component: component
+        }
     });
 
-    var sorted = fluid.transform(fluid.parsePriorityRecords(priorities, "contextMenuItems"), function (record) {
-        return record.namespace;
-    });
-    return sorted;
+    var sorted = fluid.parsePriorityRecords(components, "contextMenuItems");
+    return fluid.getMembers(sorted, "component");
 };
 
 gpii.chrome.contextMenuPanel.createContextMenuItems = function (that) {
-    var sequence = fluid.transform(that.getOrder(), function (member) {
-        return that[member].createPeerMenu;
-    });
+    var sequence = fluid.getMembers(that.getSortedContextItems(), "createPeerMenu");
 
     fluid.promise.sequence(sequence).then(that.events.afterContextMenuItemsCreated.fire);
 };
