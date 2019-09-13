@@ -73,7 +73,7 @@ gpii.chrome.contextMenuPanel.getOrder = function (that, contextItemBaseGrade) {
 
 gpii.chrome.contextMenuPanel.createContextMenuItems = function (that) {
     var sequence = fluid.transform(that.getOrder(), function (member) {
-        return that[member].create;
+        return that[member].createPeerMenu;
     });
 
     fluid.promise.sequence(sequence).then(that.events.afterContextMenuItemsCreated.fire);
@@ -93,11 +93,11 @@ fluid.defaults("gpii.chrome.contextItem", {
         }
     },
     invokers: {
-        create: {
+        createPeerMenu: {
             funcName: "gpii.chrome.contextItem.callContextMenuAPI",
             args: ["create", "{that}.options.contextProps"]
         },
-        update: {
+        updatePeerMenu: {
             funcName: "gpii.chrome.contextItem.callContextMenuAPI",
             args: ["update", "{that}.options.contextProps.id", "{arguments}.0"]
         }
@@ -145,7 +145,7 @@ fluid.defaults("gpii.chrome.contextItem.checkbox", {
     },
     modelListeners: {
         "value": {
-            funcName: "{that}.update",
+            funcName: "{that}.updatePeerMenu",
             args: [{checked: "{change}.value"}],
             excludeSource: ["init", "onClick"],
             namespace: "updateContextMenuItem"

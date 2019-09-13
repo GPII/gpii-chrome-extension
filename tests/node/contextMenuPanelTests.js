@@ -94,7 +94,7 @@ fluid.defaults("gpii.tests.contextMenuTestEnvironment.sequence.create", {
         args: ["The context props id should be set correctly", "{contextItem}.id", "{contextItem}.options.contextProps.id"]
     }, {
         // Trigger context menu item creation
-        task: "{contextItem}.create",
+        task: "{contextItem}.createPeerMenu",
         resolve: "gpii.tests.contextMenuTestEnvironment.assertCreate",
         resolveArgs: ["{contextItem}.options.contextProps"]
     }]
@@ -104,7 +104,7 @@ fluid.defaults("gpii.tests.contextMenuTestEnvironment.sequence.update", {
     gradeNames: "fluid.test.sequenceElement",
     sequence: [{
         // update menu item
-        task: "{contextItem}.update",
+        task: "{contextItem}.updatePeerMenu",
         args: ["{that}.options.testOpts.updatedContextProps"],
         resolve: "gpii.tests.contextMenuTestEnvironment.assertUpdate",
         resolveArgs: ["{contextItem}.id", "{that}.options.testOpts.updatedContextProps"]
