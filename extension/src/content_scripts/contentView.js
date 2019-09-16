@@ -39,7 +39,7 @@
             main: "main, [role~='main'], .main, #main",
             genericContent: ".content, #content, .body:not('body'), #body:not('body')"
         },
-        content: ["article", "main", "genericContent"],
+        content: ["main", "article", "genericContent"],
         defaultContent: "",
         members: {
             // The content member provides the scoping for the `locateInContent` method,
@@ -49,14 +49,14 @@
             content: {
                 expander: {
                     funcName: "gpii.chrome.contentView.findFirstSelector",
-                    args: ["{that}", "{that}.options.content", "{that}.options.defaultContent"]
+                    args: ["{that}.locate", "{that}.options.content", "{that}.options.defaultContent"]
                 }
             }
         },
         invokers: {
             locateInContent: {
                 funcName: "gpii.chrome.contentView.locateInContent",
-                args: ["{that}.locate", "{arguments}.0"]
+                args: ["{that}", "{arguments}.0"]
             },
             locateOutOfContent: {
                 funcName: "gpii.chrome.contentView.locateOutOfContent",

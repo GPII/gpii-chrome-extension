@@ -430,7 +430,11 @@
 
     gpii.chrome.enactor.tableOfContents.injectToCContainer = function (that) {
         if (!that.locate("tocContainer").length) {
-            that.content.prepend(that.options.markup.tocContainer);
+            if (that.content.length === 1) {
+                that.content.prepend(that.options.markup.tocContainer);
+            } else {
+                that.container.prepend(that.options.markup.tocContainer);
+            }
         }
     };
 
