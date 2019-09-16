@@ -849,8 +849,12 @@
 
         gpii.tests.syllabificationTester.setup = function () {
             var browserInject = function (msg, callback) {
-                var promise = fluid.prefs.enactor.syllabification.injectScript(msg.src);
-                promise.then(callback);
+                var injectPromise = $.ajax({
+                    url: msg.src,
+                    datatype: "script",
+                    cache: true
+                });
+                injectPromise.then(callback);
             };
             chrome.runtime.sendMessage.callsFake(browserInject);
         };
