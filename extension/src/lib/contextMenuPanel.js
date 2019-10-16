@@ -66,7 +66,7 @@ gpii.chrome.contextMenuPanel.getSortedContextItems = function (that, contextItem
         components[namespace] = {
             priority: fluid.get(component, ["options", "priority"]),
             component: component
-        }
+        };
     });
 
     var sorted = fluid.parsePriorityRecords(components, "contextMenuItems");
