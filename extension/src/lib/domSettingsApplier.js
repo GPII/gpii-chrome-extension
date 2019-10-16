@@ -1,7 +1,7 @@
 /*
  * GPII Chrome Extension for Google Chrome
  *
- * Copyright 2017-2018 OCAD University
+ * Copyright 2017-2019 OCAD University
  *
  * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
@@ -50,7 +50,6 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
             type: "gpii.chrome.portConnection",
             createOnEvent: "onConnect",
             options: {
-                model: "{domSettingsApplier}.model",
                 port: "{arguments}.0"
             }
         }
@@ -69,6 +68,10 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
  * port.
  *******************************************************************************************/
 
+//TODO: This component interacts with the parent's (domSettingsApplier) model rather than using a model relay to
+//      modify it's own model and share with the parent. This is because ports are created for every window/page/iframe
+//      and even the browser action. If there are too many of these connections, which may occur even on a single page
+//      with many iframes, the model relay will abort and throw an error because of too many relays.
 fluid.defaults("gpii.chrome.portConnection", {
     gradeNames: ["gpii.chrome.portBinding", "fluid.modelComponent"],
     // TODO: When FLUID-5912 is fixed, move port to the members block.
@@ -79,22 +82,24 @@ fluid.defaults("gpii.chrome.portConnection", {
             funcName: "fluid.identity",
             args: ["{that}.options.port"]
         },
+        // model writes will be triggered by the browser_action (UIO+ panel) and any enactor that also provides a
+        // settings UI to the user.
         handleWrite: {
             funcName: "gpii.chrome.portConnection.updateModel",
-            args: ["{that}", "{arguments}.0.payload"]
+            args: ["{domSettingsApplier}", "{arguments}.0.payload"]
         },
         handleRead: {
             funcName: "fluid.identity",
-            args: ["{that}.model"]
+            args: ["{domSettingsApplier}.model"]
         }
     },
     listeners: {
         "onDisconnect.destroy": "{that}.destroy"
     },
     modelListeners: {
-        "": {
+        "{domSettingsApplier}.model": {
             func: "{that}.write",
-            args: ["{that}.model"]
+            args: ["{domSettingsApplier}.model"]
         }
     }
 });
