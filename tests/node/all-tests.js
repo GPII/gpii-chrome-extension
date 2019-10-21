@@ -17,3 +17,4 @@ require("./wsConnectorTests.js");
 require("./nodeZoomTests.js");
 require("./domSettingsApplierTests.js");
 require("./chromeEventedTests.js");
+require("./contextMenuPanelTests.js");

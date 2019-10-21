@@ -63,25 +63,25 @@ fluid.defaults("gpii.tests.chromeEventedTester", {
                 listener: "gpii.tests.utils.assertEventRelayBound",
                 args: ["{chromeEvented}", "{chromeEvented}.options.eventRelayMap"]
             }, {
-                // Trigger tabs onCreated event firer callback
-                func: "gpii.tests.utils.triggerCallback",
-                args: [chrome.tabs.onCreated.addListener, 0]
+                // Dispatch tabs onCreated event
+                func: "gpii.tests.dispatchChromeEvent",
+                args: [chrome.tabs.onCreated]
             }, {
                 event: "{chromeEvented}.events.onTabOpened",
                 listener: "jqUnit.assert",
                 args: ["The onTabOpened event was fired"]
             }, {
-                // Trigger tabs onUpdated event firer callback
-                func: "gpii.tests.utils.triggerCallback",
-                args: [chrome.tabs.onUpdated.addListener, 0]
+                // Dispatch tabs onUpdated event
+                func: "gpii.tests.dispatchChromeEvent",
+                args: [chrome.tabs.onUpdated]
             }, {
                 event: "{chromeEvented}.events.onTabUpdated",
                 listener: "jqUnit.assert",
                 args: ["The onTabUpdated event was fired"]
             }, {
-                // Trigger window onFocusChanged event firer callback
-                func: "gpii.tests.utils.triggerCallback",
-                args: [chrome.windows.onFocusChanged.addListener, 0]
+                // Dispatch window onFocusChanged event
+                func: "gpii.tests.dispatchChromeEvent",
+                args: [chrome.windows.onFocusChanged]
             }, {
                 event: "{chromeEvented}.events.onWindowFocusChanged",
                 listener: "jqUnit.assert",

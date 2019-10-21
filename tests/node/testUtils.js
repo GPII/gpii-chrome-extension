@@ -23,21 +23,22 @@ fluid.registerNamespace("gpii.tests.utils");
 
 fluid.defaults("gpii.tests.testEnvironmentWithSetup", {
     gradeNames: ["fluid.test.testEnvironment"],
-    events: {
-        afterSetup: null
-    },
     invokers: {
         setup: "fluid.identity",
-        tearDown: "fluid.identity"
+        teardown: "fluid.identity"
     },
     listeners: {
-        "onCreate.setup": "{that}.setup",
-        "onDestroy.tearDown": "{that}.tearDown"
+        "onCreate.setup": {
+            listener: "{that}.setup",
+            priority: "first"
+        },
+        "onDestroy.teardown": "{that}.teardown"
     }
 });
 
-gpii.tests.utils.triggerCallback = function (method, callbackIndex, args) {
-    method.callArgWith(callbackIndex, args);
+gpii.tests.dispatchChromeEvent = function (chromeEvent, args) {
+    args = fluid.makeArray(args);
+    chromeEvent.dispatch.apply(chromeEvent, args);
 };
 
 gpii.tests.utils.assertEventRelayBound = function (that, eventRelayMap) {

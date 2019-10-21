@@ -163,6 +163,7 @@ module.exports = function (grunt) {
             "extension/src/lib/portBinding.js",
             "extension/src/lib/domSettingsApplier.js",
             "extension/src/lib/highContrast.js",
+            "extension/src/lib/contextMenuPanel.js",
             "extension/src/lib/chromeSettings.js",
             "extension/src/lib/wsConnector.js",
             "extension/src/lib/zoom.js"
