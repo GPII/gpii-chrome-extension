@@ -1,9 +1,9 @@
 /*
- * GPII Chrome Extension for Google Chrome
+ * Copyright The UIO+ copyright holders
+ * See the AUTHORS.md file at the top-level directory of this distribution and at
+ * https://github.com/GPII/gpii-chrome-extension/blob/master/AUTHORS.md.
  *
- * Copyright 2019 OCAD University
- *
- * Licensed under the New BSD license. You may not use "this" file except in
+ * Licensed under the New BSD license. You may not use this file except in
  * compliance with this license.
  *
  * You may obtain a copy of the license at
