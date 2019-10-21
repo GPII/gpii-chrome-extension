@@ -232,8 +232,8 @@ fluid.defaults("gpii.tests.domSettingsApplierTester", {
                 args: ["{domSettingsApplier}", "{domSettingsApplier}.options.eventRelayMap"]
             }, {
                 // Trigger onConnect event firer callback
-                func: "gpii.tests.utils.triggerCallback",
-                args: [chrome.runtime.onConnect.addListener, 0, gpii.tests.mockPort]
+                func: "gpii.tests.dispatchChromeEvent",
+                args: [chrome.runtime.onConnect, gpii.tests.mockPort]
             }, {
                 event: "{domSettingsApplier}.events.onConnect",
                 listener: "jqUnit.assertValue",
