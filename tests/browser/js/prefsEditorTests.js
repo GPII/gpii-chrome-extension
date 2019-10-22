@@ -190,7 +190,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/PrefsEditorTemplate-textSize.html"
+                    url: "../../../build/templates/PrefsEditorTemplate-textSize.html"
                 }
             }
         });
@@ -253,7 +253,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/PrefsEditorTemplate-lineSpace.html"
+                    url: "../../../build/templates/PrefsEditorTemplate-lineSpace.html"
                 }
             }
         });
@@ -323,7 +323,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/PrefsEditorTemplate-letterSpace.html"
+                    url: "../../../build/templates/PrefsEditorTemplate-letterSpace.html"
                 }
             }
         });
@@ -398,7 +398,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/PrefsEditorTemplate-contrast.html"
+                    url: "../../../build/templates/PrefsEditorTemplate-contrast.html"
                 }
             },
             classnameMap: {
@@ -478,7 +478,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/SelectionHighlightPanelTemplate.html"
+                    url: "../../../build/templates/SelectionHighlightPanelTemplate.html"
                 }
             },
             classnameMap: {
@@ -605,7 +605,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/SimplifyPanelTemplate.html"
+                    url: "../../../build/templates/SimplifyPanelTemplate.html"
                 }
             }
         });
@@ -656,7 +656,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/PrefsEditorTemplate-syllabification.html"
+                    url: "../../../build/templates/PrefsEditorTemplate-syllabification.html"
                 }
             }
         });
@@ -707,7 +707,7 @@
             },
             resources: {
                 template: {
-                    href: "../../../build/templates/ClickToSelectPanelTemplate.html"
+                    url: "../../../build/templates/ClickToSelectPanelTemplate.html"
                 }
             }
         });

@@ -451,7 +451,7 @@
             record: {
                 expander: {
                     funcName: "gpii.chrome.contentView.findFirstSelector",
-                    args: ["{selfVoicing}", "{selfVoicing}.options.controllerParentContainer", "{selfVoicing}.container"]
+                    args: ["{selfVoicing}.locate", "{selfVoicing}.options.controllerParentContainer", "{selfVoicing}.container"]
                 }
             },
             target: "{that orator > controller}.options.parentContainer",
@@ -460,7 +460,7 @@
             record: {
                 expander: {
                     funcName: "gpii.chrome.contentView.findFirstSelector",
-                    args: ["{selfVoicing}", "{selfVoicing}.options.domReaderContent", "{selfVoicing}.container"]
+                    args: ["{selfVoicing}.locate", "{selfVoicing}.options.domReaderContent", "{selfVoicing}.container"]
                 }
             },
             target: "{that orator}.options.components.domReader.container",
