@@ -94,7 +94,11 @@ fluid.defaults("gpii.chrome.portConnection", {
         }
     },
     listeners: {
-        "onDisconnect.destroy": "{that}.destroy"
+        "onDisconnect.destroy": "{that}.destroy",
+        "onCreate.writeInitialModel": {
+            func: "{that}.write",
+            args: ["{domSettingsApplier}.model"]
+        }
     },
     modelListeners: {
         "{domSettingsApplier}.model": {
