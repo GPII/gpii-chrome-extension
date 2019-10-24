@@ -17,7 +17,6 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 // Copied from: https://github.com/amb26/infusion/blob/FLUID-6148/tests/framework-tests/preferences/js/PanelTestUtils.js
 
 (function () {
-    "use strict";
 
     fluid.registerNamespace("fluid.tests.panels.utils");
 
