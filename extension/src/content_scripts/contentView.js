@@ -39,7 +39,7 @@
             main: "main, [role~='main'], .main, #main",
             genericContent: ".content, #content, .body:not('body'), #body:not('body')"
         },
-        content: ["article", "main", "genericContent"],
+        content: ["main", "article", "genericContent"],
         defaultContent: "",
         members: {
             // The content member provides the scoping for the `locateInContent` method,
@@ -49,7 +49,7 @@
             content: {
                 expander: {
                     funcName: "gpii.chrome.contentView.findFirstSelector",
-                    args: ["{that}", "{that}.options.content", "{that}.options.defaultContent"]
+                    args: ["{that}.locate", "{that}.options.content", "{that}.options.defaultContent"]
                 }
             }
         },
@@ -72,7 +72,8 @@
      * jQuery object with 1 or more elements. If no elements found, it returns
      * either an empty jQuery object or the default, if a default is provided.
      *
-     * @param {Component} that - a fluid.viewComponent
+     * @param {Function} locate - a locate function to find a jQuery element from a selector. Typically this is a
+     *                            component's `locate` method. e.g. `that.locate`
      * @param {String|Array} selectorNames - one or more selector names to search through in the order to try.
      *                    The selector names must correspond to selectors in the component's
      *                    selectors block.
@@ -80,15 +81,15 @@
      * @return {Any} - a jQuery object if found. If nothing found, either the `deflt` value or an empty jQuery is
      *                 returned.
      */
-    gpii.chrome.contentView.findFirstSelector = function (that, selectorNames, deflt) {
+    gpii.chrome.contentView.findFirstSelector = function (locate, selectorNames, deflt) {
         selectorNames = fluid.makeArray(selectorNames);
 
         var found = fluid.find_if(selectorNames, function (selector) {
-            var elms = that.locate(selector);
+            var elms = locate(selector);
             return elms.length > 0;
         });
 
-        return found ? that.locate(found) : deflt || $();
+        return found ? locate(found) : deflt || $();
     };
 
     /**

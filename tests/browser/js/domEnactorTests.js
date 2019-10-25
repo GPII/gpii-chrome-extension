@@ -24,7 +24,11 @@
          ********************************************************************************************************/
 
         // using the sinon-chrome stub, we return the correct path to the table of contents template
-        chrome.runtime.getURL.returns("../../../node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html");
+        chrome.runtime.getURL.withArgs("templates/TableOfContents.html")
+                             .returns("../../../node_modules/infusion/src/components/tableOfContents/html/TableOfContents.html");
+
+        chrome.runtime.getURL.withArgs("messages/tableOfContents-enactor.json")
+                             .returns("../../../node_modules/infusion/src/framework/preferences/messages/tableOfContents-enactor.json");
 
         /*********************************************************************************************************
          * Common Assertions

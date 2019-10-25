@@ -12,18 +12,22 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 /* global fluid, jqUnit */
 "use strict";
 
-// This file is copied from Infusion 2.0's preference editor tests, because it is not included in the npm package
+// This file is copied from Infusion's preference editor tests, because it is not included in the npm package
 // See: https://issues.fluidproject.org/browse/FLUID-6170
+// Copied from: https://github.com/amb26/infusion/blob/FLUID-6148/tests/framework-tests/preferences/js/PanelTestUtils.js
 
 (function () {
 
     fluid.registerNamespace("fluid.tests.panels.utils");
 
     fluid.defaults("fluid.tests.panels.utils.defaultTestPanel", {
+        gradeNames: "fluid.resourceLoader",
         strings: {},
         testMessages: {},
         parentBundle: {
             expander: {
+                // TODO: This is a dangerous technique that will leak the fluid.messageResolver component
+                // We need to add checks that component creators are not used as expander functions
                 funcName: "fluid.messageResolver",
                 args: [{messageBase: "{that}.options.testMessages"}]
             }
@@ -31,12 +35,8 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
     });
 
     fluid.defaults("fluid.tests.panels.utils.injectTemplates", {
-        listeners: {
-            "onCreate.getTemplate": {
-                funcName: "fluid.fetchResources",
-                args: ["{that}.options.resources", "{that}.refreshView"]
-            }
-        }
+        gradeNames: "fluid.resourceLoader",
+        renderOnInit: true
     });
 
     fluid.tests.panels.utils.checkModel = function (path, newModel, expectedValue) {
@@ -55,6 +55,10 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
         jqUnit.assertEquals("The toc state is set correctly", defaultInputStatus.toString(), that.switchUI.locate("control").attr("aria-checked"));
         jqUnit.assertEquals("The toggle on text is " + messageBase.switchOn, messageBase.switchOn, that.switchUI.locate("on").text());
         jqUnit.assertEquals("The toggle off text is " + messageBase.switchOff, messageBase.switchOff, that.switchUI.locate("off").text());
+    };
+
+    fluid.tests.panels.changeInput = function (controlContainer, newValue) {
+        fluid.changeElementValue(controlContainer.find("input"), newValue);
     };
 
 })();

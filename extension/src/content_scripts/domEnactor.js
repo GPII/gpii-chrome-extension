@@ -387,6 +387,13 @@
                 args: ["templates/TableOfContents.html"]
             }
         },
+        tocMessage: {
+            // Converts the relative path to a fully-qualified URL in the extension.
+            expander: {
+                funcName: "chrome.runtime.getURL",
+                args: ["messages/tableOfContents-enactor.json"]
+            }
+        },
         selectors: {
             tocContainer: ".flc-toc-tocContainer",
             article: "article, [role~='article'], .article, #article",
@@ -423,7 +430,11 @@
 
     gpii.chrome.enactor.tableOfContents.injectToCContainer = function (that) {
         if (!that.locate("tocContainer").length) {
-            that.content.prepend(that.options.markup.tocContainer);
+            if (that.content.length === 1) {
+                that.content.prepend(that.options.markup.tocContainer);
+            } else {
+                that.container.prepend(that.options.markup.tocContainer);
+            }
         }
     };
 
@@ -440,7 +451,7 @@
             record: {
                 expander: {
                     funcName: "gpii.chrome.contentView.findFirstSelector",
-                    args: ["{selfVoicing}", "{selfVoicing}.options.controllerParentContainer", "{selfVoicing}.container"]
+                    args: ["{selfVoicing}.locate", "{selfVoicing}.options.controllerParentContainer", "{selfVoicing}.container"]
                 }
             },
             target: "{that orator > controller}.options.parentContainer",
@@ -449,7 +460,7 @@
             record: {
                 expander: {
                     funcName: "gpii.chrome.contentView.findFirstSelector",
-                    args: ["{selfVoicing}", "{selfVoicing}.options.domReaderContent", "{selfVoicing}.container"]
+                    args: ["{selfVoicing}.locate", "{selfVoicing}.options.domReaderContent", "{selfVoicing}.container"]
                 }
             },
             target: "{that orator}.options.components.domReader.container",

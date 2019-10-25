@@ -34,7 +34,7 @@
 
             selection.each(function (idx, elm) {
                 elm = $(elm);
-                jqUnit.assertTrue(prefix + ": The element at index " + idx + " matches the selector", elm.is(selector));
+                jqUnit.assertTrue(prefix + ": The element at index " + idx + " matches the selector \"" + selector + "\"", elm.is(selector));
                 jqUnit.assertTrue(prefix + ": The element at index " + idx + " is in the expected set", elm.is(expected));
             });
         };
@@ -209,7 +209,7 @@
             gradeNames: ["fluid.test.testCaseHolder"],
             testOpts: {
                 prefix: "All Content Types",
-                selector: "article",
+                selector: "main",
                 expectedSelection: ".gpiic-contentView-allSelection",
                 expectedInContent: ".gpiic-contentView-allSelection-inContent",
                 expectedOutOfContent: ".gpiic-contentView-allSelection-outOfContent"
