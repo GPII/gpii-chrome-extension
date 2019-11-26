@@ -28,3 +28,4 @@ jobs:
       run: npm run listLaunchers
     - name: Tests
       run: npm test
+      timeout-minutes: 5
