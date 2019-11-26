@@ -9,9 +9,8 @@ jobs:
 
     strategy:
       matrix:
-        # os: [macos-latest]
         node-version: [10.x]
-        os: [macos-latest, windows-latest, ubuntu-18.04]
+        os: [windows-latest, ubuntu-18.04]
         # node-version: [8.x, 10.x, 12.x]
 
     steps:
@@ -26,5 +25,5 @@ jobs:
       run: npm run lint
     - name: "List Launchers"
       run: npm run listLaunchers
-    # - name: Tests
-    #   run: npm test
+    - name: Tests
+      run: npm test
