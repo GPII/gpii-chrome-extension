@@ -36,7 +36,7 @@ fluid.defaults("fluid.tests.testem", {
         tests:   "%ui-options-chrome/tests"
     },
     testemOptions: {
-        launch: "Headless Chrome",
+        launch: "Firefox",
         disable_watching: true,
         tap_quiet_logs: true
     }
