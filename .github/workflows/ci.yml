@@ -31,3 +31,5 @@ jobs:
     - name: Tests
       run: npm test
       timeout-minutes: 5
+      env:
+        HEADLESS: true
