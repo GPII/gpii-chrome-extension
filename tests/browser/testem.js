@@ -36,7 +36,6 @@ fluid.defaults("fluid.tests.testem", {
         tests:   "%ui-options-chrome/tests"
     },
     testemOptions: {
-        launch: "Chrome",
         // Due to https://issues.gpii.net/browse/GPII-4064 skipping "Headless Chrome"
         skip: "Headless Chrome, IE, PhantomJS",
         disable_watching: true,
