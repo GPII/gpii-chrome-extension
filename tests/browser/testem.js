@@ -37,6 +37,8 @@ fluid.defaults("fluid.tests.testem", {
     },
     testemOptions: {
         launch: "Chrome",
+        // Due to https://issues.gpii.net/browse/GPII-4064 skipping "Headless Chrome"
+        skip: "Headless Chrome",
         disable_watching: true,
         tap_quiet_logs: true
     }
