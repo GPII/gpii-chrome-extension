@@ -22,7 +22,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install Dependencies
       run: npm install
-    - name: Lint
+    - name: Lint Files
       run: npm run lint
     - name: "List Launchers"
       run: npm run listLaunchers
