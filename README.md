@@ -1,5 +1,7 @@
 # UI Options Plus (UIO+)
 
+![](https://github.com/jobara/gpii-chrome-extension/workflows/CI/badge.svg)
+
 User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.
 Settings for the adaptations can be set via the UIO+ adjuster panel or, if on a [Morphic](https://morphic.world) enabled
 machine, from a keyed in preference set.
