@@ -11,7 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [10.x]
-        os: [windows-latest, ubuntu-18.04]
+        os: [windows-latest]
+        # os: [windows-latest, ubuntu-18.04]
         # node-version: [8.x, 10.x, 12.x]
 
     steps:
@@ -31,5 +32,5 @@ jobs:
     - name: Tests
       run: npm test
       timeout-minutes: 10
-      env:
-        HEADLESS: true
+      # env:
+      #   HEADLESS: true
