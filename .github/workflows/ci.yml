@@ -3,19 +3,30 @@ name: CI
 on: [push]
 
 jobs:
-  build:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - name: Install Dependencies
+      run: npm install
+    - name: Lint
+      run: npm run lint
+
+  test:
 
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-18.04, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
         node-version: [10.x]
 
     steps:
-    - name: "Disable line-ending conversion"
-      run: git config --global core.autocrlf false
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -23,10 +34,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Install Dependencies
       run: npm install
-    - name: Lint
-      run: npm run lint
-    - name: "List Launchers"
-      run: npm run listLaunchers
     - name: Tests
       run: npm test
       timeout-minutes: 10
