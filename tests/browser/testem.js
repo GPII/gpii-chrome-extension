@@ -37,7 +37,8 @@ fluid.defaults("fluid.tests.testem", {
     },
     testemOptions: {
         // Due to https://issues.gpii.net/browse/GPII-4064 skipping "Headless Chrome"
-        skip: "Headless Chrome,IE,PhantomJS",
+        // Due to https://github.com/testem/testem/issues/1387 skipping "Safari"
+        skip: "Headless Chrome,IE,PhantomJS,Safari",
         disable_watching: true,
         tap_quiet_logs: true
     }
