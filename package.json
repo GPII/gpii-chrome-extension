@@ -34,8 +34,7 @@
         "test:vagrant": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm test'",
         "test:vagrantBrowser": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:browser'",
         "test:vagrantNode": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:node'",
-        "posttest": "node node_modules/nyc/bin/nyc.js report --reporter text-summary --reporter html",
-        "listLaunchers": "node node_modules/testem/testem.js launchers"
+        "posttest": "node node_modules/nyc/bin/nyc.js report --reporter text-summary --reporter html"
     },
     "dependencies": {
         "infusion": "3.0.0-dev.20191107T164711Z.332e92c33.FLUID-6148",
