@@ -14,7 +14,7 @@
 "use strict";
 
 require("./wsConnectorTests.js");
-require("./nodeZoomTests.js");
+require("./zoomTests.js");
 require("./domSettingsApplierTests.js");
 require("./chromeEventedTests.js");
 require("./contextMenuPanelTests.js");
