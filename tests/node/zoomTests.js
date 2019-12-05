@@ -20,6 +20,9 @@ var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 var jqUnit = jqUnit || fluid.require("node-jqunit", require, "jqUnit");
 var gpii = fluid.registerNamespace("gpii");
 
+require("../../extension/src/lib/chromeEvented.js");
+require("../../extension/src/lib/zoom.js");
+
 fluid.defaults("gpii.chrome.tests.zoom.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
     components: {
@@ -243,3 +246,5 @@ gpii.chrome.tests.zoom.mockChrome = function (that) {
         that.events.onSetZoom.fire(tabId, zoomLevel);
     };
 };
+
+fluid.test.runTests("gpii.chrome.tests.zoom.testEnvironment");
