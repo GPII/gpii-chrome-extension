@@ -22,12 +22,6 @@
         urls: [chrome.runtime.getURL("fonts/Orator-Icons.woff")]
     }];
 
-    // Listed in the order the scripts will be injected into the page
-    gpii.chrome.webInjection.scripts = [
-        "https://www.youtube.com/iframe_api",
-        chrome.runtime.getURL("src/captionsEnactor.js")
-    ];
-
     gpii.chrome.webInjection.styleTemplate = "<style>@font-face {font-family: \"%fontFamily\"; src: %src;}</style>";
 
     // inject fonts
@@ -45,19 +39,6 @@
 
         $("head").append(styleElm);
     });
-
-    // inject scripts
-    fluid.each(gpii.chrome.webInjection.scripts, function (src) {
-        var existingScript = $("script[src=\"" + src + "\"]");
-
-        // if the script doesn't already exist on the page, inject it.
-        if (existingScript.length === 0) {
-            var script = $("<script>").attr("src", src);
-            $("script").eq(0).before(script);
-        }
-    });
-
-
 })(jQuery, fluid);
 
 // to allow for the pages own instance of jQuery

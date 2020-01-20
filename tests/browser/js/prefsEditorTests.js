@@ -27,7 +27,6 @@
             testSettings: {
                 panelIndex: 2,
                 settings: {
-                    captionsEnabled: "test-captionsEnabled",
                     characterSpace: "test-characterSpace",
                     clickToSelectEnabled: "test-clickToSelectEnabled",
                     contrastTheme: "test-contrastTheme",
@@ -44,7 +43,6 @@
             testPrefs: {
                 panelIndex: 2,
                 preferences: {
-                    fluid_prefs_captions: "test-captionsEnabled",
                     fluid_prefs_enhanceInputs: "test-inputsLargerEnabled",
                     fluid_prefs_letterSpace: "test-characterSpace",
                     fluid_prefs_speak: "test-selfVoicingEnabled",
@@ -851,7 +849,6 @@
             testOpts: {
                 defaultModel:{
                     preferences: {
-                        fluid_prefs_captions: false,
                         fluid_prefs_enhanceInputs: false,
                         fluid_prefs_letterSpace: 1,
                         fluid_prefs_speak: false,
@@ -868,7 +865,6 @@
                 },
                 newModel: {
                     preferences: {
-                        fluid_prefs_captions: true,
                         fluid_prefs_enhanceInputs: true,
                         fluid_prefs_letterSpace: 1.2,
                         fluid_prefs_speak: true,
@@ -884,7 +880,6 @@
                     }
                 },
                 adjusters: [
-                    "fluid_prefs_panel_captions",
                     "fluid_prefs_panel_enhanceInputs",
                     "fluid_prefs_panel_layoutControls",
                     "fluid_prefs_panel_letterSpace",
@@ -903,7 +898,7 @@
                 name: "Prefs Editor Tests",
                 tests: [{
                     name: "Instantiation",
-                    expect:23,
+                    expect:22,
                     sequence: [{
                         event: "{testEnvironment prefsEditorStack prefsEditorLoader}.events.onReady",
                         listener: "gpii.tests.prefsEditorTests.assertInit",
@@ -912,17 +907,8 @@
                     }]
                 }, {
                     name: "Model Changes",
-                    expect:13,
+                    expect:12,
                     sequence: [{
-                        // captions model change
-                        jQueryTrigger: "click",
-                        element: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_captions.switchUI.dom.control"
-                    }, {
-                        listener: "gpii.tests.prefsEditorTests.assertSettingChanged",
-                        args: ["{prefsEditorStack}", ["preferences", "fluid_prefs_captions"], "{that}.options.testOpts.newModel"],
-                        spec: {path: "preferences.fluid_prefs_captions", priority: "last:testing"},
-                        changeEvent: "{prefsEditorStack}.prefsEditorLoader.prefsEditor.applier.modelChanged"
-                    }, {
                         // character space model change
                         func: "gpii.tests.changeInput",
                         args: ["{prefsEditorStack}.prefsEditorLoader.prefsEditor.fluid_prefs_panel_letterSpace.dom.textfieldStepperContainer", "{that}.options.testOpts.newModel.preferences.fluid_prefs_letterSpace"]

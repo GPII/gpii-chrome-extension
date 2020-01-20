@@ -20,7 +20,6 @@ fluid.defaults("gpii.chrome.settings", {
     defaultSettings: {
         // not all of the following settings are in the common terms yet.
         // and may need to be updated once they are added there.
-        captionsEnabled: false, // from captionsEnabled
         characterSpace: 1, // from characterSpace
         clickToSelectEnabled: false,
         contrastTheme: "default", // from highContrastEnabled and highContrastTheme
@@ -98,7 +97,6 @@ gpii.chrome.settings.updateSettings = function (that, settings) {
 fluid.defaults("gpii.chrome.settingsContextPanel", {
     gradeNames: ["gpii.chrome.contextMenuPanel"],
     strings: {
-        captions: "youtube captions",
         inputsLarger: "enhance inputs",
         rightClickToSelect: "right-click to select",
         selfVoicing: "text-to-speech",
@@ -188,19 +186,6 @@ fluid.defaults("gpii.chrome.settingsContextPanel", {
                 },
                 model: {
                     value: "{settingsContextPanel}.model.settings.inputsLargerEnabled"
-                }
-            }
-        },
-        "captions": {
-            type: "gpii.chrome.contextItem.checkbox",
-            options: {
-                priority: "after:inputsLarger",
-                contextProps: {
-                    title: "{settingsContextPanel}.options.strings.captions",
-                    parentId: "{parent}.options.contextProps.id"
-                },
-                model: {
-                    value: "{settingsContextPanel}.model.settings.captionsEnabled"
                 }
             }
         }
