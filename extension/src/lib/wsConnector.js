@@ -19,13 +19,15 @@ var WebSocket = WebSocket || require("ws");
 var gpii = fluid.registerNamespace("gpii");
 
 fluid.defaults("gpii.wsConnector", {
-    gradeNames: "fluid.component",
+    gradeNames: "fluid.modelComponent",
     solutionId: null,   /* The solution id, such as "net.gpii.solution" */
     flowManager: null,  /* This takes the form "ws://host:port"*/
-    reconnect: true,    /* Whether the component should reconnect automatically */
-    retryTime: 5,       /* Try reconnecting after x seconds */
     members: {
         socket: null
+    },
+    model: {
+        reconnect: true,  /* Whether the component should reconnect automatically */
+        retryTime: 5      /* Try reconnecting after x seconds */
     },
     invokers: {
         connect: {
@@ -93,8 +95,8 @@ gpii.wsConnector.error = function (that, err) {
     //  * make difference between different kind of errors
     //
     if (err.type === "close") {
-        if (that.options.reconnect) {
-            setTimeout(that.connect, that.options.retryTime * 1000);
+        if (that.model.reconnect) {
+            setTimeout(that.connect, that.model.retryTime * 1000);
         }
     }
 };

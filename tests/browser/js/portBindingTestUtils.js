@@ -53,14 +53,15 @@
     };
 
     gpii.tests.chrome.portBinding.returnReceipt = function (that, receipt) {
+        var returnedReceipt = fluid.copy(receipt);
         that.port.postMessage.callsFake(function () {
             // Needs to get the actual id used in the post request.
             // Best to make sure that there is only one open request to ensure that
             // the correct id is retrieved.
             var ids = fluid.keys(that.openRequests);
             if (ids.length) {
-                receipt.id = ids[0];
-                gpii.tests.mockPort.trigger.onMessage(that.port, receipt);
+                returnedReceipt.id = ids[0];
+                gpii.tests.mockPort.trigger.onMessage(that.port, returnedReceipt);
             }
         });
     };
