@@ -312,7 +312,7 @@
     fluid.defaults("gpii.chrome.enactor.syllabification", {
         gradeNames: ["fluid.prefs.enactor.syllabification"],
         terms: {
-            patternPrefix: "syllablePatterns"
+            patternPrefix: "js/lib/syllablePatterns"
         },
         markup: {
             separator: "<span class=\"flc-syllabification-separator gpii-ext-syllabification-separator\"></span>"

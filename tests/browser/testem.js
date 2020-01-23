@@ -30,7 +30,7 @@ fluid.defaults("fluid.tests.testem", {
         ]
     },
     sourceDirs: {
-        extension: "%ui-options-chrome/extension"
+        extension: "%ui-options-chrome/src"
     },
     contentDirs: {
         tests:   "%ui-options-chrome/tests"

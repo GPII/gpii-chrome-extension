@@ -46,35 +46,12 @@ npm install
 
 ### Build
 
-This is the primary build type and used when creating a published version. However, the build can also be run as an an
-unpacked extension. The generated build is output to the "build" directory at the root of the project.
+This will generate a `build` directory at the root of the project. This is used when creating a published version, and
+can also be run as an unpacked extension.
 
 ```bash
 grunt build
 ```
-
-### Development Build
-
-Development build's create a version that can be run as an unpacked extension and includes source maps for debugging
-purposes. Due to the extra resources for debugging, this build type should not be used for publishing. The generated
-build is output to the "build" directory at the root of the project.
-
-```bash
-grunt buildDev
-```
-
-### CRX Build
-
-[CRX](https://developer.chrome.com/extensions/crx) builds, allow for packaging the extension into a format that can be
-more easily shared and distributed for testing. However, this type of package cannot be uploaded to the Chrome Web
-Store. The generated build is output to the "build" directory at the root of the project.
-
-```bash
-grunt buildPkg
-```
-
-_**NOTE:** You need to use a [PEM](http://how2ssl.com/articles/working_with_pem_files/) file to sign the crx package
-with. This file needs to be called "key.pem" and must be placed in the top level folder of this repository._
 
 ## Testing
 

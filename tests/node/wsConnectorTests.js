@@ -21,7 +21,7 @@ var WebSocketServer = require("ws").Server;
 
 var gpii = fluid.registerNamespace("gpii");
 
-require("../../extension/src/lib/wsConnector.js");
+require("../../src/js/background/wsConnector.js");
 
 fluid.defaults("gpii.chrome.tests.wsConnector.server", {
     gradeNames: "fluid.modelComponent",
