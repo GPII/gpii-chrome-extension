@@ -4,6 +4,7 @@
 
 panelHeight = 183px;
 panelWidth = 450px;
+spinnerSize = 5em;
 
 // Overriding the fonts to correct the path to the font file
 @font-face {
@@ -64,11 +65,10 @@ body {
 .fl-spinner {
     position: relative;
     display: inline-block;
-    width: 5em;
-    height: 5em;
-    margin: 0 .5em;
-    font-size: 12px;
-    text-indent: 999em;
+    width: spinnerSize;
+    height: spinnerSize;
+    margin: 0 0.5rem;
+    text-indent: -999rem; /* to hide the loading text */
     overflow: hidden;
     animation: spin 1s infinite steps(8);
 }
@@ -79,14 +79,14 @@ body {
 .fl-spinner > div:after {
     content: '';
     position: absolute;
+    width: 0.5rem;
+    height: 1.5rem;
     top: 0;
-    left: 2.25em; /* (container width - part width)/2  */
-    width: .5em;
-    height: 1.5em;
-    border-radius: .2em;
+    left: ((spinnerSize - @width) / 2);
+    border-radius: 0.2rem;
     background: #eee;
-    box-shadow: 0 3.5em #eee; /* container height - part height */
-    transform-origin: 50% 2.5em; /* container height / 2 */
+    box-shadow: 0 (spinnerSize - @height) #eee;
+    transform-origin: 50% (spinnerSize / 2);
 }
 
 .fl-spinner:before {
