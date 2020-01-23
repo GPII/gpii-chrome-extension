@@ -55,6 +55,10 @@ module.exports = function (grunt) {
                 dest: "build/"
             },
             lib: {
+                //TODO: Currently there is a bug in Chrome that prevents source maps from working for extensions.
+                //      see: https://bugs.chromium.org/p/chromium/issues/detail?id=212374
+                //      After the above issue is fixed, include source maps and/or additional build types to improve
+                //      debugging.
                 files: [{
                     expand: true,
                     flatten: true,
