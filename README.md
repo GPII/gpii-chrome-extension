@@ -46,11 +46,20 @@ npm install
 
 ### Build
 
-This will generate a `build` directory at the root of the project. This is used when creating a published version, and
-can also be run as an unpacked extension.
+This will generate a `build` directory at the root of the project. Within the `build` directory are two subdirectories:
+`uio` and `morphic`. The `uio` directory contains the built version of UIO+, while the `morphic` directory contains
+the built version of UIO+ for Morphic. Both can be run as unpacked extensions and also provide a zip package that
+can be published to the Chrome Web Store.
 
 ```bash
 grunt build
+```
+
+The `--version_name` flag can be set to specify a version name to include in the manifest file. This is useful when
+publishing a beta release.
+
+```bash
+grunt build --version_name="0.1.0 beta 14"
 ```
 
 ## Testing
@@ -96,7 +105,8 @@ Follow these steps if you want to use the unpacked version of the extension:
    under the *Tools* menu to open Chrome's extension settings.
 2. Ensure that the *Developer mode* checkbox in the top right-hand corner is checked.
 3. Click *Load unpacked extension* to open a file-selection dialog.
-4. Navigate to the directory in which your local copy of the extension lives, and select the *build* folder.
+4. Navigate to the directory in which your local copy of the extension lives, and select the `build/uio` or
+   `build/morphic` folder.
 
 _**NOTE:** Published versions can be installed from the [Chrome Web Store](
     https://chrome.google.com/webstore/detail/ui-options-plus-uio%20/okenndailhmikjjfcnmolpaefecbpaek)._
@@ -119,32 +129,33 @@ _**NOTE:** Published versions can be installed from the [Chrome Web Store](
       1. Run tests: `npm test`
       2. Lint: `grunt lint`
       3. Manual test build
-         1. Create a developer build: "grunt buildDev"
+         1. Create a build: "grunt build"
          2. Load unpacked extension into Chrome
             1. In Chrome go to [chrome://extensions](chrome://extensions)
             2. Ensure that "Developer mode" is enabled
             3. Click "Load unpacked"
-            4. From the File Dialog, navigate to the "gpii-chrome-extension" repo and select the "build" directory.
+            4. From the File Dialog, navigate to the "gpii-chrome-extension" repo and select the `build/uio` or
+               `build/morphic` directory.
          3. Test all of the preferences and ensure that they apply to web page content correctly.
             1. Refresh any Browser Tabs/Windows that were open prior to installing the extension.
             2. The preferences should be tested individually and in combinations to ensure that interactions between the
-               preferences are working properly. For example (Text-to-Speech and Syllabification, Text-to-Speech with
+               preferences are working properly. For example (Text-to-Speech and Syllabification, Text-to-Speech and
                Reading Mode).
             3. Multiple web pages should be tested. However, not all preferences will work with all sites.
          4. Load Morphic and ensure that logging in users (e.g. [uioPlusCommon](
             https://github.com/GPII/universal/blob/master/testData/preferences/uioPlusCommon.json5)) applies the
-            preferences to UIO+.
+            preferences to UIO+. _(**NOTE:** this is only needed for **UIO+ for Morphic**)_
    3. Increase the "version" number in the [manifest](
       https://github.com/GPII/gpii-chrome-extension/blob/master/extension/manifest.json#L5) file, and push changes to
       master.
 2. Create the release package
    1. Create a release build: `grunt build`
-      1. If making a beta, open the manifest file, located in the newly created build directory, and add a
-      [version name](https://developer.chrome.com/apps/manifest/version#version_name) with the beta release number (e.g.
-      “version_name”:  “0.1.0 beta 10” ). The version name will be displayed instead of the version number in the Chrome
-      Web Store.
-   2. Create a zip archive of the build directory
-3. Publish to the [Chrome Web Store](https://chrome.google.com/webstore/category/extensions)
+      1. If making a beta, use the `--version_name` flag with the beta release number to set the
+      [version name](https://developer.chrome.com/apps/manifest/version#version_name) in the manifest file. (e.g.
+      `grunt build --version_name="0.1.0 beta 14"`). The version name will be displayed instead of the version number in
+      the Chrome Web Store.
+3. Publish to the [Chrome Web Store](https://chrome.google.com/webstore/category/extensions), perform the following
+   publishing steps for both the **UIO+* and **UIO+ for Morphic** extensions.
    1. Go to the [Developer Dashboard](https://chrome.google.com/webstore/developer/dashboard/g02818309428530539805) on
       the Chrome Web Store and login using the fluid team account
    2. On the Developer Dashboard, click “Edit”; located on the right hand side of the UI Options Plus (UIO+) listing
@@ -160,7 +171,7 @@ _**NOTE:** Published versions can be installed from the [Chrome Web Store](
       1. Verify that everything appears correct. Pay particular attention to anything that was changed, e.g. version
          number/name, descriptions, screenshots and etc.
    8. When everything appears correct, publish the changes.
-      1. The actual publishing to the Chrome Web Store will take about an hour.
+      1. The actual publishing to the Chrome Web Store will take some time, and may need to go through a review process.
    9. Tag the master branch with the release (e.g. v0.1.0-beta.10)
    10. Create a GitHub release for the tag
        1. Go to the [gpii-chrome-extension](
@@ -176,8 +187,9 @@ _**NOTE:** Published versions can be installed from the [Chrome Web Store](
        8. After all the information has been entered correctly, click "Publish release".
 4. Verify Published UIO+
    1. Ensure that the contents of the [UIO+](
-      https://chrome.google.com/webstore/detail/ui-options-plus-uio%20/okenndailhmikjjfcnmolpaefecbpaek) page on the
-      Chrome Web Store appear correct. Double check things like version number/name, descriptions, screenshots and etc.
+      https://chrome.google.com/webstore/detail/ui-options-plus-uio%20/okenndailhmikjjfcnmolpaefecbpaek) and
+      UIO+ for Morphic pages on the Chrome Web Store appear correct. Double check things like version number/name,
+      descriptions, screenshots and etc.
    2. Install the version from the Chrome Web Store, and run through the manual testing again. (See: step 1.2.3 above)
    3. If everything is working, announce release where required (e.g. fluid-work list, GPII list, project teams etc.).
       If there are any issues, fix them and repeat the process.
