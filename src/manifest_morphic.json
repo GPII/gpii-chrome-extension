@@ -1,4 +1,18 @@
 {
     "name": "UI Options Plus (UIO+) for Morphic",
-    "short_name": "UIO+ for Morphic"
+    "short_name": "UIO+ for Morphic",
+    "background": {
+        "scripts": [
+            "js/lib/infusion/infusion-uio.min.js",
+            "js/shared/portBinding.js",
+            "js/background/chromeEvented.js",
+            "js/background/domSettingsApplier.js",
+            "js/background/contextMenuPanel.js",
+            "js/background/chromeSettings.js",
+            "js/background/wsConnector.js",
+            "js/background/zoom.js",
+            "js/background/morphicConnector.js",
+            "js/background/background.js"
+        ]
+    }
 }

@@ -66,7 +66,6 @@
             "js/background/domSettingsApplier.js",
             "js/background/contextMenuPanel.js",
             "js/background/chromeSettings.js",
-            "js/background/wsConnector.js",
             "js/background/zoom.js",
             "js/background/background.js"
         ]

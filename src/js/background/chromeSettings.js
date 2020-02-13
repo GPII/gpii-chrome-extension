@@ -16,7 +16,7 @@
 "use strict";
 
 fluid.defaults("gpii.chrome.settings", {
-    gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent"],
+    gradeNames: ["fluid.modelComponent", "gpii.chrome.eventedComponent", "fluid.contextAware"],
     defaultSettings: {
         // not all of the following settings are in the common terms yet.
         // and may need to be updated once they are added there.
@@ -45,9 +45,6 @@ fluid.defaults("gpii.chrome.settings", {
             args: ["{that}",  "{arguments}.0"]
         }
     },
-    listeners: {
-        "{wsConnector}.events.onSettingsChange": "{settings}.updateSettings"
-    },
     components: {
         domSettingsApplier: {
             type: "gpii.chrome.domSettingsApplier",
@@ -62,14 +59,6 @@ fluid.defaults("gpii.chrome.settings", {
                     magnifierEnabled: true, // set to true because fontSize is always enabled
                     magnification: "{settings}.model.settings.fontSize"
                 }
-            }
-        },
-        wsConnector: {
-            type: "gpii.wsConnector",
-            options: {
-                solutionId: "net.gpii.uioPlus",
-                flowManager: "ws://localhost:8081/browserChannel",
-                retryTime: 10
             }
         },
         contextMenuPanel: {
