@@ -19,6 +19,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         buildType: "uio",
+        buildVersion: "<%= pkg.version %>",
         lintAll: {
             sources: {
                 md: [ "./*.md"],
@@ -134,7 +135,7 @@ module.exports = function (grunt) {
         compress: {
             all: {
                 options: {
-                    archive: "build/<%= buildType %>/UIO+_v<%= pkg.version %>_<%= buildType %>.zip"
+                    archive: "build/<%= buildType %>/UIO+_<%= buildVersion %>_<%= buildType %>.zip"
                 },
                 files: [{
                     expand: true,
@@ -177,6 +178,13 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("buildExtensions", "Build the UIO+ extension", function (target) {
+        // set the buildVersion to be the version_name if that is supplied
+        var version_name = grunt.option("version_name");
+        if (version_name) {
+            version_name = version_name.trim().replace(/\s+/g, "_");
+            grunt.config.set("buildVersion", version_name);
+        }
+
         target = target ? [target] : ["uio", "morphic"];
 
         target.forEach(function (buildType) {
