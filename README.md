@@ -28,6 +28,11 @@ R&D Center at University of Maryland under funding for the FLOE Project from the
 and the National Institute on Disability, Independent Living, and Rehabilitation Research (NIDILRR), Administration for
 Community Living under grant #90RE5027.
 
+## Filing issues
+
+UIO+ issues are tracked in a [JIRA Issue tracker](https://issues.gpii.net/issues/?jql=project%20%3D%20GPII%20AND%20component%20%3D%20%22Web%20Personalization%20Browser%20Extension%22).
+Please file issues there.
+
 ## Building the extension
 
 ### Dependencies
