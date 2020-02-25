@@ -58,6 +58,6 @@
         "rimraf": "3.0.0",
         "sinon": "7.5.0",
         "sinon-chrome": "3.0.1",
-        "testem": "3.0.1"
+        "testem": "3.0.2"
     }
 }
