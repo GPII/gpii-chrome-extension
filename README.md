@@ -141,8 +141,8 @@ _**NOTE:** Published versions can be installed from the [Chrome Web Store](
 ## Publishing to the Chrome Web Store
 
 1. Prepare Code.
-   1. Ensure that all of the code that should be published has been merged into the master branch.
-   2. Ensure that the code in the master is working as expected.
+   1. Ensure that all of the code, that should be published, has been merged into the master branch.
+   2. Ensure that the code in master is working as expected.
       1. Run tests: `npm test`
       2. Lint: `grunt lint`
       3. Manual test build.
