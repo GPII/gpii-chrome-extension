@@ -202,13 +202,13 @@
         gradeNames: ["fluid.prefs.enactor.contrast"],
         classes: {
             "default": "",
-            "bw": "gpii-ext-theme-bw",
-            "wb": "gpii-ext-theme-wb",
-            "by": "gpii-ext-theme-by",
-            "yb": "gpii-ext-theme-yb",
-            "gd": "gpii-ext-theme-gd",
-            "gw": "gpii-ext-theme-gw",
-            "bbr": "gpii-ext-theme-bbr"
+            "bw": "fl-theme-uioPlus-bw",
+            "wb": "fl-theme-uioPlus-wb",
+            "by": "fl-theme-uioPlus-by",
+            "yb": "fl-theme-uioPlus-yb",
+            "gd": "fl-theme-uioPlus-gd",
+            "gw": "fl-theme-uioPlus-gw",
+            "bbr": "fl-theme-uioPlus-bbr"
         }
     });
 
