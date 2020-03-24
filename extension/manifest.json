@@ -25,6 +25,17 @@
         "48": "images/GearHeart_Mixed_47x47.png",
         "128": "images/GearHeart_Mixed_127x127.png"
     },
+    // added a keyboard shortcut or command to open the panel
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+              "windows": "Alt+O",
+              "mac": "Command+Shift+Y",
+              "chromeos": "Ctrl+Shift+U"
+            }
+        }
+    },
+    //
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "css": [
