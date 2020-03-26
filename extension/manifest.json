@@ -26,17 +26,10 @@
         "128": "images/GearHeart_Mixed_127x127.png"
     },
     "commands": {
-        "toggle-feature": {
-            "suggested_key": {
-                "default": "Ctrl+Shift+F",
-                "mac": "MacCtrl+Shift+F"
-            },
-            "description": "Send a 'toggle-feature' event to the extension"
-        },
         "_execute_browser_action": {
             "suggested_key": {
-                "default": "Ctrl+Shift+Y",
-                "mac": "MacCtrl+Shift+Y"
+                "windows": "Ctrl+Shift+U",
+                "mac": "Command+Shift+U"
             }
         }
     },
