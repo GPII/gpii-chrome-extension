@@ -19,6 +19,13 @@
             "32": "images/gears_32.png"
         }
     },
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+U"
+            }
+        }
+    },
     "icons": {
         "16": "images/GearHeart_Mixed_15x15.png",
         "32": "images/GearHeart_Mixed_31x31.png",
