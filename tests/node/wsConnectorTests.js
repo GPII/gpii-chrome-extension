@@ -26,10 +26,10 @@ require("../../extension/src/lib/wsConnector.js");
 fluid.defaults("gpii.chrome.tests.wsConnector.server", {
     gradeNames: "fluid.modelComponent",
     port: 8083,
-    allowedClients: ["gpii.chrome.tests"],
     settings: undefined,
     members: {
-        socket: null
+        socket: null,
+        allowedClients: ["gpii.chrome.tests"]
     },
     model: {
         clientSocket: null
@@ -82,13 +82,13 @@ fluid.defaults("gpii.chrome.tests.wsConnector.server", {
 
 
 gpii.chrome.tests.wsConnector.server.allowClient = function (that, solutionId) {
-    that.options.allowedClients.push(solutionId);
+    that.allowedClients.push(solutionId);
 };
 
 gpii.chrome.tests.wsConnector.server.banClient = function (that, solutionId) {
-    var index = that.options.allowedClients.indexOf(solutionId);
+    var index = that.allowedClients.indexOf(solutionId);
     if (index > -1) {
-        that.options.allowedClients.splice(index, 1);
+        that.allowedClients.splice(index, 1);
     };
 };
 
@@ -103,7 +103,7 @@ gpii.chrome.tests.wsConnector.server.closeClient = function (that) {
 gpii.chrome.tests.wsConnector.server.processMessage = function (that, message) {
     var msg = JSON.parse(message);
     if ((msg.type === "connect") && (msg.payload)) {
-        var isAllowed = that.options.allowedClients.indexOf(msg.payload.solutionId);
+        var isAllowed = that.allowedClients.indexOf(msg.payload.solutionId);
         if (isAllowed > -1) {
             var response = {
                 type: "connectionSucceeded",
@@ -177,10 +177,7 @@ fluid.defaults("gpii.chrome.tests.wsConnector.tester", {
             }
         },
         server: {
-            type: "gpii.chrome.tests.wsConnector.server",
-            options: {
-                allowedClients: ["gpii.chrome.tests"]
-            }
+            type: "gpii.chrome.tests.wsConnector.server"
         }
     },
     modules: [{
@@ -291,7 +288,7 @@ fluid.defaults("gpii.chrome.tests.wsConnector.tester", {
 });
 
 gpii.chrome.tests.wsConnector.switchReconnecting = function (client) {
-    client.options.reconnect = !client.options.reconnect;
+    client.applier.change("reconnect", !client.model.reconnect, "ADD", "switchReconnecting");
 };
 
 gpii.chrome.tests.wsConnector.checkSettings = function (settings, expected) {

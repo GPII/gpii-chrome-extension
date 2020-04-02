@@ -69,12 +69,10 @@
             "src/background.js"
         ]
     },
-    "content_security_policy": "script-src 'self' https://youtube.com https://ytimg.com; object-src 'self'",
     "web_accessible_resources": [
         "images/gpii.png",
         "templates/TableOfContents.html",
         "messages/tableOfContents-enactor*.json",
-        "fonts/Orator-Icons.woff",
-        "src/captionsEnactor.js"
+        "fonts/Orator-Icons.woff"
     ]
 }

@@ -45,6 +45,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/core/js/ModelTransformation.js",
             "node_modules/infusion/src/framework/core/js/ModelTransformationTransforms.js",
             "node_modules/infusion/src/framework/core/js/FluidView.js",
+            "node_modules/infusion/src/framework/core/js/FluidView-browser.js",
             "node_modules/infusion/src/framework/core/js/MessageResolver.js",
             "node_modules/infusion/src/framework/core/js/ResourceLoader.js",
             "node_modules/infusion/src/framework/core/js/ResourceLoader-browser.js",
@@ -86,6 +87,7 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/core/js/ResourceLoader-browser.js",
             "node_modules/infusion/src/framework/core/js/jquery.keyboard-a11y.js",
             "node_modules/infusion/src/framework/core/js/FluidView.js",
+            "node_modules/infusion/src/framework/core/js/FluidView-browser.js",
             "node_modules/infusion/src/framework/enhancement/js/ContextAwareness.js",
             "node_modules/infusion/src/framework/enhancement/js/ProgressiveEnhancement.js",
             "node_modules/infusion/src/lib/fastXmlPull/js/fastXmlPull.js",
@@ -106,7 +108,6 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/UIEnhancer.js",
             "node_modules/infusion/src/framework/preferences/js/PrefsEditor.js",
             "node_modules/infusion/src/framework/preferences/js/Panels.js",
-            "node_modules/infusion/src/framework/preferences/js/CaptionsPanel.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpacePanel.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingPanel.js",
             "node_modules/infusion/src/framework/preferences/js/SyllabificationPanel.js",
@@ -119,7 +120,6 @@ module.exports = function (grunt) {
             "node_modules/infusion/src/framework/preferences/js/PrimaryBuilder.js",
             "node_modules/infusion/src/framework/preferences/js/AuxBuilder.js",
             "node_modules/infusion/src/framework/preferences/js/StarterSchemas.js",
-            "node_modules/infusion/src/framework/preferences/js/CaptionsSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/LetterSpaceSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/SelfVoicingSchemas.js",
             "node_modules/infusion/src/framework/preferences/js/SyllabificationSchemas.js",
@@ -233,10 +233,6 @@ module.exports = function (grunt) {
                     {
                         src: ["extension/src/lib/adjusterScriptLoader.js"],
                         dest: "build/src/adjusterScriptLoader.js"
-                    },
-                    {
-                        src: ["extension/src/lib/captionsEnactor.js"],
-                        dest: "build/src/captionsEnactor.js"
                     },
                     {
                         src: ["extension/src/lib/portBinding.js"],

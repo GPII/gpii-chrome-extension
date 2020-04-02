@@ -37,7 +37,7 @@
         "posttest": "node node_modules/nyc/bin/nyc.js report --reporter text-summary --reporter html"
     },
     "dependencies": {
-        "infusion": "3.0.0-dev.20191107T164711Z.332e92c33.FLUID-6148",
+        "infusion": "3.0.0-dev.20191220T163226Z.db83ce0ef.FLUID-6145",
         "ws": "7.2.0"
     },
     "devDependencies": {
