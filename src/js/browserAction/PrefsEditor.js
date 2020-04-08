@@ -22,7 +22,6 @@
         portName: "extensionPanel",
         rules: {
             "panelIndex": "panelIndex",
-            "preferences.fluid_prefs_captions": "settings.captionsEnabled",
             "preferences.fluid_prefs_enhanceInputs": "settings.inputsLargerEnabled",
             "preferences.fluid_prefs_letterSpace": "settings.characterSpace",
             "preferences.fluid_prefs_speak": "settings.selfVoicingEnabled",
@@ -281,15 +280,6 @@
             },
             "template": "%templatePrefix/PrefsEditorPanel.html",
             "message": "%messagePrefix/prefsEditor.json",
-            "captions": {
-                "type": "fluid.prefs.captions",
-                "panel": {
-                    "type": "fluid.prefs.panel.captions",
-                    "container": ".flc-prefsEditor-captions",
-                    "template": "%templatePrefix/PrefsEditorTemplate-captions.html",
-                    "message": "%messagePrefix/ytCaptions.json"
-                }
-            },
             "charSpace": {
                 "type": "fluid.prefs.letterSpace",
                 "panel": {

@@ -21,9 +21,9 @@ var jqUnit = fluid.require("node-jqunit", require, "jqUnit"); // eslint-disable-
 var gpii = fluid.registerNamespace("gpii");
 
 require("./testUtils.js");
-require("../../extension/src/lib/chromeEvented.js");
-require("../../extension/src/lib/portBinding.js");
-require("../../extension/src/lib/domSettingsApplier.js");
+require("../../src/js/shared/portBinding.js");
+require("../../src/js/background/chromeEvented.js");
+require("../../src/js/background/domSettingsApplier.js");
 
 /*********************************************************************************************************
  * gpii.chrome.contentScriptInjector tests

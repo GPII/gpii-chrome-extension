@@ -21,7 +21,7 @@ var jqUnit = fluid.require("node-jqunit", require, "jqUnit"); // eslint-disable-
 var gpii = fluid.registerNamespace("gpii"); // eslint-disable-line no-unused-vars
 
 require("./testUtils.js");
-require("../../extension/src/lib/chromeEvented.js");
+require("../../src/js/background/chromeEvented.js");
 
 fluid.defaults("gpii.tests.chrome.eventedComponent", {
     gradeNames: ["gpii.chrome.eventedComponent"],

@@ -23,7 +23,6 @@
         gradeNames: ["fluid.contextAware", "fluid.viewComponent"],
         model: {
             // Accepted model values:
-            // captionsEnabled: Boolean,
             // characterSpace: Number,
             // contrastTheme: String,
             // inputsLargerEnabled: Boolean,
@@ -38,8 +37,7 @@
             onIncomingSettings: null
         },
         listeners: {
-            "onIncomingSettings.updateModel": "{that}.updateModel",
-            "onIncomingSettings.postSettingsToWebPage": "{that}.postSettingsToWebPage"
+            "onIncomingSettings.updateModel": "{that}.updateModel"
         },
         contextAwareness: {
             simplify: {
@@ -51,22 +49,7 @@
                 }
             }
         },
-        webSettings: {
-            type: "gpii.chrome.domEnactor",
-            filter: {
-                keys: ["captionsEnabled"],
-                exclude: false
-            }
-        },
         invokers: {
-            postSettingsToWebPage: {
-                funcName: "gpii.chrome.domEnactor.postSettingsToWebPage",
-                args: [
-                    "{that}.options.webSettings.type",
-                    "{arguments}.0",
-                    {filter: "{that}.options.webSettings.filter"}
-                ]
-            },
             updateModel: {
                 funcName: "gpii.chrome.domEnactor.updateModel",
                 args: ["{that}", "{arguments}.0"]
@@ -201,33 +184,6 @@
         transaction.commit();
     };
 
-    /**
-     * Posts a message to the webpage allowing for communication from the content script to the
-     * web page context. This is typically used to pass the model values from the extension to
-     * related enactors running in the web page context.
-     *
-     * @param {String} type - the value of the "type" field stored in the message's data
-     * @param {Object} settings - the settings to post to the web page context
-     * @param {Object} options - optional directives for filtering the settings to be posted.
-     *                           this allows the removal of settings that are not handled by
-     *                           the web page context, allowing for the remainder to be kept
-     *                           private. Options take the following form:
-     *                           {filter: {keys: [array of keys], exclude: true/false}} The
-     *                           exclude option determines if the filter keys are removed (true)
-     *                           or included (false).
-     */
-    gpii.chrome.domEnactor.postSettingsToWebPage = function (type, settings, options) {
-        var data = {
-            type: type
-        };
-        var keysToFilter = fluid.get(options, ["filter", "keys"]);
-        if (fluid.isArrayable(keysToFilter)) {
-            settings = fluid.filterKeys(settings, keysToFilter, options.filter.exclude);
-        }
-        data.payload = settings;
-        window.postMessage(data, "*");
-    };
-
     fluid.defaults("gpii.chrome.domEnactor.simplify", {
         components: {
             simplify: {
@@ -356,7 +312,7 @@
     fluid.defaults("gpii.chrome.enactor.syllabification", {
         gradeNames: ["fluid.prefs.enactor.syllabification"],
         terms: {
-            patternPrefix: "syllablePatterns"
+            patternPrefix: "js/lib/syllablePatterns"
         },
         markup: {
             separator: "<span class=\"flc-syllabification-separator gpii-ext-syllabification-separator\"></span>"

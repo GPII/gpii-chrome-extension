@@ -33,7 +33,6 @@ fluid.defaults("gpii.chrome.domSettingsApplier", {
     model: {
         // Accepted model values:
         //
-        // settings.captionsEnabled: Boolean
         // settings.characterSpace: Number,
         // settings.contrastTheme: String,
         // settings.inputsLarger: Boolean,

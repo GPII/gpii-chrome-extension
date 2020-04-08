@@ -39,23 +39,25 @@
             "css/TableOfContents.css",
             "css/Orator.css"
         ],
-        "js": ["dist/ui-options-chrome-contentScriptsLib.min.js"],
+        "js": [
+            "js/lib/infusion/infusion-uio.min.js"
+        ],
         "all_frames": true
     }, {
         "matches": ["<all_urls>"],
         "exclude_globs": ["*://*.google.*/*"],
-        "js": ["content_scripts/simplificationContext.js"],
+        "js": ["js/content_scripts/simplificationContext.js"],
         "all_frames": true
     }, {
         "matches": ["<all_urls>"],
         "exclude_globs": ["https://www.youtube.com/embed/*"],
         "js": [
-            "content_scripts/webInjection.js",
-            "content_scripts/contentView.js",
-            "content_scripts/simplification.js",
-            "src/portBinding.js",
-            "content_scripts/domEnactor.js",
-            "content_scripts/domSettingsHandler.js"
+            "js/shared/portBinding.js",
+            "js/content_scripts/webInjection.js",
+            "js/content_scripts/contentView.js",
+            "js/content_scripts/simplification.js",
+            "js/content_scripts/domEnactor.js",
+            "js/content_scripts/domSettingsHandler.js"
         ],
         "all_frames": true
     }, {
@@ -65,16 +67,21 @@
     }],
     "background": {
         "scripts": [
-            "dist/ui-options-chrome-all.min.js",
-            "src/background.js"
+            "js/lib/infusion/infusion-uio.min.js",
+            "js/shared/portBinding.js",
+            "js/background/chromeEvented.js",
+            "js/background/domSettingsApplier.js",
+            "js/background/contextMenuPanel.js",
+            "js/background/chromeSettings.js",
+            "js/background/wsConnector.js",
+            "js/background/zoom.js",
+            "js/background/background.js"
         ]
     },
-    "content_security_policy": "script-src 'self' https://youtube.com https://ytimg.com; object-src 'self'",
     "web_accessible_resources": [
         "images/gpii.png",
         "templates/TableOfContents.html",
         "messages/tableOfContents-enactor*.json",
-        "fonts/Orator-Icons.woff",
-        "src/captionsEnactor.js"
+        "fonts/Orator-Icons.woff"
     ]
 }

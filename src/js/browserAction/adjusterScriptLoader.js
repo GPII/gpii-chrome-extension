@@ -14,7 +14,14 @@
 
 var gpii = gpii || {};
 
-gpii.loadScript = document.createElement("script");
-gpii.loadScript.src = "../dist/ui-options-chrome-adjustersLib.min.js";
-gpii.loadScript.async = false;
-document.head.appendChild(gpii.loadScript);
+[
+    "../js/lib/infusion/infusion-uio.min.js",
+    "../js/shared/portBinding.js",
+    "../js/browserAction/PrefsEditor.js",
+    "../js/browserAction/PrefsEditorInstantiation.js"
+].forEach(function (src) {
+    var element = document.createElement("script");
+    element.src = src;
+    element.async = false;
+    document.head.appendChild(element);
+});

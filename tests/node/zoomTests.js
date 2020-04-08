@@ -20,8 +20,8 @@ var chrome = chrome || fluid.require("sinon-chrome", require, "chrome");
 var jqUnit = jqUnit || fluid.require("node-jqunit", require, "jqUnit");
 var gpii = fluid.registerNamespace("gpii");
 
-require("../../extension/src/lib/chromeEvented.js");
-require("../../extension/src/lib/zoom.js");
+require("../../src/js/background/chromeEvented.js");
+require("../../src/js/background/zoom.js");
 
 fluid.defaults("gpii.chrome.tests.zoom.testEnvironment", {
     gradeNames: ["fluid.test.testEnvironment"],
