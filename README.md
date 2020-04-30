@@ -3,7 +3,9 @@
 ![CI build status badge](https://github.com/GPII/gpii-chrome-extension/workflows/CI/badge.svg)
 
 UIO+ for Morphic builds on UIO+ by providing a connection to [Morphic](https://morphic.world). On a Morphic enabled
-machine, user preferences can be supplied from a keyed in preference set. [UIO+](https://github.com/fluid-project/uio-plus#ui-options-plus-uio) allows you to customize websites to match your own personal needs and preferences.
+machine, user preferences can be supplied from a keyed in preference set. [UIO+](
+https://github.com/fluid-project/uio-plus#ui-options-plus-uio) allows you to customize websites to match your own
+personal needs and preferences.
 
 _**Note**: The ability to apply an adaptation will vary from page to page_
 
@@ -14,7 +16,8 @@ Administration for Community Living under grant #90RE5027.
 
 ## Filing issues
 
-UIO+ for Morphic issues are tracked in a [JIRA Issue tracker](https://issues.gpii.net/issues/?jql=project%20%3D%20GPII%20AND%20component%20%3D%20%22Web%20Personalization%20Browser%20Extension%22).
+UIO+ for Morphic issues are tracked in a [JIRA Issue tracker](
+https://issues.gpii.net/issues/?jql=project%20%3D%20GPII%20AND%20component%20%3D%20%22Web%20Personalization%20Browser%20Extension%22).
 Please file issues there.
 
 ## Building the extension
