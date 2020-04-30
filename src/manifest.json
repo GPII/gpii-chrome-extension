@@ -1,70 +1,9 @@
 {
-    "manifest_version": 2,
-    "name": "UI Options Plus (UIO+)",
-    "short_name": "UIO+",
-    "version": "0.1.0.12",
-    "description": "User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.",
-    "author": "Fluid Project",
-    "permissions": [
-        "contextMenus",
-        "tabs",
-        "*://*/"
-    ],
+    "name": "UI Options Plus (UIO+) for Morphic",
+    "short_name": "UIO+ for Morphic",
     "browser_action": {
-        "default_title": "UIO+",
-        "default_popup": "html/adjusters.html",
-        "default_icon": {
-            "16": "images/gears_16.png",
-            "24": "images/gears_24.png",
-            "32": "images/gears_32.png"
-        }
+        "default_title": "UIO+ for Morphic"
     },
-    "commands": {
-        "_execute_browser_action": {
-            "suggested_key": {
-                "default": "Ctrl+Shift+U"
-            }
-        }
-    },
-    "icons": {
-        "16": "images/GearHeart_Mixed_15x15.png",
-        "32": "images/GearHeart_Mixed_31x31.png",
-        "48": "images/GearHeart_Mixed_47x47.png",
-        "128": "images/GearHeart_Mixed_127x127.png"
-    },
-    "content_scripts": [{
-        "matches": ["<all_urls>"],
-        "css": [
-            "css/enactors.css",
-            "css/TableOfContents.css",
-            "css/Orator.css"
-        ],
-        "js": [
-            "js/lib/infusion/infusion-uio.min.js"
-        ],
-        "all_frames": true
-    }, {
-        "matches": ["<all_urls>"],
-        "exclude_globs": ["*://*.google.*/*"],
-        "js": ["js/content_scripts/simplificationContext.js"],
-        "all_frames": true
-    }, {
-        "matches": ["<all_urls>"],
-        "exclude_globs": ["https://www.youtube.com/embed/*"],
-        "js": [
-            "js/shared/portBinding.js",
-            "js/content_scripts/webInjection.js",
-            "js/content_scripts/contentView.js",
-            "js/content_scripts/simplification.js",
-            "js/content_scripts/domEnactor.js",
-            "js/content_scripts/domSettingsHandler.js"
-        ],
-        "all_frames": true
-    }, {
-        "matches": ["https://www.caljobs.ca.gov/*"],
-        "css": ["css/calJobs.css"],
-        "all_frames": true
-    }],
     "background": {
         "scripts": [
             "js/lib/infusion/infusion-uio.min.js",
@@ -73,14 +12,9 @@
             "js/background/domSettingsApplier.js",
             "js/background/contextMenuPanel.js",
             "js/background/chromeSettings.js",
+            "js/background/wsConnector.js",
             "js/background/zoom.js",
             "js/background/background.js"
         ]
-    },
-    "web_accessible_resources": [
-        "images/gpii.png",
-        "templates/TableOfContents.html",
-        "messages/tableOfContents-enactor*.json",
-        "fonts/Orator-Icons.woff"
-    ]
+    }
 }

@@ -10,10 +10,26 @@
  * https://github.com/GPII/gpii-chrome-extension/blob/master/LICENSE.txt
  */
 
-/* global fluid */
+/* global fluid, gpii */
 
 "use strict";
 
-fluid.setLogging(true);
-var gpii = fluid.registerNamespace("gpii");
-gpii.chrome.settings();
+
+fluid.defaults("gpii.chrome.morphic", {
+    gradeNames: "uioPlus.chrome.settings",
+    components: {
+        wsConnector: {
+            type: "gpii.wsConnector",
+            options: {
+                solutionId: "net.gpii.uioPlus",
+                flowManager: "ws://localhost:8081/browserChannel",
+                retryTime: 10,
+                listeners: {
+                    "{that}.events.onSettingsChange": "{uioPlus.chrome.settings}.updateSettings"
+                }
+            }
+        }
+    }
+});
+
+gpii.chrome.morphic();

@@ -14,11 +14,12 @@
 
 "use strict";
 
+var merge = require("deepmerge");
+
 module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
-        buildType: "uio",
         buildVersion: "<%= pkg.version %>",
         lintAll: {
             sources: {
@@ -30,175 +31,65 @@ module.exports = function (grunt) {
         },
         clean: {
             all: {
-                src: ["build/"]
-            }
-        },
-        stylus: {
-            build: {
-                options: {
-                    compress: true,
-                    relativeDest: "../../build/<%= buildType %>/css"
-                },
-                files: [{
-                    expand: true,
-                    src: ["src/stylus/*.styl"],
-                    ext: ".css"
-                }]
+                src: ["dist/"]
             }
         },
         writeManifest: {
             options: {
                 space: 4
             },
-            uio: {
-                src: "src/manifest.json",
-                dest: "build/<%= buildType %>/manifest.json"
-            },
-            morphic: {
-                src: ["src/manifest.json", "src/manifest_morphic.json"],
-                dest: "build/<%= buildType %>/manifest.json"
+            all: {
+                src: ["dist/manifest.json", "src/manifest.json"],
+                dest: "dist/manifest.json"
             }
         },
         copy: {
+            "uio+": {
+                cwd: "node_modules/uio-plus/dist",
+                expand: true,
+                dest: "dist/",
+                src: ["**/*"]
+            },
             source: {
                 cwd: "src",
                 expand: true,
                 src: [
-                    "css/**/*",
-                    "html/**/*",
-                    "images/**/*",
-                    "js/**/*",
-                    "messages/**/*",
-                    "templates/**/*"
+                    "js/**/*"
                 ],
-                dest: "build/<%= buildType %>/"
-            },
-            lib: {
-                //TODO: Currently there is a bug in Chrome that prevents source maps from working for extensions.
-                //      see: https://bugs.chromium.org/p/chromium/issues/detail?id=212374
-                //      After the above issue is fixed, include source maps and/or additional build types to improve
-                //      debugging.
-                files: [{
-                    expand: true,
-                    flatten: true,
-                    src: "node_modules/infusion/dist/infusion-uio.min.js",
-                    dest: "build/<%= buildType %>/js/lib/infusion/"
-                }, {
-                    expand: true,
-                    flatten: true,
-                    src: "node_modules/infusion/src/lib/hypher/patterns/*.js",
-                    dest: "build/<%= buildType %>/js/lib/syllablePatterns/"
-                }]
-            },
-            templates: {
-                cwd: "node_modules/infusion/src/",
-                expand: true,
-                flatten: true,
-                src: [
-                    "components/tableOfContents/html/TableOfContents.html",
-                    "framework/preferences/html/PrefsEditorTemplate-*.html"
-                ],
-                dest: "build/<%= buildType %>/templates/"
-            },
-            messages: {
-                expand: true,
-                flatten: true,
-                src: "node_modules/infusion/src/framework/preferences/messages/*.json",
-                dest: "build/<%= buildType %>/messages/"
-            },
-            fonts: {
-                cwd: "node_modules/infusion/src/",
-                expand: true,
-                flatten: true,
-                src: [
-                    "framework/preferences/fonts/*.woff",
-                    "components/orator/fonts/*.woff",
-                    "lib/opensans/fonts/*.woff"
-                ],
-                dest: "build/<%= buildType %>/fonts/"
-            },
-            styles: {
-                cwd: "node_modules/infusion/",
-                expand: true,
-                flatten: true,
-                src: [
-                    "src/lib/normalize/css/normalize.css",
-                    "src/framework/core/css/fluid.css",
-                    "src/components/orator/css/Orator.css",
-                    "src/components/tableOfContents/css/TableOfContents.css",
-                    "dist/assets/src/framework/preferences/css/PrefsEditor.css",
-                    "dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditorFrame.css"
-                ],
-                dest: "build/<%= buildType %>/css/"
-            }
-        },
-        compress: {
-            all: {
-                options: {
-                    archive: "build/<%= buildType %>/UIO+_<%= buildVersion %>_<%= buildType %>.zip"
-                },
-                files: [{
-                    expand: true,
-                    cwd: "build/<%= buildType %>/",
-                    src: ["**/*"]
-                }]
+                dest: "dist/"
             }
         }
     });
 
     grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-contrib-stylus");
     grunt.loadNpmTasks("gpii-grunt-lint-all");
 
     grunt.registerTask("lint", "Perform all standard lint checks.", ["lint-all"]);
-
-    grunt.registerTask("buildType", "Build the UIO+ extension", function (target) {
-        grunt.config.set("buildType", target);
-    });
 
     // Can specify a replacer or space option to be used by the JSON.stringify call
     // see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
     grunt.registerMultiTask("writeManifest", "Outputs a manifest file by merging the source documents into the destination.", function () {
         var options = this.options();
-        var output = {};
         var version_name = grunt.option("version_name");
 
-        this.filesSrc.forEach(function (fileSrc) {
-            var json = grunt.file.readJSON(fileSrc);
-            Object.assign(output, json);
+        var overwriteMerge = function (destinationArray, sourceArray) {
+            return sourceArray;
+        };
+
+        var inputs = this.filesSrc.map(function (fileSrc) {
+            return grunt.file.readJSON(fileSrc);
         });
 
+        var output = merge.all(inputs, { arrayMerge: overwriteMerge });
+
         if (version_name) {
-            Object.assign(output, {version_name: version_name});
+            output = merge(output, {version_name: version_name});
         }
 
         grunt.file.write(this.data.dest, JSON.stringify(output, options.replacer, options.space));
     });
 
-    grunt.registerTask("buildExtensions", "Build the UIO+ extension", function (target) {
-        // set the buildVersion to be the version_name if that is supplied
-        var version_name = grunt.option("version_name");
-        if (version_name) {
-            version_name = version_name.trim().replace(/\s+/g, "_");
-            grunt.config.set("buildVersion", version_name);
-        }
-
-        target = target ? [target] : ["uio", "morphic"];
-
-        target.forEach(function (buildType) {
-            var tasks = [
-                "buildType:" + buildType,
-                "stylus",
-                "copy",
-                "writeManifest:" + buildType,
-                "compress"
-            ];
-            grunt.task.run(tasks);
-        });
-    });
-
-    grunt.registerTask("build", "Build the extensions", ["clean", "buildExtensions"]);
+    grunt.registerTask("build", "Build the extensions", ["clean", "copy", "writeManifest"]);
     grunt.registerTask("default", ["build"]);
 };

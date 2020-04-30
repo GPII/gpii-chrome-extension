@@ -1,8 +1,8 @@
 {
-    "name": "ui-options-chrome",
+    "name": "uio-plus-for-morphic",
     "version": "0.1.0",
-    "description": "User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.",
-    "license": "(BSD-3-Clause OR ECL-2.0)",
+    "description": "User Interface Options Plus (UIO+) for Morphic allows you to customize websites to match your own personal needs and preferences.",
+    "license": "BSD-3-Clause",
     "repository": {
         "type": "git",
         "url": "git://github.com/GPII/gpii-chrome-extension.git"
@@ -16,6 +16,7 @@
         "fluid",
         "preferences",
         "uio",
+        "uio+",
         "ui options",
         "user interface options",
         "gpii",
@@ -42,6 +43,7 @@
         "ws": "7.2.1"
     },
     "devDependencies": {
+        "deepmerge": "4.2.2",
         "eslint-config-fluid": "1.4.0",
         "gpii-grunt-lint-all": "1.0.7",
         "gpii-testem": "2.1.11",
@@ -50,7 +52,6 @@
         "grunt-contrib-clean": "2.0.0",
         "grunt-contrib-compress": "1.6.0",
         "grunt-contrib-copy": "1.0.0",
-        "grunt-contrib-stylus": "1.2.0",
         "grunt-shell": "3.0.1",
         "node-jqunit": "1.1.8",
         "nyc": "15.0.0",
