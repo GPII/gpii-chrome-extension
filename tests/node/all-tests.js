@@ -1,5 +1,5 @@
 /*
- * Copyright The UIO+ copyright holders
+ * Copyright The UIO+ for Morphic copyright holders
  * See the AUTHORS.md file at the top-level directory of this distribution and at
  * https://github.com/GPII/gpii-chrome-extension/blob/master/AUTHORS.md
  *
