@@ -56,32 +56,10 @@ grunt build --version_name="0.1.0 beta 14"
 
 ## Testing
 
-### Node
-
-Run the node-based tests:
-
-```bash
-node tests/node/all-tests.js
-```
-
-### Browser
-
-Run the browser-based tests:
-
-[http://localhost/tests/browser/all-tests.html](http://localhost/tests/browser/all-tests.html)
-
-_**NOTE:** Browser tests should be served through a web server. The exact URL may vary._
-
-### All tests with reports
-
 Run all the tests and generate reports which can be viewed in the browser from the "reports" directory:
 
 ```bash
-# run on the host machine
 npm test
-
-# run in a vagrant vm
-npm run test:vagrant
 ```
 
 ## Trying out the extension
