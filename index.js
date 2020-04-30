@@ -19,4 +19,4 @@
 /* eslint-env node */
 "use strict";
 var fluid = require("infusion");
-fluid.module.register("ui-options-chrome", __dirname, require);
+fluid.module.register("uio-plus-for-morphic", __dirname, require);

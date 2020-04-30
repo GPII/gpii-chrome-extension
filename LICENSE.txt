@@ -4,7 +4,7 @@ separate directory, they may contain explicit declarations of copyright
 in both the LICENSE file in the directory in which they reside and in the
 code itself. No external contributions are allowed under licenses which are
 fundamentally incompatible with the BSD or Apache licenses that
-ui-options-chrome is distributed under.
+uio-plus-for-morphic is distributed under.
 
 All rights reserved.
 
