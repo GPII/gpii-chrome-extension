@@ -28,15 +28,16 @@
     },
     "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
     "scripts": {
+        "build": "grunt build",
         "lint": "grunt lint",
         "pretest": "node node_modules/rimraf/bin.js reports/* coverage/* && grunt build",
         "test": "node node_modules/nyc/bin/nyc.js node tests/node/all-tests.js",
         "posttest": "node node_modules/nyc/bin/nyc.js report --reporter text-summary --reporter html"
     },
     "dependencies": {
-        "infusion": "3.0.0-dev.20191107T164711Z.332e92c33.FLUID-6148",
-        "ws": "7.2.5",
-        "uio-plus": "0.1.0-dev.20200430T175839Z.dcfe668.standalone"
+        "infusion": "3.0.0-dev.20200525T161532Z.fc4d4b3.FLUID-6145",
+        "ws": "7.3.0",
+        "uio-plus": "0.1.0-dev.20200603T175039Z.86d4551"
     },
     "devDependencies": {
         "deepmerge": "4.2.2",
@@ -47,7 +48,7 @@
         "grunt-contrib-clean": "2.0.0",
         "grunt-contrib-copy": "1.0.0",
         "node-jqunit": "1.1.8",
-        "nyc": "15.0.1",
+        "nyc": "15.1.0",
         "rimraf": "3.0.2"
     }
 }

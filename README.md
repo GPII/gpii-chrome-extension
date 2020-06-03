@@ -85,7 +85,8 @@ _**NOTE:** Published versions can be installed from the [Chrome Web Store](
 
 ### BSD (3-Clause)
 
-* [UIO+](https://fluidproject.org/infusion.html)
+* [Infusion](https://github.com/fluid-project/infusion)
+* [UIO+](https://github.com/fluid-project/uio-plus)
 
 ## Publishing to the Chrome Web Store
 

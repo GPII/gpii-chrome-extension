@@ -26,13 +26,13 @@ require("../../src/js/background/wsConnector.js");
 fluid.defaults("gpii.chrome.tests.wsConnector.server", {
     gradeNames: "fluid.modelComponent",
     port: 8083,
-    allowedClients: ["gpii.chrome.tests"],
-    settings: undefined,
     members: {
-        socket: null
+        socket: null,
+        allowedClients: ["gpii.chrome.tests"]
     },
     model: {
-        clientSocket: null
+        clientSocket: null,
+        settings: {}
     },
     events: {
         onConnectionRequest: null,
@@ -47,8 +47,9 @@ fluid.defaults("gpii.chrome.tests.wsConnector.server", {
             args: ["{that}"]
         },
         updateSettings: {
-            funcName: "gpii.chrome.tests.wsConnector.server.updateSettings",
-            args: ["{that}", "{arguments}.0"]
+            changePath: "settings",
+            value: "{arguments}.0",
+            source: "updateSettings"
         },
         stop: {
             funcName: "gpii.chrome.tests.wsConnector.server.stop",
@@ -77,18 +78,26 @@ fluid.defaults("gpii.chrome.tests.wsConnector.server", {
             funcName: "gpii.chrome.tests.wsConnector.server.processMessage",
             args: ["{that}", "{arguments}.0"]
         }
+    },
+    modelListeners: {
+        "settings": {
+            funcName: "gpii.chrome.tests.wsConnector.server.broadcastSettings",
+            args: ["{that}", "{change}.value"],
+            namespace: "broadcastSettings",
+            excludeSource: ["init"]
+        }
     }
 });
 
 
 gpii.chrome.tests.wsConnector.server.allowClient = function (that, solutionId) {
-    that.options.allowedClients.push(solutionId);
+    that.allowedClients.push(solutionId);
 };
 
 gpii.chrome.tests.wsConnector.server.banClient = function (that, solutionId) {
-    var index = that.options.allowedClients.indexOf(solutionId);
+    var index = that.allowedClients.indexOf(solutionId);
     if (index > -1) {
-        that.options.allowedClients.splice(index, 1);
+        that.allowedClients.splice(index, 1);
     };
 };
 
@@ -103,11 +112,11 @@ gpii.chrome.tests.wsConnector.server.closeClient = function (that) {
 gpii.chrome.tests.wsConnector.server.processMessage = function (that, message) {
     var msg = JSON.parse(message);
     if ((msg.type === "connect") && (msg.payload)) {
-        var isAllowed = that.options.allowedClients.indexOf(msg.payload.solutionId);
+        var isAllowed = that.allowedClients.indexOf(msg.payload.solutionId);
         if (isAllowed > -1) {
             var response = {
                 type: "connectionSucceeded",
-                payload: that.options.settings
+                payload: that.model.settings
             };
             that.model.clientSocket.send(JSON.stringify(response));
         } else {
@@ -127,12 +136,14 @@ gpii.chrome.tests.wsConnector.server.setupClient = function (that, client) {
     client.on("message", that.events.onMessage.fire);
 };
 
-gpii.chrome.tests.wsConnector.server.updateSettings = function (that, settings) {
+gpii.chrome.tests.wsConnector.server.broadcastSettings = function (that, settings) {
     var msg = {
         type: "onSettingsChanged",
         payload: settings
     };
-    that.model.clientSocket.send(JSON.stringify(msg));
+    if (that.model.clientSocket) {
+        that.model.clientSocket.send(JSON.stringify(msg));
+    }
 };
 
 gpii.chrome.tests.wsConnector.server.populate = function (that) {
@@ -165,6 +176,34 @@ fluid.defaults("gpii.chrome.tests.wsConnector.tester", {
                 magnifierEnabled: true,
                 magnification: 2
             }
+        },
+        test2: {
+            connectPayload: {
+                type: "connect",
+                payload: {
+                    solutionId: "gpii.chrome.tests2"
+                }
+            },
+            settings: {
+                highContrastEnabled: true,
+                highContrastTheme: "white-black",
+                magnifierEnabled: true,
+                magnification: 2
+            }
+        },
+        test3: {
+            connectPayload: {
+                type: "connect",
+                payload: {
+                    solutionId: "gpii.chrome.tests3"
+                }
+            },
+            settings: {
+                highContrastEnabled: true,
+                highContrastTheme: "white-black",
+                magnifierEnabled: true,
+                magnification: 2
+            }
         }
     },
     components: {
@@ -176,10 +215,36 @@ fluid.defaults("gpii.chrome.tests.wsConnector.tester", {
                 retryTime: 1
             }
         },
+        clientTwo: {
+            type: "gpii.wsConnector",
+            options: {
+                solutionId: "gpii.chrome.tests2",
+                flowManager: "ws://localhost:8083",
+                reconnect: false,
+                listeners: {
+                    // remove connect on creation, will connect manually in the test
+                    "onCreate.connect": "fluid.identity"
+                }
+            }
+        },
+        clientThree: {
+            type: "gpii.wsConnector",
+            options: {
+                solutionId: "gpii.chrome.tests3",
+                flowManager: "ws://localhost:8083",
+                retryTime: 3,
+                listeners: {
+                    // remove connect on creation, will connect manually in the test
+                    "onCreate.connect": "fluid.identity"
+                }
+            }
+        },
         server: {
             type: "gpii.chrome.tests.wsConnector.server",
             options: {
-                allowedClients: ["gpii.chrome.tests"]
+                members: {
+                    allowedClients: ["gpii.chrome.tests"]
+                }
             }
         }
     },
@@ -253,46 +318,43 @@ fluid.defaults("gpii.chrome.tests.wsConnector.tester", {
             name: "Settings change, client receives settings when connecting",
             expect: 1,
             sequence: [{
-                funcName: "gpii.chrome.tests.wsConnector.switchReconnecting",
-                args: "{clientOne}"
-            }, {
                 func: "{server}.updateSettings",
-                args: ["{that}.options.payloads.test1.settings"]
+                args: ["{that}.options.payloads.test2.settings"]
             }, {
                 func: "{server}.allowClient",
-                args: ["{clientOne}.options.solutionId"]
+                args: ["{clientTwo}.options.solutionId"]
             }, {
-                func: "{clientOne}.connect"
+                func: "{clientTwo}.connect"
             }, {
-                event: "{clientOne}.events.onSettingsChange",
+                event: "{clientTwo}.events.onSettingsChange",
                 listener: "gpii.chrome.tests.wsConnector.checkSettings",
-                args: ["{arguments}.0", "{that}.options.payloads.test1.settings"]
+                args: ["{arguments}.0", "{that}.options.payloads.test2.settings"]
+            }, {
+                funcName: "{server}.stop"
             }]
         }, {
             name: "Server closes, client tries to reconnect more than once",
             expect: 3,
             sequence: [{
-                funcName: "gpii.chrome.tests.wsConnector.switchReconnecting",
-                args: "{clientOne}"
+                func: "{server}.allowClient",
+                args: ["{clientTwo}.options.solutionId"]
+            }, {
+                func: "{clientThree}.connect"
             }, {
                 func: "{server}.stop"
             }, {
-                event: "{clientOne}.events.onError",
+                event: "{clientThree}.events.onError",
                 listener: "gpii.chrome.tests.wsConnector.expectedEvent"
             }, {
-                event: "{clientOne}.events.onError",
+                event: "{clientThree}.events.onError",
                 listener: "gpii.chrome.tests.wsConnector.expectedEvent"
             }, {
-                event: "{clientOne}.events.onError",
+                event: "{clientThree}.events.onError",
                 listener: "gpii.chrome.tests.wsConnector.expectedEvent"
             }]
         }]
     }]
 });
-
-gpii.chrome.tests.wsConnector.switchReconnecting = function (client) {
-    client.options.reconnect = !client.options.reconnect;
-};
 
 gpii.chrome.tests.wsConnector.checkSettings = function (settings, expected) {
     jqUnit.assertDeepEq("Client received the new settings when updated",
