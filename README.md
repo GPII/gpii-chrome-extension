@@ -38,13 +38,15 @@ npm install
 
 ### Build
 
-This will generate a `build` directory at the root of the project. Within the `build` directory are two subdirectories:
-`uio` and `morphic`. The `uio` directory contains the built version of UIO+, while the `morphic` directory contains
-the built version of UIO+ for Morphic. Both can be run as unpacked extensions and also provide a zip package that
-can be published to the Chrome Web Store.
+This will generate a `dist` directory at the root of the project. The `dist` directory contains the built version of
+UIO+ for Morphic. This can be run as an unpacked extensions or zipped to be published on the Chrome Web Store.
 
 ```bash
 grunt build
+
+#or
+
+npm run build
 ```
 
 The `--version_name` flag can be set to specify a version name to include in the manifest file. This is useful when
@@ -75,8 +77,7 @@ Follow these steps if you want to use the unpacked version of the extension:
    under the *Tools* menu to open Chrome's extension settings.
 2. Ensure that the *Developer mode* checkbox in the top right-hand corner is checked.
 3. Click *Load unpacked extension* to open a file-selection dialog.
-4. Navigate to the directory in which your local copy of the extension lives, and select the `build/uio` or
-   `build/morphic` folder.
+4. Navigate to the directory in which your local copy of the extension lives, and select the `dist` or directory.
 
 _**NOTE:** Published versions can be installed from the [Chrome Web Store](
     https://chrome.google.com/webstore/detail/ui-options-plus-uio%20/okenndailhmikjjfcnmolpaefecbpaek)._
@@ -94,9 +95,9 @@ _**NOTE:** Published versions can be installed from the [Chrome Web Store](
    1. Ensure that all of the code, that should be published, has been merged into the master branch.
    2. Ensure that the code in master is working as expected.
       1. Run tests: `npm test`
-      2. Lint: `grunt lint`
+      2. Lint: `grunt lint` or `npm run lint`
       3. Manual test build.
-         1. Create a build: "grunt build"
+         1. Create a build: `grunt build` or `npm run build`
          2. Load unpacked extension into Chrome.
             1. In Chrome go to [chrome://extensions](chrome://extensions)
             2. Ensure that "Developer mode" is enabled.
@@ -120,15 +121,17 @@ _**NOTE:** Published versions can be installed from the [Chrome Web Store](
       [version name](https://developer.chrome.com/apps/manifest/version#version_name) in the manifest file. (e.g.
       `grunt build --version_name="0.1.0 beta 14"`). The version name will be displayed instead of the version number in
       the Chrome Web Store.
+   2. Create of a zip archive of the contents of the `dist` directory. This will be uploaded to the Chrome Web Store.
 3. Publish to the [Chrome Web Store](https://chrome.google.com/webstore/category/extensions).
    1. Go to the Developer Dashboard on the Chrome Web Store and login.
-   2. On the Developer Dashboard, click “Edit”; located on the right hand side of the UI Options Plus (UIO+) listing.
+   2. On the Developer Dashboard, click “Edit”; located on the right hand side of the UI Options Plus (UIO+) for morphic
+      listing.
    3. On the UI Options Plus (UIO+) edit page, click “upload updated package” and upload the zip created in step 2.2
       above.
    4. Update the “Detailed description” field as necessary. Similar information is contained in this README.
    5. Update the screenshots if necessary. They will need to be the exact size requested.
    6. Set the “Visibility Options” to “Unlisted”. This means that UIO+ for Morphic will be available for install from
-      the Chrome Web Store, but won't be searchable. It will only be accessible by the direct link: UIO+ for Morphic.
+      the Chrome Web Store, but won't be searchable. It will only be accessible by the direct link.
    7. Click "Preview Changes".
       1. Verify that everything appears correct. Pay particular attention to anything that was changed,
          e.g., version number/name, descriptions, screenshots, etc.
