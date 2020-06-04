@@ -1,5 +1,5 @@
 /*
- * Copyright The UIO+ copyright holders
+ * Copyright The UIO+ for Morphic copyright holders
  * See the AUTHORS.md file at the top-level directory of this distribution and at
  * https://github.com/GPII/gpii-chrome-extension/blob/master/AUTHORS.md
  *
@@ -14,10 +14,13 @@
 
 "use strict";
 
+var merge = require("deepmerge");
+
 module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
+        buildVersion: "<%= pkg.version %>",
         lintAll: {
             sources: {
                 md: [ "./*.md"],
@@ -26,107 +29,67 @@ module.exports = function (grunt) {
                 other: ["./.*"]
             }
         },
-        stylus: {
-            build: {
-                options: {
-                    compress: true,
-                    relativeDest: "../../build/css"
-                },
-                files: [{
-                    expand: true,
-                    src: ["src/stylus/*.styl"],
-                    ext: ".css"
-                }]
+        clean: {
+            all: {
+                src: ["dist/"]
+            }
+        },
+        writeManifest: {
+            options: {
+                space: 4
+            },
+            all: {
+                src: ["dist/manifest.json", "src/manifest.json"],
+                dest: "dist/manifest.json"
             }
         },
         copy: {
+            "uio+": {
+                cwd: "node_modules/uio-plus/dist",
+                expand: true,
+                dest: "dist/",
+                src: ["**/*"]
+            },
             source: {
                 cwd: "src",
                 expand: true,
                 src: [
-                    "css/**/*",
-                    "html/**/*",
-                    "images/**/*",
-                    "js/**/*",
-                    "messages/**/*",
-                    "templates/**/*",
-                    "manifest.json"
+                    "js/**/*"
                 ],
-                dest: "build/"
-            },
-            lib: {
-                //TODO: Currently there is a bug in Chrome that prevents source maps from working for extensions.
-                //      see: https://bugs.chromium.org/p/chromium/issues/detail?id=212374
-                //      After the above issue is fixed, include source maps and/or additional build types to improve
-                //      debugging.
-                files: [{
-                    expand: true,
-                    flatten: true,
-                    src: "node_modules/infusion/dist/infusion-uio.min.js",
-                    dest: "build/js/lib/infusion/"
-                }, {
-                    expand: true,
-                    flatten: true,
-                    src: "node_modules/infusion/src/lib/hypher/patterns/*.js",
-                    dest: "build/js/lib/syllablePatterns/"
-                }]
-            },
-            templates: {
-                cwd: "node_modules/infusion/src/",
-                expand: true,
-                flatten: true,
-                src: [
-                    "components/tableOfContents/html/TableOfContents.html",
-                    "framework/preferences/html/PrefsEditorTemplate-*.html"
-                ],
-                dest: "build/templates/"
-            },
-            messages: {
-                expand: true,
-                flatten: true,
-                src: "node_modules/infusion/src/framework/preferences/messages/*.json",
-                dest: "build/messages/"
-            },
-            fonts: {
-                cwd: "node_modules/infusion/src/",
-                expand: true,
-                flatten: true,
-                src: [
-                    "framework/preferences/fonts/*.woff",
-                    "components/orator/fonts/*.woff",
-                    "lib/opensans/fonts/*.woff"
-                ],
-                dest: "build/fonts/"
-            },
-            styles: {
-                cwd: "node_modules/infusion/",
-                expand: true,
-                flatten: true,
-                src: [
-                    "src/lib/normalize/css/normalize.css",
-                    "src/framework/core/css/fluid.css",
-                    "src/components/orator/css/Orator.css",
-                    "src/components/tableOfContents/css/TableOfContents.css",
-                    "dist/assets/src/framework/preferences/css/PrefsEditor.css",
-                    "dist/assets/src/framework/preferences/css/SeparatedPanelPrefsEditorFrame.css"
-                ],
-                dest: "build/css/"
-            }
-        },
-        clean: {
-            all: {
-                src: ["build/"]
+                dest: "dist/"
             }
         }
     });
 
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-contrib-stylus");
     grunt.loadNpmTasks("gpii-grunt-lint-all");
 
     grunt.registerTask("lint", "Perform all standard lint checks.", ["lint-all"]);
-    grunt.registerTask("build", "Build the extension so you can start using it unpacked", ["clean", "stylus", "copy"]);
 
+    // Can specify a replacer or space option to be used by the JSON.stringify call
+    // see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+    grunt.registerMultiTask("writeManifest", "Outputs a manifest file by merging the source documents into the destination.", function () {
+        var options = this.options();
+        var version_name = grunt.option("version_name");
+
+        var overwriteMerge = function (destinationArray, sourceArray) {
+            return sourceArray;
+        };
+
+        var inputs = this.filesSrc.map(function (fileSrc) {
+            return grunt.file.readJSON(fileSrc);
+        });
+
+        var output = merge.all(inputs, { arrayMerge: overwriteMerge });
+
+        if (version_name) {
+            output = merge(output, {version_name: version_name});
+        }
+
+        grunt.file.write(this.data.dest, JSON.stringify(output, options.replacer, options.space));
+    });
+
+    grunt.registerTask("build", "Build the extensions", ["clean", "copy", "writeManifest"]);
     grunt.registerTask("default", ["build"]);
 };

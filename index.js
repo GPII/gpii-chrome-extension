@@ -1,5 +1,5 @@
 /*
- * Copyright The UIO+ copyright holders
+ * Copyright The UIO+ for Morphic copyright holders
  * See the AUTHORS.md file at the top-level directory of this distribution and at
  * https://github.com/GPII/gpii-chrome-extension/blob/master/AUTHORS.md
  *
@@ -19,4 +19,4 @@
 /* eslint-env node */
 "use strict";
 var fluid = require("infusion");
-fluid.module.register("ui-options-chrome", __dirname, require);
+fluid.module.register("uio-plus-for-morphic", __dirname, require);

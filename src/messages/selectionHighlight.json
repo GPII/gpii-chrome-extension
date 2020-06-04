@@ -1,8 +1,0 @@
-{
-    "selectionHighlight-default": "Default",
-    "selectionHighlight-yellow": "Yellow highlight",
-    "selectionHighlight-green": "Green highlight",
-    "selectionHighlight-pink": "Pink highlight",
-    "label": "Selection Highlight",
-    "description": "Change the highlight colour for text selections"
-}

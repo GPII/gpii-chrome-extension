@@ -1,8 +1,8 @@
 {
-    "name": "ui-options-chrome",
+    "name": "uio-plus-for-morphic",
     "version": "0.1.0",
-    "description": "User Interface Options Plus (UIO+) allows you to customize websites to match your own personal needs and preferences.",
-    "license": "(BSD-3-Clause OR ECL-2.0)",
+    "description": "User Interface Options Plus (UIO+) for Morphic allows you to customize websites to match your own personal needs and preferences.",
+    "license": "BSD-3-Clause",
     "repository": {
         "type": "git",
         "url": "git://github.com/GPII/gpii-chrome-extension.git"
@@ -16,46 +16,39 @@
         "fluid",
         "preferences",
         "uio",
+        "uio+",
         "ui options",
         "user interface options",
         "gpii",
         "morphic"
     ],
-    "author": "Fluid Project",
+    "author": "GPII",
     "bugs": {
         "url": "http://issues.gpii.net/browse/GPII"
     },
     "homepage": "https://github.com/GPII/gpii-chrome-extension#README.md",
     "scripts": {
+        "build": "grunt build",
         "lint": "grunt lint",
         "pretest": "node node_modules/rimraf/bin.js reports/* coverage/* && grunt build",
-        "test": "npm run test:node && npm run test:browser",
-        "test:node": "node node_modules/nyc/bin/nyc.js node tests/node/all-tests.js",
-        "test:browser": "node node_modules/testem/testem.js ci --file tests/browser/testem.js",
-        "test:vagrant": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm test'",
-        "test:vagrantBrowser": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:browser'",
-        "test:vagrantNode": "vagrant up && vagrant ssh -c 'cd /home/vagrant/sync/; DISPLAY=:0 npm run test:node'",
+        "test": "node node_modules/nyc/bin/nyc.js node tests/node/all-tests.js",
         "posttest": "node node_modules/nyc/bin/nyc.js report --reporter text-summary --reporter html"
     },
     "dependencies": {
-        "infusion": "3.0.0-dev.20191107T164711Z.332e92c33.FLUID-6148",
-        "ws": "7.2.1"
+        "infusion": "3.0.0-dev.20200525T161532Z.fc4d4b3.FLUID-6145",
+        "ws": "7.3.0",
+        "uio-plus": "0.1.0-dev.20200603T175039Z.86d4551"
     },
     "devDependencies": {
+        "deepmerge": "4.2.2",
         "eslint-config-fluid": "1.4.0",
         "gpii-grunt-lint-all": "1.0.7",
-        "gpii-testem": "2.1.11",
-        "grunt": "1.0.4",
+        "grunt": "1.1.0",
         "grunt-cli": "1.3.2",
         "grunt-contrib-clean": "2.0.0",
         "grunt-contrib-copy": "1.0.0",
-        "grunt-contrib-stylus": "1.2.0",
-        "grunt-shell": "3.0.1",
         "node-jqunit": "1.1.8",
-        "nyc": "15.0.0",
-        "rimraf": "3.0.0",
-        "sinon": "8.1.1",
-        "sinon-chrome": "3.0.1",
-        "testem": "3.0.2"
+        "nyc": "15.1.0",
+        "rimraf": "3.0.2"
     }
 }

@@ -2,11 +2,11 @@
 
 ## Copyright Holders
 
-This is the list of UIO+ copyright holders. It does not list all individual contributors because some have assigned
-copyright to an institution, only made minor changes, or their contributions no longer appear in the codebase.
+This is the list of UIO+ for Morphic copyright holders. It does not list all individual contributors because some have
+assigned copyright to an institution, only made minor changes, or their contributions no longer appear in the codebase.
 Please see the version control system's revision history for details on contributions.
 
-Copyright 2016-2019
+Copyright 2016-2020
 
 * OCAD University
 * Raising the Floor - International
