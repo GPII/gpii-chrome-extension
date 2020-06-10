@@ -42,6 +42,10 @@ fluid.defaults("gpii.wsConnector", {
         messageHandler: {
             funcName: "gpii.wsConnector.messageHandler",
             args: ["{that}", "{arguments}.0"]
+        },
+        sendMessage: {
+            funcName: "gpii.wsConnector.sendMessage",
+            args: ["{that}", "{arguments}.0", "{arguments}.1"]
         }
     },
     events: {
@@ -100,12 +104,19 @@ gpii.wsConnector.error = function (that, err) {
 };
 
 gpii.wsConnector.setup = function (that) {
-    var authPayload = {
-        type: "connect",
-        payload: {
-            solutionId: that.options.solutionId
-        }
-    };
-    that.socket.send(JSON.stringify(authPayload));
+    that.sendMessage("connect", {solutionId: that.options.solutionId});
     that.socket.onmessage = that.messageHandler;
+};
+
+gpii.wsConnector.sendMessage = function (that, type, payload) {
+    var message = {
+        type: type,
+        payload: payload
+    };
+
+    if (that.socket) {
+        that.socket.send(JSON.stringify(message));
+    } else {
+        fluid.log("Unable to send message: " + message + ". No socket connection available.");
+    }
 };
