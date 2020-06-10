@@ -37,7 +37,7 @@
     "dependencies": {
         "infusion": "3.0.0-dev.20200525T161532Z.fc4d4b3.FLUID-6145",
         "ws": "7.3.0",
-        "uio-plus": "0.1.0-dev.20200603T175039Z.86d4551"
+        "uio-plus": "0.1.0-dev.20200610T141822Z.83bce7f"
     },
     "devDependencies": {
         "deepmerge": "4.2.2",
