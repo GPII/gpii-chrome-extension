@@ -52,7 +52,8 @@ fluid.defaults("gpii.wsConnector", {
         onConnect: null,
         onConnectionSucceeded: null,
         onError: null,
-        onSettingsChange: null
+        onSettingsChange: null,
+        onSettingsReceived: null
     },
     listeners: {
         "onCreate.connect": "{wsConnector}.connect",
@@ -80,8 +81,11 @@ gpii.wsConnector.messageHandler = function (that, ev) {
         }
     } else if (msg.type === "onSettingsChanged") {
         that.events.onSettingsChange.fire(msg.payload ? msg.payload : undefined);
+    } else if (msg.type === "changeSettingsReceived") {
+        // confirms that settings sent back across the socket have been received by the server
+        that.events.onSettingsReceived.fire(msg.payload);
     } else {
-        fluid.log("Unrecognized event/message");
+        fluid.log("Unrecognized event/message", msg);
     }
 };
 
