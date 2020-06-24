@@ -8,6 +8,7 @@ https://github.com/fluid-project/uio-plus#ui-options-plus-uio) allows you to cus
 personal needs and preferences.
 
 _**Note**: The ability to apply an adaptation will vary from page to page_
+_**Note**: UIO+ for Morphic is not compatible with Morphic Classic v1.3.5 or earlier_
 
 UI Options Plus for Morphic is the result of a joint effort of the Inclusive Design Research Centre at OCAD University
 and the Trace R&D Center at University of Maryland under funding for the FLOE Project from the William and Flora Hewlett
