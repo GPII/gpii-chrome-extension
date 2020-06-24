@@ -66,6 +66,10 @@ fluid.defaults("gpii.chrome.tests.wsConnector.server", {
         allowClient: {
             funcName: "gpii.chrome.tests.wsConnector.server.allowClient",
             args: ["{that}", "{arguments}.0"]
+        },
+        broadcastMessage: {
+            funcName: "gpii.chrome.tests.wsConnector.server.broadcastMessage",
+            args: ["{that}", "{arguments}.0", "{arguments}.1"]
         }
     },
     listeners: {
@@ -81,8 +85,8 @@ fluid.defaults("gpii.chrome.tests.wsConnector.server", {
     },
     modelListeners: {
         "settings": {
-            funcName: "gpii.chrome.tests.wsConnector.server.broadcastSettings",
-            args: ["{that}", "{change}.value"],
+            func: "{that}.broadcastMessage",
+            args: ["onSettingsChanged", "{change}.value"],
             namespace: "broadcastSettings",
             excludeSource: ["init"]
         }
@@ -136,9 +140,9 @@ gpii.chrome.tests.wsConnector.server.setupClient = function (that, client) {
     client.on("message", that.events.onMessage.fire);
 };
 
-gpii.chrome.tests.wsConnector.server.broadcastSettings = function (that, settings) {
+gpii.chrome.tests.wsConnector.server.broadcastMessage = function (that, type, settings) {
     var msg = {
-        type: "onSettingsChanged",
+        type: type,
         payload: settings
     };
     if (that.model.clientSocket) {
@@ -286,6 +290,17 @@ fluid.defaults("gpii.chrome.tests.wsConnector.tester", {
                 event: "{clientOne}.events.onSettingsChange",
                 listener: "gpii.chrome.tests.wsConnector.checkSettings",
                 args: ["{arguments}.0"]
+            }]
+        }, {
+            name: "Server sends changeSettingsReceived message",
+            expect: 1,
+            sequence: [{
+                func: "{server}.broadcastMessage",
+                args: ["changeSettingsReceived", "{that}.options.payloads.test1.settings"]
+            }, {
+                event: "{clientOne}.events.onSettingsReceived",
+                listener: "gpii.chrome.tests.wsConnector.checkSettings",
+                args: ["{arguments}.0", "{that}.options.payloads.test1.settings"]
             }]
         }, {
             name: "Server disconnects client, client reconnects",

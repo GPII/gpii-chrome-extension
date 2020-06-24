@@ -42,13 +42,18 @@ fluid.defaults("gpii.wsConnector", {
         messageHandler: {
             funcName: "gpii.wsConnector.messageHandler",
             args: ["{that}", "{arguments}.0"]
+        },
+        sendMessage: {
+            funcName: "gpii.wsConnector.sendMessage",
+            args: ["{that}", "{arguments}.0", "{arguments}.1"]
         }
     },
     events: {
         onConnect: null,
         onConnectionSucceeded: null,
         onError: null,
-        onSettingsChange: null
+        onSettingsChange: null,
+        onSettingsReceived: null
     },
     listeners: {
         "onCreate.connect": "{wsConnector}.connect",
@@ -76,8 +81,11 @@ gpii.wsConnector.messageHandler = function (that, ev) {
         }
     } else if (msg.type === "onSettingsChanged") {
         that.events.onSettingsChange.fire(msg.payload ? msg.payload : undefined);
+    } else if (msg.type === "changeSettingsReceived") {
+        // confirms that settings sent back across the socket have been received by the server
+        that.events.onSettingsReceived.fire(msg.payload);
     } else {
-        fluid.log("Unrecognized event/message");
+        fluid.log("Unrecognized event/message", msg);
     }
 };
 
@@ -100,12 +108,19 @@ gpii.wsConnector.error = function (that, err) {
 };
 
 gpii.wsConnector.setup = function (that) {
-    var authPayload = {
-        type: "connect",
-        payload: {
-            solutionId: that.options.solutionId
-        }
-    };
-    that.socket.send(JSON.stringify(authPayload));
+    that.sendMessage("connect", {solutionId: that.options.solutionId});
     that.socket.onmessage = that.messageHandler;
+};
+
+gpii.wsConnector.sendMessage = function (that, type, payload) {
+    var message = {
+        type: type,
+        payload: payload
+    };
+
+    if (that.socket) {
+        that.socket.send(JSON.stringify(message));
+    } else {
+        fluid.log("Unable to send message: " + message + ". No socket connection available.");
+    }
 };

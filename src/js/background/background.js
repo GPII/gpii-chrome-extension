@@ -17,6 +17,20 @@
 
 fluid.defaults("gpii.chrome.morphic", {
     gradeNames: "uioPlus.chrome.settings",
+    invokers: {
+        updateSettings: {
+            funcName: "gpii.chrome.morphic.updateSettings",
+            args: ["{that}", "{arguments}.0", "updateSettings"]
+        }
+    },
+    modelListeners: {
+        "settings": {
+            func: "{wsConnector}.sendMessage",
+            args: ["changeSettings", {settings: "{change}.value"}],
+            excludeSource: ["init", "updateSettings"],
+            namespace: "sendToMorphic"
+        }
+    },
     components: {
         wsConnector: {
             type: "gpii.wsConnector",
@@ -25,11 +39,15 @@ fluid.defaults("gpii.chrome.morphic", {
                 flowManager: "ws://localhost:8081/browserChannel",
                 retryTime: 10,
                 listeners: {
-                    "{that}.events.onSettingsChange": "{uioPlus.chrome.settings}.updateSettings"
+                    "{that}.events.onSettingsChange": "{gpii.chrome.morphic}.updateSettings"
                 }
             }
         }
     }
 });
+
+gpii.chrome.morphic.updateSettings = function (that, settings, source) {
+    that.applier.change("settings", settings || that.options.defaultSettings, "ADD", source);
+};
 
 gpii.chrome.morphic();
