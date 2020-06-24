@@ -1,6 +1,8 @@
 {
     "name": "UI Options Plus (UIO+) for Morphic",
     "short_name": "UIO+ for Morphic",
+    "version": "0.2.0",
+    "version_name": "0.2.0",
     "browser_action": {
         "default_title": "UIO+ for Morphic"
     },
